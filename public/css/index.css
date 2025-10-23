@@ -1,0 +1,179 @@
+  .text-muted {
+    --bs-text-opacity: 1;
+    color: rgb(195 195 195 / 75%) !important;
+}
+  input.form-control::placeholder {
+  color: #aaa;             /* cor do placeholder */
+}
+
+.form-control, input{
+  font-size: 18px;
+  color:white;
+  background-color: #01223e;
+  border:none;
+}
+.nav-link {
+color:white;
+
+}
+
+
+
+  .premio{
+    box-shadow: 0 0 8px rgb(0 0 0 / 40%);
+background: url("{{ asset('img/campo.png') }}") no-repeat 50%;
+
+     border:  solid 1px #ffee00ff;
+    width: 50%;
+     color:white;  background-color: #011d81;
+      padding: 10px;
+       margin-bottom: 10px;
+        border-radius:20px;
+        font-weight: bold;
+  }
+  .btt-conf{
+   
+    width: 100%; 
+     font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    padding:10px;
+    background-color: #011d81;
+  }
+  .col-4 {
+    flex: 0 0 auto;
+    width: 40%;
+}
+  .modal{
+--bs-modal-width: 625px;
+  }
+      .game-card {
+      background-color: #1b2430;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.4);
+    }
+
+    .league {
+      color: #9bbcf5;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .match-number {
+      background-color: #0d6efd;
+      border-radius: 50%;
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-right: 10px;
+    }
+
+    .odds button {
+      background-color: #212d40;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      width: 100%;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .odds button:hover {
+      background-color: #0d6efd;
+    }
+
+    .odds small {
+      display: block;
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+  .home-bar{
+    color: #0dcaf0;
+    font-size:50px;
+    padding-bottom:10px;
+  }
+  .pulse {
+  color: red;
+  animation: pulse-animation 1s infinite;
+}
+
+@keyframes pulse-animation {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+  .legenda-premio{
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 23px;
+    text-align:center;
+  }
+  .card-title-btt{
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+  }
+
+    .story-card {
+      text-align: center;
+      transition: transform 0.3s ease;
+      flex: 1 1 100px; /* deixa os cards flexíveis */
+      max-width: 130px; /* limita o tamanho máximo */
+    }
+
+    .story-card:hover {
+      transform: scale(1.05);
+    }
+
+    .story-img {
+      width: 100%;
+      aspect-ratio: 1 / 1; /* mantém formato quadrado sempre */
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+      margin: 0 auto 10px;
+      border: 3px solid #ff3366;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+
+    .story-card:hover .story-img {
+      border-color: #ff6f61;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+    }
+
+    .story-name {
+      font-family: 'Bebas Neue', sans-serif;
+       letter-spacing: 2px;
+      font-weight: 500;
+      font-size: 1rem;
+      color: #ffffff;
+      text-wrap: nowrap;
+    }
+
+    /* Centraliza os stories e deixa responsivo */
+    .stories-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px; /* espaçamento entre os cards */
+    }
+
+    @media (max-width: 576px) {
+      .story-card {
+        max-width: 100px;
+      }
+    }
