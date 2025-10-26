@@ -16,21 +16,111 @@
 color:white;
 
 }
+.bloco-limpar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-limpar {
+  position: relative;
+  background: #ffc757; /* Fundo levemente transparente */
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 14px 42px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Ícone */
+.btn-limpar i {
+  margin-right: 10px;
+  font-size: 1.2rem;
+  color: black;
+}
+
+/* Brilho sutil animado */
+.btn-limpar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transition: all 0.6s ease;
+}
+
+.btn-limpar:hover::before {
+  left: 100%;
+}
+
+.btn-limpar:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+}
+
+.btn-limpar:active {
+  transform: scale(0.98);
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.15);
+}
 
 
 
-  .premio{
-    box-shadow: 0 0 8px rgb(0 0 0 / 40%);
-background: url("{{ asset('img/campo.png') }}") no-repeat 50%;
 
-     border:  solid 1px #ffee00ff;
-    width: 50%;
-     color:white;  background-color: #011d81;
-      padding: 10px;
-       margin-bottom: 10px;
-        border-radius:20px;
-        font-weight: bold;
-  }
+.premio {
+  background: linear-gradient(145deg, #f9f9f9, #ffffff);
+  border: 1px solid #e5e5e5;
+  color: #333;
+  padding: 25px 40px;
+  border-radius: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  font-size: 1.1rem;
+  display: inline-block;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.premio:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.premio i {
+  color: #0072ff;
+  margin: 0 8px;
+  font-size: 1.2rem;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+
+.premio:hover i {
+  color: #00bfff;
+  transform: scale(1.2);
+}
+
+.valor-premio {
+  display: block;
+  margin-top: 10px;
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #0072ff, #00bfff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+}
+
   .btt-conf{
    
     width: 100%; 
@@ -119,6 +209,7 @@ background: url("{{ asset('img/campo.png') }}") no-repeat 50%;
 }
   .legenda-premio{
     font-family: 'Bebas Neue', sans-serif;
+    color:#f1f700;
     font-size: 23px;
     text-align:center;
   }

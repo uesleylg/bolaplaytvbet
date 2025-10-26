@@ -10,21 +10,22 @@
 
 
 
-<div class="container py-5">
-<div style="color: white; background-color: #0f172a; font-size: 18px; padding: 15px; border-radius: 10px; margin-bottom: 0px; font-family: 'Roboto', sans-serif; font-weight: bolder; box-shadow: 0 0 10px 2px #00000052; display: flex; justify-content: space-between; align-items: center;">
+<div style="padding-top: 0px !important;" class="container py-5">
+<div style="color: white; background-color: rgb(30 41 59);; border: 1px solid #ffffff4d;  font-size: 18px; padding: 15px; border-radius: 10px; margin-bottom: 0px; font-family: 'Roboto', sans-serif; font-weight: bolder; box-shadow: 0 0 10px 2px #00000052; display: flex; justify-content: space-between; align-items: center;">
   <div>
    <i style="color: #fffb00ff;" class="fa-solid fa-trophy"></i> BOLÃO HOJE - 23/10/2025 <br> <label style="color:#00ffa9; font-weight: 200;">Premiação: R$ 2.000,00</label>
   </div>
 
   <div style="display: flex; align-items: center; gap: 10px;">
-    <button style="border:1px solid #cececeff; border-radius:10px; background-color:#334155; color:white; padding: 5px 15px; font-weight: bold;">
-      <i class="fa-solid fa-arrows-rotate"></i> Atualizar
+    <button data-bs-toggle="modal" data-bs-target="#ModalVermais" style="border:1px solid #cececeff; border-radius:10px; background-color:#334155; color:white; padding: 5px 15px; font-weight: bold;">
+      <i class="fa-solid fa-list"></i> Ver outros
     </button>
-    <i class="fa-solid fa-circle-question" style="font-size: 20px; cursor: pointer;"></i>
+    <i data-bs-toggle="modal" data-bs-target="#ModalInfo" class="fa-solid fa-circle-question" style="font-size: 20px; cursor: pointer;"></i>
   </div>
 </div>
 
-<div style="color:#ffe200; font-weight: bold; background: #34495e; padding:10px; text-align: center;">
+<div style="border-radius: 0 0 10px 10px;
+ color:#ffe200; font-weight: bold; background: ; padding:10px; text-align: center;">
 
 
 <div class="container my-4 position-relative">
@@ -256,8 +257,8 @@
       </tr>
     </thead>
     <tbody style="background-color: #1e293b; color: #fff;">
-      <tr>
-        <th scope="row"><i style="color: #fffb00ff;" class="fa-solid fa-trophy"></i> 1º</th>
+      <tr data-bs-toggle="modal" data-bs-target="#ModalAposta">
+        <th  scope="row"><i style="color: #fffb00ff;" class="fa-solid fa-trophy"></i> 1º</th>
         <td><i class="fa-solid fa-ticket"></i> BLT-001</td>
         <td><i class="fa-solid fa-user"></i> João Silva</td>
         <td>4</td>
@@ -356,11 +357,49 @@
 
 
 
+<style>
+
+
+
+  .table-modern {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: rgba(15,23,42,0.9); /* fundo glass */
+  backdrop-filter: blur(8px);       /* blur moderno */
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.table-modern thead {
+  background: linear-gradient(90deg, #0f172a, #1e293b);
+  color: #ffe200;
+  font-weight: 600;
+}
+
+.table-modern tbody tr {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.table-modern tbody tr:hover {
+  background: rgba(255,255,255,0.05);
+  transform: scale(1.01);
+}
+
+.table-modern td i {
+  font-size: 22px;
+}
+
+</style>
+
 
 
 </div>
-
-
-
-@include('Modal.ModalLoginRegistro')
+@include('Modal.ModalIndicacao')
+@include('Modal.ModalVermais')
+@include('Modal.ModalInfo')
+ @include('Modal.ModalLoginRegistro')
+ @include('Modal.ModalBilhete')
 @endsection

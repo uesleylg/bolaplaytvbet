@@ -1,21 +1,29 @@
 
  <div class="modal fade" id="ModalAposta" tabindex="-1" aria-labelledby="ModalAposta" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered"><!-- centraliza verticalmente -->
-      <div class="modal-content">
+      <div class="modal-content" style="border-radius: 10px;">
         
-        <div class="modal-header">
-          <h5 class="modal-title" id="meuModalLabel">FAÇA SUA APOSTA</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+         <div class="modal-header" style="background-color:#1e293b; color:white;">
+        <div>
+          <h5 class="modal-title" id="meuModalLabel"><i class="fa-solid fa-ticket"></i> Fazer aposta</h5>
         </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
         
-        <div class="modal-body text-center">
+        <div class="modal-body text-center" style="max-height: 70vh; overflow-y: auto;">
           
+        
 
 
-            <div class="container">
-              <center>
-              <div class="premio"><i class="fa-solid fa-gem"></i> PREMIAÇÃO ESTIMADA <i class="fa-solid fa-gem"></i><BR> R$ 2.000,00</div>
-  </center>
+            <div class="container" >
+
+          <div class="bloco-limpar my-4">
+  <button class="btn-limpar">
+    <i class="fa-solid fa-broom"></i> LIMPAR APOSTAS
+  </button>
+</div>
+
+   
     <!-- Jogo 1 -->
      <i class="fa-solid fa-circle-info"></i> Para cada partida, selecione uma das opções: <b>Time vencedor</b> ou <b>empate</b> <br>
     <div class="game-card">
@@ -39,6 +47,94 @@
     </div>
 
     <!-- Jogo 2 -->
+    <div class="game-card">
+      <div class="d-flex align-items-center mb-2">
+        <div class="match-number">2</div>
+        <div class="league">
+          🔍 21/10 16:00 — <strong>EUROPA:</strong> Liga dos Campeões - Fase da Liga
+        </div>
+      </div>
+      <div class="row text-center g-2 odds">
+        <div class="col-4">
+          <button>LEVERKUSEN-ALE <small></small></button>
+        </div>
+        <div style="width:20%;" class="col-4">
+          <button>EMPATE <small></small></button>
+        </div>
+        <div class="col-4">
+          <button>PSG-FRA <small></small></button>
+        </div>
+      </div>
+    </div>
+
+
+     <!-- Jogo 2 -->
+    <div class="game-card">
+      <div class="d-flex align-items-center mb-2">
+        <div class="match-number">2</div>
+        <div class="league">
+          🔍 21/10 16:00 — <strong>EUROPA:</strong> Liga dos Campeões - Fase da Liga
+        </div>
+      </div>
+      <div class="row text-center g-2 odds">
+        <div class="col-4">
+          <button>LEVERKUSEN-ALE <small></small></button>
+        </div>
+        <div style="width:20%;" class="col-4">
+          <button>EMPATE <small></small></button>
+        </div>
+        <div class="col-4">
+          <button>PSG-FRA <small></small></button>
+        </div>
+      </div>
+    </div>
+
+
+     <!-- Jogo 2 -->
+    <div class="game-card">
+      <div class="d-flex align-items-center mb-2">
+        <div class="match-number">2</div>
+        <div class="league">
+          🔍 21/10 16:00 — <strong>EUROPA:</strong> Liga dos Campeões - Fase da Liga
+        </div>
+      </div>
+      <div class="row text-center g-2 odds">
+        <div class="col-4">
+          <button>LEVERKUSEN-ALE <small></small></button>
+        </div>
+        <div style="width:20%;" class="col-4">
+          <button>EMPATE <small></small></button>
+        </div>
+        <div class="col-4">
+          <button>PSG-FRA <small></small></button>
+        </div>
+      </div>
+    </div>
+
+
+     <!-- Jogo 2 -->
+    <div class="game-card">
+      <div class="d-flex align-items-center mb-2">
+        <div class="match-number">2</div>
+        <div class="league">
+          🔍 21/10 16:00 — <strong>EUROPA:</strong> Liga dos Campeões - Fase da Liga
+        </div>
+      </div>
+      <div class="row text-center g-2 odds">
+        <div class="col-4">
+          <button>LEVERKUSEN-ALE <small></small></button>
+        </div>
+        <div style="width:20%;" class="col-4">
+          <button>EMPATE <small></small></button>
+        </div>
+        <div class="col-4">
+          <button>PSG-FRA <small></small></button>
+        </div>
+      </div>
+    </div>
+
+
+     <!-- Jogo 2 -->
     <div class="game-card">
       <div class="d-flex align-items-center mb-2">
         <div class="match-number">2</div>

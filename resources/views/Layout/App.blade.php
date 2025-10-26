@@ -67,6 +67,8 @@
   <ul style="" class="nav flex-column ms-3">
     <li class="nav-item"><a class="nav-link" href="{{ route('home.index') }} "><i class="fa-solid fa-house"></i> Início</a></li>
     <li class="nav-item"><a class="nav-link" href="{{ route('ranking.index') }}"><i class="fa-solid fa-chart-simple"></i> Ranking</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ route('ranking.index') }}"><i class="fa-solid fa-hand"></i> Regras</a></li>
+    
     <li class="nav-item"><a class="nav-link" href="https://bolaplaytv.com.br/"><i class="fa-solid fa-play"></i> Futebol Ao Vivo</a></li>
     <li class="nav-item"><a class="nav-link" href="#"><i class="fa-brands fa-whatsapp"></i> Contato</a></li>
   </ul>
