@@ -89,12 +89,12 @@
     }
   </style>
 
-  <div class="container py-5" style="padding-bottom: 0px !important; padding-top: 0px !important;">
-    <div style="color: white;background-color: rgb(30 41 59);; font-size: 18px; padding: 15px; border-radius: 10px; margin-bottom: 30px;  font-family: 'Roboto', sans-serif;     font-weight: bolder;   box-shadow: 0 0 10px 2px #00000052;"><i style="color:#5dff5d;" class="fa-solid fa-circle pulse"></i> 
-     RODADA SEXTA 24/10 | 8 Jogos
+  <div class="container py-5 " style="padding-bottom: 0px !important; padding-top: 0px !important;">
+    <div class="text-title-bolao" ><i style="color:#5dff5d;" class="fa-solid fa-circle pulse"></i> 
+     Rodada 6 — Quinta-feira, 24/10 | 8 Jogos
     </div>
     
-    <div class="container my-5">
+    <div class="container my-5 pd-2">
     <div class="card-bolao p-4" data-bs-toggle="modal" data-bs-target="#ModalAposta">
       <div class="d-flex justify-content-between align-items-start flex-wrap">
         <div>

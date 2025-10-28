@@ -12,7 +12,7 @@
       </div>
 
       <!-- Corpo -->
-      <div class="modal-body bg-dark text-white p-4">
+      <div class="modal-body  text-white p-4" style="background-color: rgb(30 41 59);">
         <div class="text-center mb-4">
           <i class="fa-solid fa-users-between-lines text-warning fs-1 mb-3"></i>
           <h5 class="fw-bold">Convide seus amigos e ganhe recompensas!</h5>

@@ -12,13 +12,26 @@
   <!-- Slides -->
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img src="{{ asset('img/banner02.png') }}" class="d-block w-100" alt="Slide 1" />
+      <picture>
+        <source media="(max-width: 767px)" srcset="{{ asset('img/banner-mobile.png') }}">
+        <source media="(min-width: 768px)" srcset="{{ asset('img/banner03.png') }}">
+        <img src="{{ asset('img/banner-desktop.png') }}" class="d-block w-100" alt="Slide 1">
+      </picture>
+      
     </div>
     <div class="carousel-item">
-      <img src="{{ asset('img/banner03.png') }}" class="d-block w-100" alt="Slide 2" />
+          <picture>
+        <source media="(max-width: 767px)" srcset="{{ asset('img/banner-mobile.png') }}">
+        <source media="(min-width: 768px)" srcset="{{ asset('img/banner03.png') }}">
+        <img src="{{ asset('img/banner-desktop.png') }}" class="d-block w-100" alt="Slide 2">
+      </picture>
     </div>
     <div class="carousel-item">
-      <img src="{{ asset('img/banner02.png') }}" class="d-block w-100" alt="Slide 3" />
+          <picture>
+        <source media="(max-width: 767px)" srcset="{{ asset('img/banner-mobile.png') }}">
+        <source media="(min-width: 768px)" srcset="{{ asset('img/banner03.png') }}">
+        <img src="{{ asset('img/banner-desktop.png') }}" class="d-block w-100" alt="Slide 3">
+      </picture>
     </div>
   </div>
 
@@ -36,7 +49,7 @@
 
 
 
-<div  class="container py-5 text-center">
+<div class="container py-5 text-center pd-2">
   <div class="stories-wrapper d-flex justify-content-center flex-wrap gap-4">
 
     <!-- Ranking -->
@@ -56,12 +69,11 @@
     </div>
 
     <!-- Regras -->
-     <div class="story-card" data-bs-toggle="modal" data-bs-target="#ModalIndicacao">
+    <div class="story-card" data-bs-toggle="modal" data-bs-target="#ModalIndicacao">
       <div class="icon-wrapper">
-       <i style="color:white;" class="fa-solid fa-file-lines"></i>
-
+        <i style="color:white;" class="fa-solid fa-file-lines"></i>
       </div>
-      <div class="story-name">Regras</div>
+      <div class="story-name">REGRAS</div>
     </div>
 
     <!-- Indicação -->
@@ -76,24 +88,7 @@
 </div>
 
 <style>
-
-.carousel-item img {
-  display: block;
-  width: 100%;
-  height: auto;
-
-  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: cover;
-
-  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-  mask-repeat: no-repeat;
-  mask-size: cover;
-}
-
   /* ======= LAYOUT BASE ======= */
-
-
   .stories-wrapper {
     gap: 40px;
     display: flex;
@@ -153,26 +148,73 @@
   /* ======= TEXTO ======= */
   .story-name {
     color: #fff;
-    font-weight: 600;
     margin-top: 15px;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.9px;
     font-size: 0.9rem;
     text-transform: uppercase;
   }
 
   /* ======= RESPONSIVO ======= */
   @media (max-width: 768px) {
+    .stories-wrapper {
+      flex-wrap: nowrap; /* impede quebra de linha */
+      justify-content: space-between; /* espaçamento uniforme */
+      overflow-x: auto; /* rolagem horizontal caso necessário */
+      gap: 10px; /* diminui o espaço entre os cards */
+      padding-bottom: 10px;
+    }
+
     .story-card {
-      width: 100px;
-      padding: 20px 8px;
+      flex: 0 0 22%; /* 4 cards lado a lado (4 x 25% ≈ 100%) */
+      min-width: 80px;
+      padding: 15px 5px;
     }
 
     .icon-wrapper {
-      font-size: 38px;
+      font-size: 32px;
     }
 
     .story-name {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
     }
   }
+  
+.carousel-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+
+  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: cover;
+
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  mask-repeat: no-repeat;
+  mask-size: cover;
+}
+
+ @media (max-width: 425px) {
+ .gap-4 {
+    gap: 0.5rem !important;
+    padding-top: 8px;
+}
+
+.story-name {
+  
+    margin-top: 10px;
+}
+    .story-card {
+    
+        min-width: 65px;
+        padding: 10px 5px;
+    }
+
+    .pd-2{
+      padding-top: .5rem !important;
+    padding-bottom: .7rem !important;
+    }
+
+
+ }
+
 </style>

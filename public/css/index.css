@@ -91,7 +91,6 @@ color:white;
   transition: all 0.3s ease;
   position: relative;
 }
-
 .premio:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
@@ -263,8 +262,36 @@ color:white;
       gap: 20px; /* espaçamento entre os cards */
     }
 
+
+.text-title-bolao{
+  color: white;
+  background-color: rgb(30 41 59);
+  font-size: 18px;
+  padding: 15px;
+  border-radius: 10px;
+   margin-bottom: 30px;
+     font-family: 'Roboto', sans-serif;
+          font-weight: bolder;
+             box-shadow: 0 0 10px 2px #00000052;
+}
+
+
+ @media (max-width: 425px) {
+.text-title-bolao{
+  margin-bottom: 12px;
+  font-size: 13px;
+
+}
+
+.pd-2{
+  margin-top: 0rem !important;
+}
+ }
+
+
     @media (max-width: 576px) {
       .story-card {
         max-width: 100px;
       }
     }
+
