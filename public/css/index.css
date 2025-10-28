@@ -276,7 +276,34 @@ color:white;
 }
 
 
+
+.info-encerra-mobile, .btt-mobile{display: none !important;}
  @media (max-width: 425px) {
+
+  .odds button {
+    font-size: 12px;
+  }
+  .league {
+   
+      font-size: 0.6rem;
+    
+    }
+
+  .pd-bolao{padding: 12px;}
+  
+  .premio-valor{font-size: 37px;}
+  .info-encerra-mobile, .btt-mobile{display: block !important; width: 100%; }
+  .info-encerra, .btt-desktop{display: none !important;}
+
+  .timer-box {
+    width: 100%;
+    }
+
+  .my-5 {
+    margin-top: 3rem !important;
+    margin-bottom: 1rem !important;
+}
+
 .text-title-bolao{
   margin-bottom: 12px;
   font-size: 13px;
