@@ -14,7 +14,7 @@
   <!-- Cabeçalho da página -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="fw-bold mb-0">👤 Gerenciamento de Usuários</h4>
-    <button class="btn btn-primary">
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalUsuario">
       <i class="fa-solid fa-user-plus me-2"></i> Novo Usuário
     </button>
   </div>
@@ -25,7 +25,7 @@
       <div class="stat-card p-3 d-flex justify-content-between align-items-center">
         <div>
           <small class="text-muted">Total de Usuários</small>
-          <h4 class="fw-bold mb-0">1.254</h4>
+          <h4 class="fw-bold mb-0">{{ $totalUsuarios }}</h4>
         </div>
         <i class="fa-solid fa-users fa-2x text-primary"></i>
       </div>
@@ -34,7 +34,7 @@
       <div class="stat-card p-3 d-flex justify-content-between align-items-center">
         <div>
           <small class="text-muted">Ativos</small>
-          <h4 class="fw-bold text-success mb-0">1.112</h4>
+          <h4 class="fw-bold text-success mb-0">{{ $totalAtivos }}</h4>
         </div>
         <i class="fa-solid fa-user-check fa-2x text-success"></i>
       </div>
@@ -43,7 +43,7 @@
       <div class="stat-card p-3 d-flex justify-content-between align-items-center">
         <div>
           <small class="text-muted">Inativos</small>
-          <h4 class="fw-bold text-danger mb-0">142</h4>
+          <h4 class="fw-bold text-danger mb-0">{{ $totalBloqueados }}</h4>
         </div>
         <i class="fa-solid fa-user-xmark fa-2x text-danger"></i>
       </div>
@@ -69,48 +69,38 @@
         <thead>
           <tr>
             <th>Usuário</th>
-            <th>E-mail</th>
+            <th>Telefone</th>
+            <th>Perfil</th>
+            <th>Data Registro</th>
             <th>Status</th>
             <th class="text-end">Ações</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Uesley Lauriano</td>
-            <td>uesley.lauriano@bolaplay.bet</td>
-            <td><span class="badge bg-success">Ativo</span></td>
-            <td class="text-end">
-              <button class="btn btn-sm btn-outline-secondary me-2"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
-            </td>
-          </tr>
-          <tr>
-            <td>Maria Oliveira</td>
-            <td>maria.oliveira@email.com</td>
-            <td><span class="badge bg-success">Ativo</span></td>
-            <td class="text-end">
-              <button class="btn btn-sm btn-outline-secondary me-2"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
-            </td>
-          </tr>
-          <tr>
-            <td>João Mendes</td>
-            <td>joao.mendes@email.com</td>
-            <td><span class="badge bg-warning">Pendente</span></td>
-            <td class="text-end">
-              <button class="btn btn-sm btn-outline-secondary me-2"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
-            </td>
-          </tr>
-          <tr>
-            <td>Lucas Andrade</td>
-            <td>lucas.andrade@email.com</td>
-            <td><span class="badge bg-danger">Inativo</span></td>
-            <td class="text-end">
-              <button class="btn btn-sm btn-outline-secondary me-2"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
-            </td>
-          </tr>
+      @foreach ($users as $user)
+      <tr>
+        <td>{{ $user->name }}</td>
+        <td>{{ $user->phone ?? '-' }}</td>
+        <td>{{ $user->profile->name ?? 'Usuário' }}</td>
+        <td>{{ $user->created_at ? $user->created_at->format('d/m/Y') : '-' }}</td>
+        <td>
+          @if ($user->status == "Ativo")
+            <span class="badge bg-success">Ativo </span>
+          @else
+            <span class="badge bg-danger">Bloqueado</span>
+          @endif
+        </td>
+        <td class="text-end">
+          <button class="btn btn-sm btn-outline-secondary me-2" title="Editar">
+            <i class="fa-solid fa-pen"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-danger" title="Excluir">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      @endforeach
+          
         </tbody>
       </table>
     </div>
@@ -123,5 +113,5 @@
 
 
 
-
+@include('Admin.Modal.ModalUsuario')
 @endsection

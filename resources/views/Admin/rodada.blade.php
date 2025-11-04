@@ -61,7 +61,7 @@
         <!-- Rodada 2 -->
         <div class="col-md-6 col-lg-4">
             <div class="card card-hover shadow-sm rounded-4 border-0 position-relative" style="background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;">
-                <span class="badge bg-warning fw-semibold position-absolute top-0 end-0 m-3">Fechada</span>
+                <span style="background-color: #ff1100 !important;" class="badge bg-warning fw-semibold position-absolute top-0 end-0 m-3">Pendente</span>
                 <div class="card-body">
                     <h5 class="card-title text-light fw-bold mb-2">Rodada 2 - Brasileirão</h5>
                     <p class="text-light mb-1"><i class="fas fa-gift me-2"></i> Prêmio: Camisa Oficial</p>
@@ -91,7 +91,7 @@
                     <p class="text-light mb-3"><i class="fas fa-calendar-check me-2"></i> Fim: 23/11/2025 17:00</p>
 
                     <div class="d-flex justify-content-between">
-                        <button class="btn btn-outline-primary btn-sm rounded-3">
+                        <button data-bs-toggle="modal" data-bs-target="#ModalJogosRodada"  class="btn btn-outline-primary btn-sm rounded-3">
                             <i class="fas fa-edit me-1"></i> Jogos
                         </button>
                            <button class="btn btn-outline-primary btn-sm rounded-3">
@@ -108,6 +108,7 @@
     </div>
 </div>
 
+@include('Admin.Modal.ModalJogosRodada')
 @include('Admin.Modal.ModalCriarRodada')
 @endsection
 

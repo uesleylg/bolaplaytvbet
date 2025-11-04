@@ -19,7 +19,8 @@ class User extends Authenticatable
         'password',
         'phone',
         'referencia_id',
-        'profile_id', // adiciona profile_id para mass assignment
+        'profile_id',
+        'status', 
     ];
 
     protected $hidden = [
