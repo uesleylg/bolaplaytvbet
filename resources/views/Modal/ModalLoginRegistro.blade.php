@@ -13,7 +13,9 @@
 
       <!-- Corpo -->
       <div class="modal-body p-3">
-        <div id="alert-container" class="alert-login"></div>
+       
+  <!-- ALERTA DE MENSAGENS -->
+  <div class="alert-area-mobile" id="alert-area"></div>
 
         <!-- Abas -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -30,63 +32,81 @@
 
           <!-- Aba Login -->
           <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
-            <form id="login-form">
-              @csrf
-              <div class="mb-3">
-                <input type="text" name="username" class="form-control" placeholder="Usuário" id="loginUsername" maxlength="8" required oninput="this.value=this.value.slice(0,8)" style="color:white !important;">
-              </div>
 
-              <div class="mb-3">
-                <div class="input-group">
-                  <input type="password" name="senha" class="form-control password-input" placeholder="Senha" id="loginPassword" maxlength="12" required>
-                  <button class="btn btn-outline-secondary btn-show-password" type="button" tabindex="-1">
-                    <i class="fa-solid fa-eye"></i>
-                  </button>
-                </div>
-                <div>
-        
+      
 
-                  <a class="small text-muted" 
-   style="color:white; cursor:pointer;" 
-   id="recuperacao-tab-link">
-   Esqueceu a senha?
-</a>
+<form id="login-form">
+  @csrf
+  <div class="mb-3">
+    <input type="text" name="username" class="form-control validate-lowercase" placeholder="Usuário" id="loginUsername" maxlength="10" required>
+  </div>
 
-                </div>
-              </div>
+  <div class="mb-3">
+    <div class="input-group">
+      <input type="password" name="senha" class="form-control password-input" placeholder="Senha" id="loginPassword" maxlength="12" required>
+      <button class="btn btn-outline-secondary btn-show-password" type="button" tabindex="-1">
+        <i class="fa-solid fa-eye"></i>
+      </button>
+    </div>
 
-              <button type="submit" id="login-user" class="btn w-100 text-dark fw-bold" style="background:#FAEF5C; border:0;">
-                <i class="fa-solid fa-right-to-bracket"></i> Entrar
-              </button>
-            </form>
+    <div>
+      <a class="small text-muted" style="cursor:pointer;" id="recuperacao-tab-link">
+        Esqueceu a senha?
+      </a>
+    </div>
+  </div>
+
+
+  <button type="submit" id="login-user" class="btn w-100 text-dark fw-bold" style="background:#FAEF5C; border:0;">
+    <i class="fa-solid fa-right-to-bracket"></i> Entrar
+  </button>
+</form>
+
+
+
           </div>
 
           <!-- Aba Registro -->
           <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
-            <form id="register-form">
-              @csrf
-              <div class="mb-3">
-                <input type="text" name="username" class="form-control" placeholder="Nome de Usuário" id="registerUsername" maxlength="8" required oninput="this.value=this.value.slice(0,8)">
-              </div>
-              <div class="mb-3">
-                <input type="tel" name="telefone" class="form-control" placeholder="Telefone" id="phone" maxlength="15" required>
-              </div>
-              <div class="mb-3">
-                <div class="input-group">
-                  <input type="password" name="senha" class="form-control password-input" placeholder="Senha" id="registerPassword" maxlength="12" required>
-                  <button class="btn btn-outline-secondary btn-show-password" type="button" tabindex="-1">
-                    <i class="fa-solid fa-eye"></i>
-                  </button>
-                </div>
-                <span class="text-muted small"><i class="fa-solid fa-circle-exclamation"></i> A senha deve ter pelo menos 6 caracteres!</span>
-              </div>
+         <form id="register-form">
+  @csrf
+  <div class="mb-3">
+    <input type="text" name="name" class="form-control validate-lowercase" placeholder="Usuário" id="registerName" maxlength="10" required oninput="this.value=this.value.slice(0,8)">
+  </div>
 
-              <input type="hidden" name="referencia" value="">
+  <div class="mb-3">
+    <input 
+  type="email" 
+  name="email" 
+  class="form-control" 
+  placeholder="E-mail" 
+  id="registerEmail" 
+  required>
+  </div>
 
-              <button type="submit" id="cadastrar-user" class="btn w-100 text-dark fw-bold" style="background:#FAEF5C; border:0;">
-                Continuar
-              </button>
-            </form>
+  <div class="mb-3">
+    <input type="tel" name="phone" class="form-control" placeholder="Telefone" id="registerPhone" maxlength="15" required>
+  </div>
+
+  <div class="mb-3">
+    <div class="input-group">
+      <input type="password" name="password" class="form-control password-input" placeholder="Senha" id="registerPassword" maxlength="12" required>
+      <button class="btn btn-outline-secondary btn-show-password" type="button" tabindex="-1">
+        <i class="fa-solid fa-eye"></i>
+      </button>
+    </div>
+    <span class="text-muted small">
+      <i class="fa-solid fa-circle-exclamation"></i> A senha deve ter pelo menos 6 caracteres!
+    </span>
+  </div>
+
+  <input type="hidden" name="referencia_id" value="">
+
+  <button type="submit" id="cadastrar-user" class="btn w-100 text-dark fw-bold" style="background:#FAEF5C; border:0;">
+    Continuar
+  </button>
+</form>
+
           </div>
 
           <!-- Aba Recuperação -->
@@ -110,11 +130,69 @@
 </div>
 
 
+<style>
+
+   @media (max-width: 425px) {
+
+    .nav-tabs, .alert-area-mobile{
+      font-size:13px;
+    }
+    
+   }
+  </style>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <!-- JS necessários -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+
+document.querySelectorAll('.validate-lowercase').forEach(function(input) {
+  input.addEventListener('input', function() {
+    // Pega o valor atual e a posição do cursor
+    let start = this.selectionStart;
+    let end = this.selectionEnd;
+    let value = this.value;
+
+    // Remove caracteres inválidos (permite apenas a-z minúsculo e 0-9)
+    value = value.replace(/[^a-z0-9]/gi, ''); // 'i' ignora case, pega maiúsculas e minúsculas
+    value = value.toLowerCase(); // força minúsculas
+
+    // Limita ao maxlength
+    value = value.slice(0, this.maxLength);
+
+    // Atualiza o valor mantendo o cursor
+    this.value = value;
+    this.setSelectionRange(start, end);
+  });
+});
+
+
+  document.getElementById('registerPhone').addEventListener('input', function (e) {
+    let valor = e.target.value;
+
+    // Remove tudo que não for número
+    valor = valor.replace(/\D/g, '');
+
+    // Limita a 11 dígitos (DD + número)
+    valor = valor.substring(0, 11);
+
+    // Formata de acordo com a quantidade de números
+    if (valor.length > 10) {
+        valor = valor.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+    } else if (valor.length > 6) {
+        valor = valor.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
+    } else if (valor.length > 2) {
+        valor = valor.replace(/^(\d{2})(\d{0,5})$/, '($1) $2');
+    } else if (valor.length > 0) {
+        valor = valor.replace(/^(\d*)$/, '($1');
+    }
+
+    e.target.value = valor;
+});
+
 
   document.addEventListener('DOMContentLoaded', function () {
   const loginModal = document.getElementById('loginModal');
@@ -201,4 +279,129 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('login-form');
+  const alertArea = document.getElementById('alert-area');
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const data = {
+      name: formData.get('username'),
+      password: formData.get('senha'),
+    };
+
+    alertArea.innerHTML = '';
+
+    try {
+      const response = await axios.post('/login', data, {
+        headers: { 'X-CSRF-TOKEN': document.querySelector('input[name=_token]').value }
+      });
+
+      // backend sempre envia success e message
+      showAlert(response.data.message, response.data.success ? 'success' : 'danger');
+
+      if (response.data.success && response.data.redirect) {
+        setTimeout(() => window.location.href = response.data.redirect, 1500);
+      }
+
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.message) {
+        showAlert(error.response.data.message, 'danger');
+      } else {
+        showAlert('Ocorreu um erro inesperado.', 'danger');
+      }
+    }
+  });
+
+  function showAlert(message, type = 'danger') {
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type} alert-dismissible fade show mt-3`;
+    alert.setAttribute('role', 'alert');
+    alert.innerHTML = `
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+
+    alertArea.innerHTML = '';
+    alertArea.appendChild(alert);
+
+    // Remove automaticamente após 4 segundos
+    setTimeout(() => {
+      const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+      bsAlert.close();
+    }, 4000);
+  }
+});
+
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('register-form');
+  const alertArea = document.getElementById('alert-area');
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    alertArea.innerHTML = ''; // limpa alertas anteriores
+
+    try {
+      const response = await axios.post('/register', formData, {
+        headers: { 'X-CSRF-TOKEN': document.querySelector('input[name=_token]').value }
+      });
+
+      // ✅ Sucesso no cadastro
+      if (response.data.success) {
+        showAlert(response.data.message, 'success');
+        setTimeout(() => {
+          window.location.href = response.data.redirect;
+        }, 1500);
+      } 
+      // ⚠️ Caso de erro retornado (mas sem exception)
+      else {
+        showAlert(response.data.message || 'Erro ao cadastrar.', 'danger');
+      }
+
+    } catch (error) {
+      // ⚠️ Erro de validação (Laravel retorna 422)
+      if (error.response && error.response.data && error.response.data.message) {
+        showAlert(error.response.data.message, 'danger');
+      } 
+      // ⚠️ Erro inesperado
+      else {
+        showAlert('Erro inesperado. Tente novamente.', 'danger');
+      }
+    }
+  });
+
+  // Função para mostrar alerta
+  function showAlert(message, type = 'danger') {
+    const alert = `
+      <div class="alert alert-${type} alert-dismissible fade show mt-3" role="alert">
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>`;
+    alertArea.innerHTML = alert;
+
+    // Fecha automaticamente após 4 segundos
+    setTimeout(() => {
+      const alertElement = alertArea.querySelector('.alert');
+      if (alertElement) {
+        alertElement.classList.remove('show');
+        alertElement.classList.add('fade');
+        setTimeout(() => alertArea.innerHTML = '', 300);
+      }
+    }, 4000);
+  }
+});
 </script>
+

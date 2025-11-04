@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="{{ asset('css/index.css') }}">
 
+
 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
   
   <!-- Indicadores -->

@@ -6,7 +6,7 @@
   <title>@yield('title', 'Dashboard')</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-
+<script src="https://kit.fontawesome.com/afcee4f894.js" crossorigin="anonymous" defer></script>
   <style>
     :root{
          
@@ -172,24 +172,48 @@
 
       <nav class="sidebar-nav">
         <ul class="nav flex-column">
-          <li class="nav-item mb-1">
-            <a class="nav-link active" href="#"><i class="bi bi-speedometer2 me-2"></i> Visão Geral</a>
-          </li>
-          <li class="nav-item mb-1">
-            <a class="nav-link" href="#"><i class="bi bi-people-fill me-2"></i> Usuários</a>
-          </li>
-          <li class="nav-item mb-1">
-            <a class="nav-link" href="#"><i class="bi bi-ticket-perforated-fill me-2"></i> Bilhetes</a>
-          </li>
-          <li class="nav-item mb-1">
-            <a class="nav-link" href="#"><i class="bi bi-wallet-fill me-2"></i> Financeiro</a>
-          </li>
+         <li class="nav-item mb-1">
+  <a class="nav-link {{ request()->routeIs('admin.index') ? 'active' : '' }}" 
+     href="{{ route('admin.index') }}">
+    <i class="fa-solid fa-gauge"></i> Visão Geral
+  </a>
+</li>
+
+<li class="nav-item mb-1">
+  <a class="nav-link {{ request()->routeIs('admin.cadastro.rodada') ? 'active' : '' }}" 
+     href="{{ route('admin.cadastro.rodada') }}">
+    <i class="fa-solid fa-trophy"></i> Rodadas
+  </a>
+</li>
+
+<li class="nav-item mb-1">
+  <a class="nav-link {{ request()->routeIs('admin.usuarios*') ? 'active' : '' }}" 
+     href="{{ route('admin.usuarios.index') }}">
+    <i class="fa-solid fa-user"></i> Usuários
+  </a>
+</li>
+<li class="nav-item mb-1">
+  <a class="nav-link {{ request()->routeIs('admin.usuarios*') ? 'active' : '' }}" 
+     href="{{ route('admin.usuarios.index') }}">
+    <i class="fa-solid fa-chart-simple"></i> Relatório
+  </a>
+</li>
+        
+       
           <li class="nav-item mt-3">
             <hr>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#"><i class="bi bi-gear-fill me-2"></i> Configurações</a>
+            <a class="nav-link" href="#"><i class="fa-solid fa-gear"></i> Configurações</a>
           </li>
+           <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('home.index*') ? 'active' : '' }}" 
+     href="{{ route('home.index') }}">
+    <i class="fa-solid fa-house"></i> Cliente
+  </a>
+         
+          </li>
+         
         </ul>
       </nav>
 
@@ -208,7 +232,7 @@
             </svg>
           </button>
 
-          <h5 class="mb-0 d-none d-md-block">Visão Geral</h5>
+          <h5 class="mb-0 d-none d-md-block">@yield('title-menu', 'Visão Geral')</h5>
         </div>
 
         <div class="d-flex align-items-center">
@@ -260,6 +284,7 @@
 
   <!-- Optionally add a tiny script to manage active nav links -->
   <script>
+    
     document.querySelectorAll('.sidebar-nav .nav-link, .offcanvas-body .nav-link').forEach(function(link){
       link.addEventListener('click', function(e){
         document.querySelectorAll('.sidebar-nav .nav-link').forEach(n=>n.classList.remove('active'));

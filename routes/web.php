@@ -6,6 +6,8 @@ use App\Http\Controllers\RankingController;
 use App\Http\Controllers\BilheteUsuarioController;
 use App\Http\Controllers\Admin\HomeAdminController;
 use App\Http\Controllers\Admin\UsuariosAdminController;
+use App\Http\Controllers\Admin\RodadaController;
+use App\Http\Controllers\Auth\AuthController; // 👈 adicionado
 
 /*
 |--------------------------------------------------------------------------
@@ -22,8 +24,22 @@ Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');
 Route::get('/bilhete', [BilheteUsuarioController::class, 'index'])->name('bilhete.index');
 
-// 🔐 Rotas administrativas
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [HomeAdminController::class, 'index'])->name('index');
-    Route::get('/usuarios', [UsuariosAdminController::class, 'index'])->name('usuarios.index');
-});
+// 🔐 Autenticação (simples com HTML/CSS base)
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
+// 🧩 Rotas administrativas (proteção opcional)
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth', 'admin'])
+    ->group(function () {
+        Route::get('/', [HomeAdminController::class, 'index'])->name('index');
+        Route::get('/usuarios', [UsuariosAdminController::class, 'index'])->name('usuarios.index');
+        Route::get('/cadastro/bolao', [RodadaController::class, 'create'])->name('cadastro.rodada');
+    });
