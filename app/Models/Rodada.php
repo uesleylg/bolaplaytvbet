@@ -14,20 +14,20 @@ class Rodada extends Model
     protected $fillable = [
         'nome',
         'premio',
+        'valor_bilhete',
+        'premiacao_estimada',
+        'descricao',
         'data_inicio',
         'data_fim',
         'status',
+        'modo',
+        'num_palpites',
+        'multiplas',
     ];
 
-    // Relacionamento: uma rodada tem vários jogos
-    public function jogos()
-    {
-        return $this->hasMany(Jogo::class, 'rodada_id');
-    }
-
-    // Relacionamento: uma rodada pode ter várias apostas
-    public function apostas()
-    {
-        return $this->hasMany(Aposta::class, 'rodada_id');
-    }
+    protected $casts = [
+        'data_inicio' => 'datetime',
+        'data_fim' => 'datetime',
+        'multiplas' => 'boolean',
+    ];
 }

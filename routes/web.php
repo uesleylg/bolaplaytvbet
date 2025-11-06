@@ -52,7 +52,15 @@ Route::prefix('admin')
     ->group(function () {
         Route::get('/', [HomeAdminController::class, 'index'])->name('index');
         Route::get('/usuarios', [UsuariosAdminController::class, 'index'])->name('usuarios.index');
-        Route::get('/cadastro/bolao', [RodadaController::class, 'create'])->name('cadastro.rodada');
+        
+        
+        Route::get('/cadastro/bolao', [RodadaController::class, 'index'])->name('cadastro.rodada');
+        Route::post('/rodadas/cadastro', [RodadaController::class, 'store'])->name('rodadas.store');
+        Route::put('/rodadas/{id}', [RodadaController::class, 'update'])->name('rodadas.update');
+        Route::delete('/rodadas/{id}', [RodadaController::class, 'destroy'])->name('rodadas.destroy');
+
+
+
         Route::post('/register', [AuthController::class, 'adminregister'])->name('register.post');
          Route::put('/usuario/{id}', [AuthController::class, 'update'])->name('usuario.update');
          Route::delete('/usuario/{id}', [AuthController::class, 'destroy'])->name('usuario.destroy');

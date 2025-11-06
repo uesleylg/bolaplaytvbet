@@ -194,7 +194,7 @@
   </a>
 </li>
 <li class="nav-item mb-1">
-  <a class="nav-link {{ request()->routeIs('admin.usuarios*') ? 'active' : '' }}" 
+  <a class="nav-link " 
      href="{{ route('admin.usuarios.index') }}">
     <i class="fa-solid fa-chart-simple"></i> Relatório
   </a>

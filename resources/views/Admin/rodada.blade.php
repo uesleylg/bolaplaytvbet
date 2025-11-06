@@ -33,80 +33,153 @@
         </button>
     </div>
 
-    <!-- Cards de rodadas -->
-    <div class="row g-4">
+<div class="row g-4">
+  @forelse ($rodadas as $rodada)
+    <div class="col-md-6 col-lg-4">
+      <div class="card shadow-lg border-0 rounded-4 overflow-hidden bg-dark text-light position-relative card-hover">
 
-        <!-- Rodada 1 -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card card-hover shadow-sm rounded-4 border-0 position-relative" style="background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;">
-                <span class="badge bg-success fw-semibold position-absolute top-0 end-0 m-3">Aberta</span>
-                <div class="card-body">
-                    <h5 class="card-title text-light fw-bold mb-2">Rodada 1 - Brasileirão</h5>
-                    <p class="text-light mb-1"><i class="fas fa-gift me-2"></i> Prêmio: Pix R$100,00</p>
-                    <p class="text-light mb-1"><i class="fas fa-calendar-alt me-2"></i> Início: 05/11/2025 00:00</p>
-                    <p class="text-light mb-3"><i class="fas fa-calendar-check me-2"></i> Fim: 08/11/2025 17:00</p>
+        <!-- Badge de status -->
+        <span class="badge 
+          @if($rodada->status === 'Ativo') bg-success 
+          @elseif($rodada->status === 'Pendente') bg-warning text-dark
+          @elseif($rodada->status === 'Encerrada') bg-secondary
+          @else bg-danger @endif
+          fw-semibold position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill shadow-sm">
+        <b>   {{ strtoupper($rodada->status) }} </b>
+        </span>
 
-                    <div class="d-flex justify-content-between">
-                        <button class="btn btn-outline-primary btn-sm rounded-3">
-                            <i class="fas fa-edit me-1"></i> Editar
-                        </button>
-                        <button class="btn btn-outline-danger btn-sm rounded-3">
-                            <i class="fas fa-trash me-1"></i> Excluir
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div class="card-body p-4">
+          <!-- Título -->
+          <h5 class="card-title fw-bold text-light mb-3">
+            <i class="fa-solid fa-flag-checkered me-2 text-primary"></i>
+            {{ $rodada->nome }}
+          </h5>
+
+          <!-- Informações principais -->
+          <ul class="list-unstyled small mb-4">
+            <li class="mb-2">
+              <i class="fas fa-gift me-2 text-warning"></i>
+              <span class="text-light">Prêmio:</span> {{ 'R$' . number_format($rodada->premiacao_estimada, 2, ',', '.') }}
+            </li>
+            <li class="mb-2">
+              <i class="fas fa-calendar-alt me-2 text-info"></i>
+              <span class="text-light">Início:</span> 
+              {{ \Carbon\Carbon::parse($rodada->data_inicio)->format('d/m/Y H:i') }}
+            </li>
+            <li>
+              <i class="fas fa-calendar-check me-2 text-success"></i>
+              <span class="text-light">Fim:</span> 
+              {{ \Carbon\Carbon::parse($rodada->data_fim)->format('d/m/Y H:i') }}
+            </li>
+          </ul>
+
+          <!-- Linha divisória -->
+          <hr class="border-secondary mb-3">
+
+          <!-- Botões de ação -->
+          <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
+            <button 
+              data-bs-toggle="modal" 
+              data-bs-target="#ModalJogosRodada"  
+              class="btn btn-outline-info btn-sm rounded-pill px-3 fw-semibold shadow-sm"
+              data-id="{{ $rodada->id }}">
+              <i class="fas fa-futbol me-1"></i> Jogos
+            </button>
+
+           <button 
+  class="btn btn-outline-warning btn-sm rounded-pill px-3 fw-semibold shadow-sm btn-editar-rodada"
+  data-id="{{ $rodada->id }}"
+  data-nome="{{ $rodada->nome }}"
+  data-valor="{{ $rodada->valor_bilhete }}"
+  data-premiacao="{{ $rodada->premiacao_estimada }}"
+  data-descricao="{{ $rodada->descricao }}"
+  data-inicio="{{ \Carbon\Carbon::parse($rodada->data_inicio)->format('Y-m-d\TH:i') }}"
+  data-fim="{{ \Carbon\Carbon::parse($rodada->data_fim)->format('Y-m-d\TH:i') }}"
+  data-modo="{{ $rodada->modo_jogo }}"
+  data-num="{{ $rodada->num_palpites }}"
+  data-multiplas="{{ $rodada->multiplas }}"
+  data-bs-toggle="modal" 
+  data-bs-target="#ModalCadastroRodada"
+>
+  <i class="fas fa-pen me-1"></i> Editar
+</button>
+
+<button 
+  class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-semibold shadow-sm"
+  data-bs-toggle="modal" 
+  data-bs-target="#modalExcluirRodada"
+  data-id="{{ $rodada->id }}">
+  <i class="fas fa-trash me-1"></i> Excluir
+</button>
+          </div>
         </div>
-
-        <!-- Rodada 2 -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card card-hover shadow-sm rounded-4 border-0 position-relative" style="background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;">
-                <span style="background-color: #ff1100 !important;" class="badge bg-warning fw-semibold position-absolute top-0 end-0 m-3">Pendente</span>
-                <div class="card-body">
-                    <h5 class="card-title text-light fw-bold mb-2">Rodada 2 - Brasileirão</h5>
-                    <p class="text-light mb-1"><i class="fas fa-gift me-2"></i> Prêmio: Camisa Oficial</p>
-                    <p class="text-light mb-1"><i class="fas fa-calendar-alt me-2"></i> Início: 12/11/2025 00:00</p>
-                    <p class="text-light mb-3"><i class="fas fa-calendar-check me-2"></i> Fim: 15/11/2025 17:00</p>
-
-                    <div class="d-flex justify-content-between">
-                        <button class="btn btn-outline-primary btn-sm rounded-3">
-                            <i class="fas fa-edit me-1"></i> Editar
-                        </button>
-                        <button class="btn btn-outline-danger btn-sm rounded-3">
-                            <i class="fas fa-trash me-1"></i> Excluir
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Rodada 3 -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card card-hover shadow-sm rounded-4 border-0 position-relative" style="background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;">
-                <span class="badge bg-secondary fw-semibold position-absolute top-0 end-0 m-3">Finalizada</span>
-                <div class="card-body">
-                    <h5 class="card-title text-light fw-bold mb-2">Rodada 3 - Brasileirão</h5>
-                    <p class="text-light mb-1"><i class="fas fa-gift me-2"></i> Prêmio: Vale-Presente R$150</p>
-                    <p class="text-light mb-1"><i class="fas fa-calendar-alt me-2"></i> Início: 20/11/2025 00:00</p>
-                    <p class="text-light mb-3"><i class="fas fa-calendar-check me-2"></i> Fim: 23/11/2025 17:00</p>
-
-                    <div class="d-flex justify-content-between">
-                        <button data-bs-toggle="modal" data-bs-target="#ModalJogosRodada"  class="btn btn-outline-primary btn-sm rounded-3">
-                            <i class="fas fa-edit me-1"></i> Jogos
-                        </button>
-                           <button class="btn btn-outline-primary btn-sm rounded-3">
-                            <i class="fas fa-edit me-1"></i> Editar
-                        </button>
-                        <button class="btn btn-outline-danger btn-sm rounded-3">
-                            <i class="fas fa-trash me-1"></i> Excluir
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
+    </div>
+  @empty
+    <div class="col-12 text-center text-light py-5">
+      <i class="fa-solid fa-circle-info me-2"></i> Nenhuma rodada cadastrada ainda.
+    </div>
+  @endforelse
+</div>
 
     </div>
+
+
+
+
+
+
+<div class="modal fade" id="modalExcluirRodada" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-slate text-light border-0 rounded-4 shadow-lg">
+      
+      <div class="modal-header border-0">
+        <h5 class="modal-title">
+          <i class="fa-solid fa-triangle-exclamation text-danger me-2"></i>
+          Confirmar Exclusão
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <p class="mb-0">Tem certeza que deseja excluir esta rodada?<br> Esta ação não poderá ser desfeita.</p>
+      </div>
+
+      <div class="modal-footer border-0 d-flex justify-content-between">
+        <button type="button" class="btn btn-outline-secondary rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+
+        <form id="formExcluirRodada" method="POST">
+          @csrf
+          @method('DELETE')
+          <button type="submit" class="btn btn-danger rounded-pill px-4 fw-semibold shadow-sm">
+            Excluir
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const modalExcluir = document.getElementById('modalExcluirRodada');
+    const formExcluir = document.getElementById('formExcluirRodada');
+
+    modalExcluir.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget; // botão que abriu o modal
+      const rodadaId = button.getAttribute('data-id');
+
+      // Define a action dinâmica
+      formExcluir.action = `/admin/rodadas/${rodadaId}`;
+    });
+  });
+</script>
+
+
 
 @include('Admin.Modal.ModalJogosRodada')
 @include('Admin.Modal.ModalCriarRodada')
