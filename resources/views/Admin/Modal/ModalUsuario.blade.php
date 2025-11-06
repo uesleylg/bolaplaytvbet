@@ -12,82 +12,298 @@
 
       <!-- Corpo -->
       <div class="modal-body p-4">
-        <form id="formUsuario" class="needs-validation" novalidate>
-          <div class="row g-3">
-            <!-- Nome -->
-            <div class="col-md-6">
-              <label for="name" class="form-label fw-semibold text-secondary">
-                <i class="fa-solid fa-user me-1"></i> Nome completo
-              </label>
-              <input type="text" class="form-control bg-transparent text-light border-secondary" id="name" name="name" placeholder="Digite o nome" required>
-              <div class="invalid-feedback">Por favor, insira o nome completo.</div>
-            </div>
+        <!-- Área para alertas -->
+<div id="alert-area"></div>
 
-            <!-- Email -->
-            <div class="col-md-6">
-              <label for="email" class="form-label fw-semibold text-secondary">
-                <i class="fa-solid fa-envelope me-1"></i> E-mail
-              </label>
-              <input type="email" class="form-control bg-transparent text-light border-secondary" id="email" name="email" placeholder="exemplo@email.com" required>
-              <div class="invalid-feedback">Insira um e-mail válido.</div>
-            </div>
+<form id="formUsuario" class="needs-validation" novalidate>
+   @csrf
+  <div class="row g-3">
+    <!-- Usuário -->
+    <div class="col-md-6">
+      <label for="name" class="form-label fw-semibold text-secondary">
+        <i class="fa-solid fa-user me-1"></i> Usuário
+      </label>
+      <input type="text" class="form-control bg-transparent text-light border-secondary" id="name" name="name" placeholder="Digite o nome (sem espaços)" required>
+      <div class="invalid-feedback">Por favor, insira o nome completo.</div>
+    </div>
 
-            <!-- Senha -->
-            <div class="col-md-6">
-              <label for="password" class="form-label fw-semibold text-secondary">
-                <i class="fa-solid fa-lock me-1"></i> Senha
-              </label>
-              <input type="password" class="form-control bg-transparent text-light border-secondary" id="password" name="password" placeholder="********" required>
-              <div class="invalid-feedback">Informe uma senha.</div>
-            </div>
+    <!-- Email -->
+    <div class="col-md-6">
+      <label for="email" class="form-label fw-semibold text-secondary">
+        <i class="fa-solid fa-envelope me-1"></i> E-mail
+      </label>
+      <input type="email" class="form-control bg-transparent text-light border-secondary" id="email" name="email" placeholder="exemplo@email.com" required>
+      <div class="invalid-feedback">Insira um e-mail válido.</div>
+    </div>
 
-            <!-- Telefone -->
-            <div class="col-md-6">
-              <label for="phone" class="form-label fw-semibold text-secondary">
-                <i class="fa-solid fa-phone me-1"></i> Telefone
-              </label>
-              <input type="text" class="form-control bg-transparent text-light border-secondary" id="phone" name="phone" placeholder="(11) 99999-9999">
-            </div>
+    <!-- Senha -->
+    <div class="col-md-6">
+      <label for="password" class="form-label fw-semibold text-secondary">
+        <i class="fa-solid fa-lock me-1"></i> Senha
+      </label>
+      <input type="password" class="form-control bg-transparent text-light border-secondary" id="password" name="password" placeholder="********" required>
+      <div class="invalid-feedback">Informe uma senha.</div>
+    </div>
 
-            <!-- Perfil -->
-            <div class="col-md-6">
-              <label for="profile_id" class="form-label fw-semibold text-secondary">
-                <i class="fa-solid fa-id-badge me-1"></i> Perfil
-              </label>
-              <select class="form-select bg-transparent text-light border-secondary" id="profile_id" name="profile_id" required>
-                <option value="" selected disabled>Selecione o perfil</option>
-                <option value="1">Cliente</option>
-                <option value="3">Revendedor</option>
-                <option value="2">Administrador</option>
-                
-              </select>
-              <div class="invalid-feedback">Escolha um perfil.</div>
-            </div>
+    <!-- Telefone -->
+    <div class="col-md-6">
+      <label for="phone" class="form-label fw-semibold text-secondary">
+        <i class="fa-solid fa-phone me-1"></i> Telefone
+      </label>
+      <input type="text" class="form-control bg-transparent text-light border-secondary" id="phone" name="phone" placeholder="(11) 99999-9999">
+    </div>
 
-            <!-- Referência -->
-            <div class="col-md-6">
-              <label for="referencia_id" class="form-label fw-semibold text-secondary">
-                <i class="fa-solid fa-users me-1"></i> Referência
-              </label>
-              <input type="number" class="form-control bg-transparent text-light border-secondary" id="referencia_id" name="referencia_id" placeholder="ID do usuário de referência">
-            </div>
-          </div>
+    <!-- Perfil -->
+    <div class="col-md-6">
+      <label for="profile_id" class="form-label fw-semibold text-secondary">
+        <i class="fa-solid fa-id-badge me-1"></i> Perfil
+      </label>
+      <select class="form-select bg-transparent text-light border-secondary" id="profile_id" name="profile_id" required>
+        <option value="" selected disabled>Selecione o perfil</option>
+        <option value="1">Cliente</option>
+        <option value="2">Revendedor</option>
+        <option value="3">Administrador</option>
+      </select>
+      <div class="invalid-feedback">Escolha um perfil.</div>
+    </div>
 
-          <!-- Botões -->
-          <div class="mt-4 d-flex justify-content-end gap-2">
-            <button type="button" class="btn btn-outline-light px-4" data-bs-dismiss="modal">
-              <i class="fa-solid fa-xmark me-1"></i> Cancelar
-            </button>
-            <button type="submit" class="btn btn-primary px-4" style="background-color:#2563eb; border:none;">
-              <i class="fa-solid fa-check me-1"></i> Salvar
-            </button>
-          </div>
-        </form>
+    <!-- Referência -->
+    <div class="col-md-6">
+      <label for="referencia_id" class="form-label fw-semibold text-secondary">
+        <i class="fa-solid fa-users me-1"></i> Referência
+      </label>
+      <input type="number" class="form-control bg-transparent text-light border-secondary" id="referencia_id" name="referencia_id" placeholder="ID do usuário de referência">
+    </div>
+  </div>
+
+
+<div class="mb-3" id="status-container" style="display: none;">
+  <label for="status" class="form-label fw-semibold text-secondary d-block">
+    <i class="fa-solid fa-toggle-on me-1"></i> Status da Conta
+  </label>
+
+  <div class="form-check form-switch d-flex align-items-center">
+    <input 
+      class="form-check-input me-2" 
+      type="checkbox" 
+      id="status" 
+      name="status" 
+      value="Ativo"
+      style="width: 3rem; height: 1.5rem; cursor: pointer;"
+    >
+    <label class="form-check-label fw-semibold" for="status" id="statusLabel">Ativo</label>
+  </div>
+</div>
+
+  <!-- Botões -->
+  <div class="mt-4 d-flex justify-content-end gap-2">
+    <button type="button" class="btn btn-outline-light px-4" data-bs-dismiss="modal">
+      <i class="fa-solid fa-xmark me-1"></i> Cancelar
+    </button>
+    <button type="submit" class="btn btn-primary px-4" style="background-color:#2563eb; border:none;">
+      <i class="fa-solid fa-check me-1"></i> Salvar
+    </button>
+  </div>
+</form>
+<style>
+/* Estilo moderno pro switch */
+.form-check-input {
+  background-color: #dc3545; /* vermelho (bloqueado) */
+  border-color: #dc3545;
+  transition: all 0.3s ease;
+}
+.form-check-input:checked {
+  background-color: #198754 !important; /* verde (ativo) */
+  border-color: #198754 !important;
+}
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}
+</style>
+
+<!-- Máscara para telefone -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+<script>
+  $('#phone').mask('(00) 00000-0000');
+</script>
+
       </div>
 
     </div>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('formUsuario');
+  const alertArea = document.getElementById('alert-area');
+  const modalEl = document.getElementById('ModalUsuario');
+  const statusContainer = document.getElementById('status-container');
+  const statusInput = document.getElementById('status');
+  const statusLabel = document.getElementById('statusLabel');
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+  // Forçar nome minúsculo e sem espaço
+  const nameInput = document.getElementById('name');
+  nameInput.addEventListener('input', e => {
+    e.target.value = e.target.value.toLowerCase().replace(/\s/g, '');
+  });
+
+  // Resetar o formulário ao abrir o modal
+  modalEl.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const mode = button.getAttribute('data-mode');
+    const modalTitle = modalEl.querySelector('.modal-title');
+
+    form.reset();
+    form.classList.remove('was-validated');
+    alertArea.innerHTML = '';
+
+    if (mode === 'edit') {
+      // Preenche dados para edição
+      modalTitle.innerHTML = `<i class="fa-solid fa-pen me-2"></i> Editar Usuário`;
+      statusContainer.style.display = 'block';
+
+      document.getElementById('name').value = button.dataset.name;
+      document.getElementById('email').value = button.dataset.email;
+      document.getElementById('phone').value = button.dataset.phone || '';
+      document.getElementById('profile_id').value = button.dataset.profile || '';
+      document.getElementById('referencia_id').value = button.dataset.referencia || '';
+      document.getElementById('password').removeAttribute('required');
+      document.getElementById('password').placeholder = 'Deixe em branco para manter';
+
+      // Controle do status
+      const currentStatus = button.dataset.status || 'Ativo';
+      statusInput.checked = currentStatus === 'Ativo';
+      statusInput.value = currentStatus;
+      updateStatusLabel(currentStatus);
+
+      form.setAttribute('data-id', button.dataset.id);
+      form.setAttribute('data-mode', 'edit');
+    } else {
+      // Modo criar
+      modalTitle.innerHTML = `<i class="fa-solid fa-user-plus me-2"></i> Cadastrar Usuário`;
+      statusContainer.style.display = 'none';
+      document.getElementById('password').setAttribute('required', true);
+      form.removeAttribute('data-id');
+      form.setAttribute('data-mode', 'create');
+    }
+  });
+
+  // Alternar texto, valor e cor do status
+  statusInput.addEventListener('change', function () {
+    const newStatus = this.checked ? 'Ativo' : 'Bloqueado';
+    this.value = newStatus;
+    updateStatusLabel(newStatus);
+  });
+
+  // Função para atualizar o texto e cor do status
+  function updateStatusLabel(status) {
+    statusLabel.textContent = status;
+    if (status === 'Ativo') {
+      statusLabel.classList.remove('text-danger');
+      statusLabel.classList.add('text-success');
+    } else {
+      statusLabel.classList.remove('text-success');
+      statusLabel.classList.add('text-danger');
+    }
+  }
+
+  // Envio do formulário
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    alertArea.innerHTML = '';
+
+    if (!form.checkValidity()) {
+      form.classList.add('was-validated');
+      return;
+    }
+
+    const formData = new FormData(form);
+    const mode = form.getAttribute('data-mode');
+    const userId = form.getAttribute('data-id');
+    const btnSubmit = form.querySelector('button[type="submit"]');
+
+    // Adiciona o status atual
+    formData.set('status', statusInput.checked ? 'Ativo' : 'Bloqueado');
+
+    btnSubmit.disabled = true;
+    btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Salvando...';
+
+    try {
+      let response;
+
+      if (mode === 'edit') {
+        // ✅ Rota dinâmica para update
+        const updateUrl = "{{ route('admin.usuario.update', ':id') }}".replace(':id', userId);
+        formData.append('_method', 'PUT'); // Laravel reconhece PUT via POST
+
+        response = await axios.post(updateUrl, formData, {
+          headers: {
+            'X-CSRF-TOKEN': csrfToken,
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+      } else {
+        // ✅ Rota de criação
+        const createUrl = "{{ route('admin.register.post') }}";
+        response = await axios.post(createUrl, formData, {
+          headers: {
+            'X-CSRF-TOKEN': csrfToken,
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+      }
+
+      // ✅ Verificação de resposta
+      if (response.data.success) {
+        showAlert(response.data.message, 'success');
+        setTimeout(() => {
+          const modal = bootstrap.Modal.getInstance(modalEl);
+          if (modal) modal.hide();
+          location.reload();
+        }, 1500);
+      } else {
+        showAlert(response.data.message || 'Erro ao salvar o usuário.', 'danger');
+      }
+
+    } catch (error) {
+      console.error("Erro ao enviar formulário:", error);
+      if (error.response?.data?.message) {
+        showAlert(error.response.data.message, 'danger');
+      } else {
+        showAlert('Erro inesperado. Tente novamente.', 'danger');
+      }
+    } finally {
+      btnSubmit.disabled = false;
+      btnSubmit.innerHTML = '<i class="fa-solid fa-check me-1"></i> Salvar';
+    }
+  });
+
+  // Função para exibir alertas no modal
+  function showAlert(message, type = 'danger') {
+    const alert = `
+      <div class="alert alert-${type} alert-dismissible fade show mt-3" role="alert">
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>`;
+    alertArea.innerHTML = alert;
+
+    setTimeout(() => {
+      const alertElement = alertArea.querySelector('.alert');
+      if (alertElement) {
+        alertElement.classList.remove('show');
+        alertElement.classList.add('fade');
+        setTimeout(() => alertArea.innerHTML = '', 300);
+      }
+    }, 4000);
+  }
+});
+</script>
+
+
 
 <!-- Script Bootstrap Validation -->
 <script>

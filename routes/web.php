@@ -33,11 +33,10 @@ Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');
 Route::get('/bilhete', [BilheteUsuarioController::class, 'index'])->name('bilhete.index');
 
-// 🔐 Autenticação (simples com HTML/CSS base)
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
 
@@ -55,4 +54,8 @@ Route::prefix('admin')
         Route::get('/usuarios', [UsuariosAdminController::class, 'index'])->name('usuarios.index');
         Route::get('/cadastro/bolao', [RodadaController::class, 'create'])->name('cadastro.rodada');
         Route::post('/register', [AuthController::class, 'adminregister'])->name('register.post');
+         Route::put('/usuario/{id}', [AuthController::class, 'update'])->name('usuario.update');
+         Route::delete('/usuario/{id}', [AuthController::class, 'destroy'])->name('usuario.destroy');
+
+        
     });

@@ -14,9 +14,10 @@
   <!-- Cabeçalho da página -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="fw-bold mb-0">👤 Gerenciamento de Usuários</h4>
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalUsuario">
-      <i class="fa-solid fa-user-plus me-2"></i> Novo Usuário
-    </button>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalUsuario" data-mode="create">
+  <i class="fa-solid fa-user-plus me-2"></i> Novo Usuário
+</button>
+
   </div>
 
   <!-- Cards de estatísticas -->
@@ -68,6 +69,7 @@
       <table class="table table-borderless align-middle mb-0">
         <thead>
           <tr>
+            <th>ID</th>
             <th>Usuário</th>
             <th>Telefone</th>
             <th>Perfil</th>
@@ -79,6 +81,7 @@
         <tbody>
       @foreach ($users as $user)
       <tr>
+        <td>{{ $user->id }}</td>
         <td>{{ $user->name }}</td>
         <td>{{ $user->phone ?? '-' }}</td>
         <td>{{ $user->profile->name ?? 'Usuário' }}</td>
@@ -91,12 +94,35 @@
           @endif
         </td>
         <td class="text-end">
-          <button class="btn btn-sm btn-outline-secondary me-2" title="Editar">
-            <i class="fa-solid fa-pen"></i>
-          </button>
-          <button class="btn btn-sm btn-outline-danger" title="Excluir">
-            <i class="fa-solid fa-trash"></i>
-          </button>
+       
+<button 
+  class="btn btn-sm btn-outline-secondary me-2 btn-edit-user"
+  title="Editar"
+  data-bs-toggle="modal"
+  data-bs-target="#ModalUsuario"
+  data-mode="edit"
+  data-id="{{ $user->id }}"
+  data-name="{{ $user->name }}"
+  data-email="{{ $user->email }}"
+  data-phone="{{ $user->phone }}"
+  data-profile="{{ $user->profile_id }}"
+  data-referencia="{{ $user->referencia_id }}"
+  data-status="{{ $user->status }}"
+>
+  <i class="fa-solid fa-pen"></i>
+</button>
+
+
+
+          <button 
+            data-bs-toggle="modal"
+  data-bs-target="#ModalConfirmDelete"
+  class="btn btn-sm btn-outline-danger btn-delete-user" 
+  title="Excluir"
+  data-id="{{ $user->id }}" 
+  data-name="{{ $user->name }}">
+  <i class="fa-solid fa-trash"></i>
+</button>
         </td>
       </tr>
       @endforeach
@@ -107,11 +133,13 @@
   </div>
 
 </div>
+
+
 <!-- ==========================
      FIM DA PÁGINA DE USUÁRIOS
 =========================== -->
 
 
-
+@include('Admin.Modal.ModalConfirmDelete')
 @include('Admin.Modal.ModalUsuario')
 @endsection

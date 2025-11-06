@@ -170,18 +170,19 @@ $user = User::create([
         return redirect()->route('home.index');
     }
 
-  public function update(Request $request, $id)
-    {
+public function update(Request $request, $id)
+{
+    try {
         $user = User::findOrFail($id);
 
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $id,
             'phone' => 'nullable|string|max:20',
-            'profile_id' => 'required|exists:profiles,id',
-            'referencia_id' => 'nullable|exists:users,id',
-            'status' => 'required|in:ativo,bloqueado',
-            'password' => 'nullable|min:6|confirmed',
+            'profile_id' => 'required|integer|exists:profiles,id',
+            'referencia_id' => 'nullable|integer|exists:users,id',
+            'password' => 'nullable|string|min:6',
+            'status' => 'nullable|in:Ativo,Bloqueado'
         ]);
 
         $user->name = $request->name;
@@ -189,21 +190,35 @@ $user = User::create([
         $user->phone = $request->phone;
         $user->profile_id = $request->profile_id;
         $user->referencia_id = $request->referencia_id;
-        $user->status = $request->status;
 
+        // Atualiza a senha somente se foi enviada
         if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+            $user->password = bcrypt($request->password);
+        }
+
+        // Atualiza o status apenas se foi enviado
+        if ($request->filled('status')) {
+            $user->status = $request->status;
         }
 
         $user->save();
 
-        return redirect()->route('users.index')->with('success', 'Usuário atualizado com sucesso!');
+        return response()->json([
+            'success' => true,
+            'message' => 'Usuário atualizado com sucesso!'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Erro ao atualizar o usuário: ' . $e->getMessage()
+        ], 500);
     }
+}
     
 
 
 
-    public function adminregister(Request $request)
+public function adminregister(Request $request)
 {
     $validator = Validator::make($request->all(), [
         'name' => [
@@ -211,7 +226,7 @@ $user = User::create([
             'string',
             'max:10',
             'unique:users,name',
-            'regex:/^[a-z0-9]{1,10}$/', // apenas letras minúsculas e números, sem espaço
+            'regex:/^[a-z0-9]{1,10}$/', // apenas minúsculas e números
         ],
         'email' => [
             'required',
@@ -223,50 +238,51 @@ $user = User::create([
         'phone' => [
             'nullable',
             'string',
-            // Formato brasileiro: (XX) XXXX-XXXX ou (XX) XXXXX-XXXX
             'regex:/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/',
         ],
         'password' => [
             'required',
             'string',
             'min:6',
-         
+        ],
+        'profile_id' => [
+            'required',
+            'integer',
+            'exists:profiles,id', // garante que o perfil exista na tabela
         ],
     ], [
         'name.required' => 'O nome de usuário é obrigatório.',
         'name.unique' => 'Já existe um usuário com esse nome.',
         'name.max' => 'O nome deve ter no máximo 10 caracteres.',
-        'name.regex' => 'O nome deve conter apenas letras minúsculas e números, sem espaços ou símbolos.',
+        'name.regex' => 'Use apenas letras minúsculas e números, sem espaços.',
         'email.required' => 'O e-mail é obrigatório.',
         'email.email' => 'Digite um e-mail válido.',
         'email.unique' => 'Já existe um usuário com esse e-mail.',
-        'phone.regex' => 'Digite um telefone válido com a quantidade correta de números.',
+        'phone.regex' => 'Digite um telefone válido (ex: (11) 99999-9999).',
         'password.required' => 'A senha é obrigatória.',
         'password.min' => 'A senha deve ter no mínimo 6 caracteres.',
-
+        'profile_id.required' => 'Selecione um perfil.',
+        'profile_id.exists' => 'O perfil selecionado é inválido.',
     ]);
 
     if ($validator->fails()) {
         return response()->json([
             'success' => false,
-            'message' => $validator->errors()->first(), // só retorna a primeira mensagem
+            'message' => $validator->errors()->first(),
         ], 422);
     }
 
     $validated = $validator->validated();
-    $validated['name'] = strtolower($validated['name']); // força minúsculas
+    $validated['name'] = strtolower($validated['name']);
 
-$user = User::create([
-    'name' => $validated['name'],
-    'email' => $validated['email'],
-    'phone' => $validated['phone'] ?? null,
-    'password' => Hash::make($validated['password']),
-    'referencia_id' => $request->referencia_id ?? null,
-    'profile_id' => $request->profile_id ?? 1, // 👈 define client (ID 1) como padrão
-]);
-
-    Auth::login($user);
-    $request->session()->regenerate();
+    $user = User::create([
+        'name' => $validated['name'],
+        'email' => $validated['email'],
+        'phone' => $validated['phone'] ?? null,
+        'password' => Hash::make($validated['password']),
+        'referencia_id' => $request->referencia_id ?? null,
+        'profile_id' => $validated['profile_id'], // 👈 vem do select agora!
+    ]);
 
     return response()->json([
         'success' => true,
@@ -274,5 +290,23 @@ $user = User::create([
         'redirect' => route('home.index'),
     ]);
 }
+
+
+public function destroy($id)
+{
+    $user = User::find($id);
+
+    if (!$user) {
+        return response()->json(['success' => false, 'message' => 'Usuário não encontrado.']);
+    }
+
+    try {
+        $user->delete();
+        return response()->json(['success' => true, 'message' => 'Usuário excluído com sucesso!']);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => 'Erro ao excluir o usuário.']);
+    }
+}
+
 
 }
