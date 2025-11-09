@@ -95,34 +95,119 @@
     </div>
     
     <div class="container my-5 pd-2">
-    <div class="card-bolao p-4" data-bs-toggle="modal" data-bs-target="#ModalAposta">
-      <div class="d-flex justify-content-between align-items-start flex-wrap">
-        <div>
-          <span class="badge-bolao"><i class="fa-solid fa-trophy "></i> <b> PRÊMIAÇÃO ESTIMADA</b></span>
-          <h3 class="mt-3 fw-bold premio-valor">R$ 50.000,00</h3>
-          <div class="info-encerra-mobile"><i class="bi bi-clock"></i> <strong>Encerra às 17:00h</strong></div>
-          <div class="d-flex gap-4 align-items-center mt-2 info-encerra">
-            
-            <div><i class="bi bi-clock"></i> <strong>Encerra em: 24/10/2025 às 17:00h</strong></div>
-          </div>
-          <button class="btn btn-warning text-dark fw-semibold mt-4 px-4 py-2 btt-desktop">
-            <b>PARTICIPAR DO BOLÃO</b> <i class="bi bi-arrow-right"></i>
-          </button>
-        </div>
 
-        <div class="timer-box mt-3 mt-md-0">
-          <small>Tempo restante</small>
-          <span>12 : 31 : 27</span>
-          <div>
-            <small>hrs&nbsp;&nbsp;min&nbsp;&nbsp;seg</small>
-          </div>
+  
+
+
+@if($rodada)
+<div class="card-bolao p-4" data-bs-toggle="modal" data-bs-target="#ModalAposta">
+  <div class="d-flex justify-content-between align-items-start flex-wrap">
+    <div>
+      <span class="badge-bolao"><i class="fa-solid fa-trophy"></i> <b> PRÊMIAÇÃO ESTIMADA</b></span>
+      <h3 class="mt-3 fw-bold premio-valor">
+        R$ {{ number_format($rodada->premiacao_estimada ?? 0, 2, ',', '.') }}
+      </h3>
+
+      <div class="info-encerra-mobile">
+        <i class="bi bi-clock"></i> 
+        <strong>Encerra às {{ \Carbon\Carbon::parse($rodada->data_fim)->format('H:i') }}h</strong>
+      </div>
+
+      <div class="d-flex gap-4 align-items-center mt-2 info-encerra">
+        <div>
+          <i class="bi bi-clock"></i> 
+          <strong>Encerra em: {{ \Carbon\Carbon::parse($rodada->data_fim)->format('d/m/Y \à\s H:i') }}</strong>
         </div>
-         <button class="btn btn-warning text-dark fw-semibold mt-4 px-4 py-2 btt-mobile">
-            <b>PARTICIPAR DO BOLÃO</b> <i class="bi bi-arrow-right"></i>
-          </button>
-        
+      </div>
+
+      <button class="btn btn-warning text-dark fw-semibold mt-4 px-4 py-2 btt-desktop">
+        <b>PARTICIPAR DO BOLÃO</b> <i class="bi bi-arrow-right"></i>
+      </button>
+    </div>
+
+    <div class="timer-box mt-3 mt-md-0">
+      <small>Tempo restante</small>
+      <span id="tempoRestante">00 : 00 : 00</span>
+      <div>
+        <small>hrs&nbsp;&nbsp;min&nbsp;&nbsp;seg</small>
       </div>
     </div>
+
+    <button class="btn btn-warning text-dark fw-semibold mt-4 px-4 py-2 btt-mobile">
+      <b>PARTICIPAR DO BOLÃO</b> <i class="bi bi-arrow-right"></i>
+    </button>
+
+  </div>
+</div>
+@else
+<!-- Card moderno sem pulsar -->
+<div class="card p-5 text-center shadow-lg" style="border-radius: 16px; background: linear-gradient(135deg, #0f9d58, #34a853); color: #ffffff;">
+  <i class="fa-solid fa-clock fa-3x anim-icon mb-3"></i>
+  <h3 class="fw-bold mb-2">Nenhum bolão disponível</h3>
+  <p class="text-white-50 mb-4">Fique ligado! Assim que um bolão estiver ativo, ele aparecerá aqui.</p>
+  <button class="btn btn-light fw-semibold px-4 py-2" disabled>
+    Aguardar próximo bolão
+  </button>
+</div>
+
+<style>
+/* Ícone animado de relógio (leve rotação ou pulse) */
+.anim-icon {
+  display: inline-block;
+  animation: swing-clock 2s ease-in-out infinite;
+}
+
+@keyframes swing-clock {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(10deg); }
+  50% { transform: rotate(0deg); }
+  75% { transform: rotate(-10deg); }
+}
+</style>
+
+@endif
+
+
+
+
+
+
+
+<script>
+  @if($rodada)
+    // Data de encerramento da rodada (em milissegundos)
+    const fimRodada = new Date("{{ $rodada->data_fim }}").getTime();
+
+    function atualizarTimer() {
+      const agora = new Date().getTime();
+      let distancia = fimRodada - agora;
+
+      if (distancia < 0) {
+        document.getElementById('tempoRestante').innerText = "00 : 00 : 00";
+        clearInterval(timerInterval);
+        return;
+      }
+
+      const horas = Math.floor((distancia / (1000 * 60 * 60)));
+      const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+      const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
+
+      document.getElementById('tempoRestante').innerText =
+        String(horas).padStart(2, '0') + " : " +
+        String(minutos).padStart(2, '0') + " : " +
+        String(segundos).padStart(2, '0');
+    }
+
+    // Atualiza a cada 1 segundo
+    atualizarTimer();
+    const timerInterval = setInterval(atualizarTimer, 1000);
+  @endif
+</script>
+
+
+
+
+
   </div>
 
 

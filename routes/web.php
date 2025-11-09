@@ -8,6 +8,9 @@ use App\Http\Controllers\Admin\HomeAdminController;
 use App\Http\Controllers\Admin\UsuariosAdminController;
 use App\Http\Controllers\Admin\RodadaController;
 use App\Http\Controllers\Auth\AuthController; // 👈 adicionado
+use App\Http\Controllers\Admin\RodadaJogoController;
+
+use App\Http\Controllers\JogosinfoController;
 
 use Illuminate\Support\Facades\Http;
 
@@ -59,7 +62,23 @@ Route::prefix('admin')
         Route::put('/rodadas/{id}', [RodadaController::class, 'update'])->name('rodadas.update');
         Route::delete('/rodadas/{id}', [RodadaController::class, 'destroy'])->name('rodadas.destroy');
 
+          
+      
+    // Retorna os jogos em JSON (usado pelo front para preencher a tabela)
+    Route::get('/get/jogos', [JogosinfoController::class, 'jogos'])->name('get.jogos');
+    Route::get('get/odds/{id}', [JogosInfoController::class, 'odds'])->name('get.odds');
+        Route::get('get/placar/{id}', [JogosInfoController::class, 'placar'])->name('get.placar');
+        Route::post('rodadas/jogos', [RodadaJogoController::class, 'store'])->name('rodadas.jogos.store');
 
+
+
+
+
+
+
+
+
+    
 
         Route::post('/register', [AuthController::class, 'adminregister'])->name('register.post');
          Route::put('/usuario/{id}', [AuthController::class, 'update'])->name('usuario.update');
