@@ -11,6 +11,8 @@ class HomeController extends Controller
 {
     public function index()
     {
+
+        
         $agora = Carbon::now('America/Sao_Paulo'); // horário atual correto
 
         // Busca rodadas ativas e que ainda não terminaram

@@ -12,6 +12,54 @@ use Illuminate\Validation\Rule;
 
 class RodadaController extends Controller
 {
+
+public function jogos($id)
+{
+    try {
+        $rodada = \App\Models\Rodada::with('jogos')->findOrFail($id);
+
+        return response()->json([
+            'success' => true,
+            'rodada' => [
+                'id' => $rodada->id,
+                'nome' => $rodada->nome,
+                'modo' => $rodada->modo,
+                'status' => $rodada->status,
+                'valor_bilhete' => $rodada->valor_bilhete,
+                'premiacao_estimada' => $rodada->premiacao_estimada,
+                'data_inicio' => $rodada->data_inicio?->format('d/m/Y H:i'),
+                'data_fim' => $rodada->data_fim?->format('d/m/Y H:i'),
+            ],
+            'jogos' => $rodada->jogos->map(function ($jogo) {
+                return [
+                    'id' => $jogo->id,
+                    'id_partida' => $jogo->id_partida, // 🔹 Necessário para buscar as odds
+                    'time_casa_nome' => $jogo->time_casa_nome,
+                    'time_fora_nome' => $jogo->time_fora_nome,
+                    'time_casa_brasao' => $jogo->time_casa_brasao,
+                    'time_fora_brasao' => $jogo->time_fora_brasao,
+                    'data_jogo' => $jogo->data_jogo?->format('d/m/Y H:i'),
+                    'competicao' => $jogo->competicao,
+                    'status_jogo' => $jogo->status_jogo,
+                    'resultado_real' => $jogo->resultado_real,
+                ];
+            }),
+        ]);
+    } catch (\Exception $e) {
+        \Log::error('Erro ao buscar jogos da rodada: ' . $e->getMessage());
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Erro ao carregar os jogos da rodada.',
+        ], 500);
+    }
+}
+
+
+
+
+
+
     // 🏁 Lista todas as rodadas
     public function index()
     {

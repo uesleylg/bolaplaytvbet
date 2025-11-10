@@ -13,16 +13,15 @@ class Rodada extends Model
 
     protected $fillable = [
         'nome',
-        'premio',
         'valor_bilhete',
         'premiacao_estimada',
         'descricao',
         'data_inicio',
         'data_fim',
-        'status',
         'modo',
         'num_palpites',
         'multiplas',
+        'status',
     ];
 
     protected $casts = [
@@ -30,4 +29,12 @@ class Rodada extends Model
         'data_fim' => 'datetime',
         'multiplas' => 'boolean',
     ];
+
+    /**
+     * Relação com os jogos da rodada.
+     */
+    public function jogos()
+    {
+        return $this->hasMany(RodadaJogo::class, 'rodada_id', 'id');
+    }
 }

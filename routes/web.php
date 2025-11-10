@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\UsuariosAdminController;
 use App\Http\Controllers\Admin\RodadaController;
 use App\Http\Controllers\Auth\AuthController; // 👈 adicionado
 use App\Http\Controllers\Admin\RodadaJogoController;
+use App\Http\Controllers\PalpiteController;
 
 use App\Http\Controllers\JogosinfoController;
 
@@ -46,6 +47,12 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/rodadas/{id}/jogos', [RodadaController::class, 'jogos'])->name('rodadas.jogos');
+
+Route::post('/palpites', [PalpiteController::class, 'store'])->name('palpites.store');
+
+
 
 
 // 🧩 Rotas administrativas (proteção opcional)

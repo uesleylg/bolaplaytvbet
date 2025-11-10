@@ -16,6 +16,10 @@
 color:white;
 
 }
+
+ .btt-empate{
+    width: 20% !important;
+  }
 .bloco-limpar {
   display: flex;
   justify-content: center;
@@ -144,7 +148,7 @@ color:white;
     }
 
     .league {
-      color: #9bbcf5;
+      color: #6893dd;
       font-size: 0.9rem;
       font-weight: 500;
     }

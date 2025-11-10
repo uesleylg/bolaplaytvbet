@@ -10,6 +10,9 @@ use App\Models\Rodada;
 
 class RodadaJogoController extends Controller
 {
+
+
+    
     /**
      * Cadastrar um novo jogo de rodada
      */

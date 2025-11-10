@@ -11,167 +11,168 @@
  @include('Slide.SlidePadrao')
 
 
-  <style>
-    .card-bolao {
-      position: relative;
-      background: linear-gradient(to right, #14532d, #166534);
-      color: #fff;
-      border: none;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-
-    .card-bolao:hover {
-      transform: translateY(-4px);
-    }
-
-    /* ✨ Efeito de luz passando */
-.card-bolao::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -75%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    rgba(255, 255, 255, 0.1) 0%,
-    rgba(255, 255, 255, 0.4) 50%,
-    rgba(255, 255, 255, 0.1) 100%
-  );
-  transform: skewX(-25deg);
-  animation: shine 6s ease infinite; /* duração de 4s, repetindo sempre */
-}
 
 
 
 
-    @keyframes shine {
-      0% { left: -75%; }
-      100% { left: 125%; }
-    }
+<style>
+  .card-bolao {
+    position: relative;
+    background: linear-gradient(to right, #14532d, #166534);
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
 
-    .badge-bolao {
-      background-color: #ff0000ff;
-      color: #ffffffff;
-      font-weight: 600;
-      border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 0.8rem;
-    }
+  .card-bolao:hover {
+    transform: translateY(-4px);
+  }
 
-    .timer-box {
-      background-color: rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 10px 15px;
-      text-align: center;
-    }
+  /* ✨ Efeito de luz passando */
+  .card-bolao::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      rgba(255, 255, 255, 0.1) 100%
+    );
+    transform: skewX(-25deg);
+    animation: shine 6s ease infinite;
+  }
 
-    .timer-box span {
-      font-size: 1.5rem;
-      font-weight: bold;
-      display: block;
-      line-height: 1;
-    }
+  @keyframes shine {
+    0% { left: -75%; }
+    100% { left: 125%; }
+  }
 
-    .timer-box small {
-      font-size: 0.7rem;
-      color: #ddd;
-    }
+  .badge-bolao {
+    background-color: #ff0000ff;
+    color: #ffffffff;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
 
-    .card-custom-white{
-      color:white;
-      border: 1px solid #ffffff33 !important;
-      background-color:rgb(30 41 59);;
-    }
-  </style>
+  .timer-box {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px 15px;
+    text-align: center;
+  }
 
-  <div class="container py-5 " style="padding-bottom: 0px !important; padding-top: 0px !important;">
-    <div class="text-title-bolao" ><i style="color:#5dff5d;" class="fa-solid fa-circle pulse"></i> 
-     Rodada 6 — Quinta-feira, 24/10 | 8 Jogos
+  .timer-box span {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: block;
+    line-height: 1;
+  }
+
+  .timer-box small {
+    font-size: 0.7rem;
+    color: #ddd;
+  }
+
+  .card-custom-white {
+    color: white;
+    border: 1px solid #ffffff33 !important;
+    background-color: rgb(30 41 59);
+  }
+</style>
+
+<div class="container py-5" style="padding-bottom: 30px !important; padding-top: 0px !important;">
+
+  @if($rodada)
+    <div class="text-title-bolao">
+      <i style="color:#5dff5d;" class="fa-solid fa-circle pulse"></i> 
+      {{ $rodada->nome }} | {{ $rodada->num_palpites }} Jogos
     </div>
-    
-    <div class="container my-5 pd-2">
 
-  
-
-
-@if($rodada)
-<div class="card-bolao p-4" data-bs-toggle="modal" data-bs-target="#ModalAposta">
-  <div class="d-flex justify-content-between align-items-start flex-wrap">
-    <div>
-      <span class="badge-bolao"><i class="fa-solid fa-trophy"></i> <b> PRÊMIAÇÃO ESTIMADA</b></span>
-      <h3 class="mt-3 fw-bold premio-valor">
-        R$ {{ number_format($rodada->premiacao_estimada ?? 0, 2, ',', '.') }}
-      </h3>
-
-      <div class="info-encerra-mobile">
-        <i class="bi bi-clock"></i> 
-        <strong>Encerra às {{ \Carbon\Carbon::parse($rodada->data_fim)->format('H:i') }}h</strong>
-      </div>
-
-      <div class="d-flex gap-4 align-items-center mt-2 info-encerra">
+    <div class="card-bolao p-4" data-bs-toggle="modal" data-bs-target="#ModalAposta" data-id="{{ $rodada->id }}">
+      <div class="d-flex justify-content-between align-items-start flex-wrap">
+        
         <div>
-          <i class="bi bi-clock"></i> 
-          <strong>Encerra em: {{ \Carbon\Carbon::parse($rodada->data_fim)->format('d/m/Y \à\s H:i') }}</strong>
-        </div>
-      </div>
+          <span class="badge-bolao">
+            <i class="fa-solid fa-trophy"></i> <b>PRÊMIAÇÃO ESTIMADA</b>
+          </span>
+          <h3 class="mt-3 fw-bold premio-valor">
+            R$ {{ number_format($rodada->premiacao_estimada ?? 0, 2, ',', '.') }}
+          </h3>
 
-      <button class="btn btn-warning text-dark fw-semibold mt-4 px-4 py-2 btt-desktop">
-        <b>PARTICIPAR DO BOLÃO</b> <i class="bi bi-arrow-right"></i>
+          <div class="info-encerra-mobile">
+            <i class="bi bi-clock"></i> 
+            <strong>Encerra às {{ \Carbon\Carbon::parse($rodada->data_fim)->format('H:i') }}h</strong>
+          </div>
+
+          <div class="d-flex gap-4 align-items-center mt-2 info-encerra">
+            <div>
+              <i class="bi bi-clock"></i> 
+              <strong>
+                Encerra em: {{ \Carbon\Carbon::parse($rodada->data_fim)->format('d/m/Y \à\s H:i') }}
+              </strong>
+            </div>
+          </div>
+
+          <button class="btn btn-warning text-dark fw-semibold mt-4 px-4 py-2 btt-desktop">
+            <b>PARTICIPAR DO BOLÃO</b> <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+
+        <div class="timer-box mt-3 mt-md-0">
+          <small>Tempo restante</small>
+          <span id="tempoRestante">00 : 00 : 00</span>
+          <div>
+            <small>hrs&nbsp;&nbsp;min&nbsp;&nbsp;seg</small>
+          </div>
+        </div>
+
+        <button class="btn btn-warning text-dark fw-semibold mt-4 px-4 py-2 btt-mobile">
+          <b>PARTICIPAR DO BOLÃO</b> <i class="bi bi-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+  @else
+    <!-- Card moderno sem pulsar -->
+    <div class="card p-5 text-center shadow-lg" 
+         style="border-radius: 16px; background: linear-gradient(135deg, #0f9d58, #34a853); color: #ffffff;">
+      <i class="fa-solid fa-clock fa-3x anim-icon mb-3"></i>
+      <h3 class="fw-bold mb-2">Nenhum bolão disponível</h3>
+      <p class="text-white-50 mb-4">
+        Fique ligado! Assim que um bolão estiver ativo, ele aparecerá aqui.
+      </p>
+      <button class="btn btn-light fw-semibold px-4 py-2" disabled>
+        Aguardar próximo bolão
       </button>
     </div>
 
-    <div class="timer-box mt-3 mt-md-0">
-      <small>Tempo restante</small>
-      <span id="tempoRestante">00 : 00 : 00</span>
-      <div>
-        <small>hrs&nbsp;&nbsp;min&nbsp;&nbsp;seg</small>
-      </div>
-    </div>
+    <style>
+      /* Ícone animado de relógio (leve rotação ou pulse) */
+      .anim-icon {
+        display: inline-block;
+        animation: swing-clock 2s ease-in-out infinite;
+      }
 
-    <button class="btn btn-warning text-dark fw-semibold mt-4 px-4 py-2 btt-mobile">
-      <b>PARTICIPAR DO BOLÃO</b> <i class="bi bi-arrow-right"></i>
-    </button>
+      @keyframes swing-clock {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(10deg); }
+        50% { transform: rotate(0deg); }
+        75% { transform: rotate(-10deg); }
+      }
+    </style>
+  @endif
 
-  </div>
 </div>
-@else
-<!-- Card moderno sem pulsar -->
-<div class="card p-5 text-center shadow-lg" style="border-radius: 16px; background: linear-gradient(135deg, #0f9d58, #34a853); color: #ffffff;">
-  <i class="fa-solid fa-clock fa-3x anim-icon mb-3"></i>
-  <h3 class="fw-bold mb-2">Nenhum bolão disponível</h3>
-  <p class="text-white-50 mb-4">Fique ligado! Assim que um bolão estiver ativo, ele aparecerá aqui.</p>
-  <button class="btn btn-light fw-semibold px-4 py-2" disabled>
-    Aguardar próximo bolão
-  </button>
-</div>
-
-<style>
-/* Ícone animado de relógio (leve rotação ou pulse) */
-.anim-icon {
-  display: inline-block;
-  animation: swing-clock 2s ease-in-out infinite;
-}
-
-@keyframes swing-clock {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(10deg); }
-  50% { transform: rotate(0deg); }
-  75% { transform: rotate(-10deg); }
-}
-</style>
-
-@endif
-
-
-
-
-
-
 
 <script>
   @if($rodada)
@@ -188,7 +189,7 @@
         return;
       }
 
-      const horas = Math.floor((distancia / (1000 * 60 * 60)));
+      const horas = Math.floor(distancia / (1000 * 60 * 60));
       const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
       const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
 
@@ -208,16 +209,17 @@
 
 
 
-  </div>
 
 
 
-    
- 
 
-      </div>
-    </div>
-  </div>
+
+
+
+
+
+
+
 
   
   <div class="container py-5" style="padding-top: 0px !important;">
