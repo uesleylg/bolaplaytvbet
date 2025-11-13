@@ -1,10 +1,9 @@
 @extends('Layout/App')
 
-
 @section('title', 'BolaPlay Bet')
 
 @section('content')
- @include('Slide.SlidePadrao')
+@include('Slide.SlidePadrao')
 
 <style>
   .header-title {
@@ -20,6 +19,12 @@
     color: #facc15;
     font-size: 1.5rem;
   }
+
+   @media (max-width: 425px) {
+    .header-title {
+    font-size: 1.2rem;
+    }
+   }
 
   .stats-card {
     background-color: #1e293b;
@@ -112,14 +117,122 @@
     font-weight: 600;
     margin-bottom: 10px;
   }
+
+  .bilhete-card {
+    background-color: #1e293b;
+    border-radius: 10px;
+    padding: 15px 20px;
+    color: #fff;
+    margin-bottom: 15px;
+    box-shadow: 0 0 6px #000;
+    transition: transform 0.2s ease;
+  }
+
+  .bilhete-card:hover {
+    transform: scale(1.02);
+  }
+
+  .bilhete-card small {
+    color: #94a3b8;
+  }
+
+  .status {
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .status.pendente { color: #facc15; }
+  .status.ganho { color: #4ade80; }
+  .status.perdido { color: #f87171; }
+
   .py-5 {
-    padding-top: 1rem !important;
-    padding-bottom: 5rem !important;
+     padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+</style>
+
+<style>
+  .bilhete-card {
+    background: linear-gradient(145deg, #0f172a, #1e293b);
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    color: #f1f5f9;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+  }
+
+  .bilhete-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 36px rgba(0, 0, 0, 0.45);
+  }
+
+  .bilhete-card .status {
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 20px;
+    padding: 4px 10px;
+    text-transform: capitalize;
+  }
+
+  .status.pendente {
+    background-color: #fbbf24;
+    color: #0f172a;
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+  }
+
+  .status.pago {
+    background-color: #22c55e;
+    color: #fff;
+  }
+
+  .status.cancelado {
+    background-color: #ef4444;
+    color: #fff;
+  }
+
+  .bilhete-actions {
+    display: flex;
+    justify-content: end;
+    gap: 0.6rem;
+  }
+
+  .bilhete-actions button {
+    border-radius: 10px;
+    transition: all 0.2s ease;
+  }
+
+  .bilhete-actions button:hover {
+    transform: scale(1.05);
+  }
+
+  .btn-excluir {
+  color: #f1f5f9; /* branco suave */
+  border-color: #334155; /* borda sutil cinza-azulada */
+  background-color: transparent;
+  transition: all 0.3s ease;
 }
+
+.btn-excluir:hover {
+  color: #fff;
+  background-color: #b91c1c; /* vermelho elegante */
+  border-color: #b91c1c;
+  box-shadow: 0 0 10px rgba(185, 28, 28, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-excluir i {
+  transition: transform 0.25s ease;
+}
+
+.btn-excluir:hover i {
+  transform: rotate(-10deg);
+}
+
 </style>
 
 <div class="container py-5">
-
   <!-- 🔖 Cabeçalho -->
   <div class="header-title mb-4">
     <i class="fa-solid fa-ticket"></i> Meus Bilhetes
@@ -129,15 +242,15 @@
   <div class="stats-card mb-3">
     <div>
       <small>Pendente</small>
-      <strong>0 (Nenhum)</strong>
+      <strong>{{ $bilhetes->where('status', 'pendente')->count() }}</strong>
     </div>
     <div>
       <small>Total de Bilhetes</small>
-      <div class="number">0</div>
+      <div class="number">{{ $bilhetes->count() }}</div>
     </div>
     <div>
       <small>Bilhetes Ganhos</small>
-      <div class="number text-success">0</div>
+      <div class="number text-success">{{ $bilhetes->where('status', 'ganho')->count() }}</div>
     </div>
   </div>
 
@@ -152,18 +265,71 @@
     </button>
   </div>
 
-  <!-- 📭 Estado vazio -->
-  <div class="empty-state">
-    <i class="fa-solid fa-ticket"></i>
-    <h5>Nenhum bilhete encontrado</h5>
-    <p>Você ainda não comprou nenhum bilhete. Participe de um bolão e faça sua primeira aposta!</p>
+  <!-- 🎟️ Lista de bilhetes ou estado vazio -->
+  @if($bilhetes->isEmpty())
+    <div class="empty-state">
+      <i class="fa-solid fa-ticket"></i>
+      <h5>Nenhum bilhete encontrado</h5>
+      <p>Você ainda não comprou nenhum bilhete. Participe de um bolão e faça sua primeira aposta!</p>
+    </div>
+  @else
+    @foreach($bilhetes as $bilhete)
+
+<div class="bilhete-card">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <div>
+      <strong>🎟️ Bilhete #{{ $bilhete->id }}</strong>
+      <div><small class="text-secondary">Criado em {{ $bilhete->created_at->format('d/m/Y H:i') }}</small></div>
+    </div>
+    <span class="status {{ strtolower($bilhete->status) }}">
+      {{ ucfirst($bilhete->status) }}
+    </span>
   </div>
 
+  <div class="mt-2 mb-3">
+    <div><small>Combinações:</small><br><strong>{{ $bilhete->combinacoes_compactadas }}</strong></div>
+    <div class="mt-2">
+      <small>Valor Total:</small>
+      <strong>R$ {{ number_format($bilhete->valor_total, 2, ',', '.') }}</strong><br>
+      <small><strong>(7 Secos; 1 Duplo; 0 Triplos)</strong></small>
+    </div>
+  </div>
+
+  <div class="bilhete-actions">
+    <!-- Botão Editar -->
+ 
+
+    <button 
+    class="btn btn-outline-warning btn-sm"
+  data-bs-toggle="modal" 
+  data-bs-target="#ModalAposta"
+  data-id="{{ $bilhete->rodada_id }}"
+  data-editar="true"
+  data-carrinho-id="{{ $bilhete->id }}"
+  data-combinacao="{{ $bilhete->combinacoes_compactadas }}">
+ <i class="fa-solid fa-pen-to-square"></i>
+</button>
+
+
+    <!-- Botão Pagar (só se estiver pendente) -->
+    @if(strtolower($bilhete->status) === 'pendente')
+      <button class="btn btn-success btn-sm" title="Pagar agora">
+        <i class="fa-solid fa-credit-card"></i> Pagar
+      </button>
+    @endif
+
+    <!-- Botão Visualizar Detalhes -->
+    <button class="btn btn-outline-light btn-sm btn-excluir" title="Excluir">
+  <i class="fa-solid fa-trash"></i>
+</button>
+
+  </div>
 </div>
 
 
-
-
-
+    @endforeach
+  @endif
+</div>
+@include('Modal.ModalAposta')
 @include('Modal.ModalIndicacao')
 @endsection

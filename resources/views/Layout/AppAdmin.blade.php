@@ -186,6 +186,19 @@
     <i class="fa-solid fa-trophy"></i> Rodadas
   </a>
 </li>
+<li class="nav-item mb-1">
+  <a class="nav-link {{ request()->routeIs('admin.get.carrinho') ? 'active' : '' }}" 
+     href="{{ route('admin.get.carrinho') }}">
+    <i class="fa-solid fa-cart-shopping"></i> Carrinho
+  </a>
+</li>
+
+<li class="nav-item mb-1">
+  <a class="nav-link " 
+     href="{{ route('admin.cadastro.rodada') }}">
+    <i class="fa-solid fa-ticket"></i> Bilhetes
+  </a>
+</li>
 
 <li class="nav-item mb-1">
   <a class="nav-link {{ request()->routeIs('admin.usuarios*') ? 'active' : '' }}" 

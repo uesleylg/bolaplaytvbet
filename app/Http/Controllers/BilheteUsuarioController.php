@@ -3,12 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\CarrinhoPalpite;
+use Illuminate\Support\Facades\Auth;
 
 class BilheteUsuarioController extends Controller
 {
-        public function index()
+    public function index()
     {
-        // Aqui você pode buscar dados do ranking ou retornar uma view
-        return view('BilheteUsuario'); // retorna a view resources/views/ranking/index.blade.php
+        // Busca todos os bilhetes do usuário autenticado
+        $usuarioId = Auth::id();
+
+        $bilhetes = CarrinhoPalpite::where('usuario_id', $usuarioId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('BilheteUsuario', compact('bilhetes'));
     }
 }

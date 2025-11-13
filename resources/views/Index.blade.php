@@ -12,6 +12,87 @@
 
 
 
+<!-- 🔹 Botão flutuante de carrinho -->
+<a href="/meu-carrinho" class="btn-bilhete position-fixed d-flex align-items-center justify-content-center" title="Ver meu carrinho">
+  <i class="fa-solid fa-ticket fa-lg"></i>
+  <span class="contador-bilhetes">0</span>
+</a>
+
+<style>
+  .btn-bilhete {
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #0d6efd, #6610f2);
+    color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    text-decoration: none;
+  }
+
+  .btn-bilhete:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    color: #fff;
+  }
+
+  .btn-bilhete i {
+    font-size: 1.4rem;
+  }
+
+  /* 🔸 contador pequeno no canto do botão */
+  .btn-bilhete .contador-bilhetes {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #dc3545;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 6px rgba(0,0,0,0.3);
+  }
+
+  /* 🔸 animação de aparecer */
+  .btn-bilhete {
+    opacity: 0;
+    transform: translateY(15px);
+    animation: aparecerBotao 0.6s ease forwards;
+    animation-delay: 0.6s;
+  }
+
+  @keyframes aparecerBotao {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Exemplo: atualiza o contador do carrinho dinamicamente
+    fetch('/api/carrinho/quantidade')
+      .then(res => res.json())
+      .then(data => {
+        const contador = document.querySelector('.contador-bilhetes');
+        if (data.quantidade > 0) {
+          contador.textContent = data.quantidade;
+        } else {
+          contador.style.display = 'none';
+        }
+      })
+      .catch(() => console.log('Não foi possível carregar o total do carrinho.'));
+  });
+</script>
 
 
 

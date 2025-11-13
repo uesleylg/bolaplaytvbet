@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\RodadaJogoController;
 use App\Http\Controllers\PalpiteController;
 
 use App\Http\Controllers\JogosinfoController;
+use App\Http\Controllers\CarrinhoPalpiteController;
+
 
 use Illuminate\Support\Facades\Http;
 
@@ -51,7 +53,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/rodadas/{id}/jogos', [RodadaController::class, 'jogos'])->name('rodadas.jogos');
 
 Route::post('/palpites', [PalpiteController::class, 'store'])->name('palpites.store');
-
+Route::post('/carrinho/salvar', [CarrinhoPalpiteController::class, 'salvarCarrinho'])->name('carrinho.salvar');
 
 
 
@@ -76,6 +78,14 @@ Route::prefix('admin')
     Route::get('get/odds/{id}', [JogosInfoController::class, 'odds'])->name('get.odds');
         Route::get('get/placar/{id}', [JogosInfoController::class, 'placar'])->name('get.placar');
         Route::post('rodadas/jogos', [RodadaJogoController::class, 'store'])->name('rodadas.jogos.store');
+
+
+
+        // CARRINHO
+        Route::get('/carrinho', [CarrinhoPalpiteController::class, 'carrinho'])->name('get.carrinho');
+        Route::delete('/carrinho/{id}', [CarrinhoPalpiteController::class, 'destroy'])->name('carrinho.destroy');
+        Route::put('/carrinhos/{id}', [CarrinhoPalpiteController::class, 'update'])->name('carrinhos.update');
+
 
 
 

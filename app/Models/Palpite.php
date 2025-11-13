@@ -2,31 +2,31 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Palpite extends Model
 {
+    use HasFactory;
+
+    protected $table = 'palpite'; // Nome da tabela no banco
+
     protected $fillable = [
-        'rodada_id',
-        'usuario_id',
-        'codigo_bilhete',
-        'valor_aposta',
-        'status',
-        'premio_recebido'
+        'bilhete_id',
+        'rodada_jogo_id',
+        'escolha',
+        'resultado_correto'
     ];
 
-    public function jogos()
+    // Relacionamento com o bilhete
+    public function bilhete()
     {
-        return $this->hasMany(PalpiteJogo::class);
+        return $this->belongsTo(Bilhete::class, 'bilhete_id');
     }
 
-    public function usuario()
+    // Relacionamento com o jogo da rodada
+    public function rodadaJogo()
     {
-        return $this->belongsTo(User::class, 'usuario_id');
-    }
-
-    public function rodada()
-    {
-        return $this->belongsTo(Rodada::class, 'rodada_id');
+        return $this->belongsTo(RodadaJogo::class, 'rodada_jogo_id');
     }
 }

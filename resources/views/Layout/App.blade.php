@@ -105,6 +105,25 @@
     <form method="POST" action="{{ route('logout') }}" class="mt-auto  w-90">
          <hr style="color:#ffffff69;">
         @csrf
+        <style>
+           .btn-danger {
+  background-color: #b91c1c !important;
+  border-color: #991b1b !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+  transition: all 0.25s ease;
+}
+
+.btn-danger:hover {
+  background-color: #dc2626 !important;
+  border-color: #b91c1c !important;
+  box-shadow: 0 0 12px rgba(220, 38, 38, 0.5);
+  transform: translateY(-1px);
+}
+
+
+
+        </style>
         <button style="border-radius: 0px;" type="submit" class="btn btn-danger w-100">
             <i class="fa-solid fa-right-from-bracket me-1"></i> Sair
         </button>
