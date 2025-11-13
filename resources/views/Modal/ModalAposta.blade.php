@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Alterar texto do botão
         btnConfirmar.textContent = modoEdicao ? 'ATUALIZAR APOSTA' : 'CONFIRMAR APOSTA';
-        btnConfirmar.classList.toggle('btn-warning', modoEdicao);
+        btnConfirmar.classList.toggle('', modoEdicao);
     });
 
     // 🔹 Carregar jogos + odds externas

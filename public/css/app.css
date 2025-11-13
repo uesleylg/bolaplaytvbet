@@ -1,135 +1,145 @@
-    html, body {
+   @import url('root.css');
+
+   html, body {
+      background-color: var(--cor-fundo);
       height: 100%;
       margin: 0;
     }
 
     body {
       display: flex;
-       background-color: #0f172a;
-     /* background-color: #2c3e50; */
       flex-direction: column;
       min-height: 100vh;
     }
 
-      .user-card {
-    background-color: #1e293b;
-    color: #f8fafc;
-    border-radius: 14px;
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    transition: background 0.3s ease, transform 0.3s ease;
-  }
-
-  .user-card:hover {
-    background-color: #334155;
-    transform: translateY(-2px);
-  }
-
-  .user-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #3b82f6, #06b6d4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    color: white;
-  }
-
-  .user-info {
-    line-height: 1.5;
-  }
-
-  .user-name {
-    font-weight: 600;
-    font-size: 1rem;
-  }
-
-  .user-status {
-    font-size: 0.85rem;
-    color: #94a3b8;
-  }
-
-  .offcanvas {
-    width: 270px;
-  }
-
-   /* Sidebar (desktop) */
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100vh;
-      width: 280px;
-      background-color: #202242 !important;
-      color: #fff;
-      padding-top: 2rem;
-      transition: all 0.3s;
-    }
-
-    .sidebar .nav-link {
-      
-      letter-spacing: 2px;
-      color: #d3d3d3;
-      font-weight: 500;
-      margin-bottom: 0.8rem;
-    }
-
-    .sidebar .nav-link:hover {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-    }
-
-    .sidebar .navbar-brand {
-     color: #cbcbcb;
-      font-size: 1.4rem;
-      font-weight: bold;
-      margin-left: 1rem;
-    }
-
-    /* Navbar (mobile) */
-    .navbar {
-      display: none;
-    }
-
-        .btn-entrar {
-      background-color: #0d6efd;
-      color: #fff;
-      border-radius: 20px;
-      padding: 6px 16px;
-    }
-
-    .btn-entrar:hover {
-      background-color: #0b5ed7;
-      color: #fff;
-    }
-
-    @media (min-width: 992px) {
-      .sidebar {
-        display: block;
-      }
-      main {
-        margin-left: 280px; /* desloca main para a direita da sidebar */
-      }
-    }
-
-    @media (max-width: 991px) {
-      .sidebar {
-        display: none;
-      }
-      .navbar {
-        display: flex;
-      }
-    }
-
- @media (max-width: 425px) {
-.mobile-text{
-  font-size: 0.8rem;
+    /* =========  Header  =========*/
+/* ======== User Card ======== */
+.user-card {
+  background-color: var(--user-card-cor-fundo);
+  color: var(--branco);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: background 0.3s ease, transform 0.3s ease;
 }
- }
+
+.user-card:hover {
+  background-color: #334155;
+  transform: translateY(-2px);
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--branco);
+}
+
+.user-info { line-height: 1.5; }
+
+.user-name {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.user-status {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+/* ======== Sidebar Desktop ======== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 280px;
+  background-color: #202242 !important;
+  color: var(--branco);
+  padding-top: 2rem;
+  transition: all 0.3s;
+}
+
+.sidebar .navbar-brand {
+  color: #cbcbcb;
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-left: 1rem;
+}
+
+.sidebar .nav-link {
+  color: #d3d3d3;
+  font-weight: 500;
+  margin-bottom: 0.8rem;
+  letter-spacing: 2px;
+}
+
+.sidebar .nav-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+}
+
+/* ======== Navbar Mobile ======== */
+.navbar {
+  display: none;
+}
+
+/* ======== Botões ======== */
+.btn-entrar {
+  background-color: #0d6efd;
+  color: var(--branco);
+  border-radius: 20px;
+  padding: 6px 16px;
+  transition: 0.3s;
+}
+
+.btn-entrar:hover {
+  background-color: #0b5ed7;
+}
+
+/* ======== Botão Sair ======== */
+.btn-danger {
+  background-color: #b91c1c !important;
+  border-color: #991b1b !important;
+  color: #fff !important;
+  transition: all 0.25s ease;
+}
+
+.btn-danger:hover {
+  background-color: #dc2626 !important;
+  border-color: #b91c1c !important;
+  box-shadow: 0 0 12px rgba(220, 38, 38, 0.5);
+  transform: translateY(-1px);
+}
+
+/* ======== Responsividade ======== */
+@media (min-width: 992px) {
+  .sidebar { display: block; }
+  main { margin-left: 280px; }
+}
+
+@media (max-width: 991px) {
+  .sidebar { display: none; }
+  .navbar { display: flex; }
+}
+
+@media (max-width: 425px) {
+  .mobile-text { font-size: 0.8rem; }
+}
+
+.offcanvas {
+  width: 270px;
+}
+
+
+/* ============= FIM HEADER ===============  */
 
 
     /* Webkit (Chrome, Edge, Safari) */

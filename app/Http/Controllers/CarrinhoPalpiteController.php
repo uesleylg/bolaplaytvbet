@@ -109,6 +109,95 @@ class CarrinhoPalpiteController extends Controller
         }
     }
 
+
+public function excluir($id)
+{
+    try {
+        $carrinho = CarrinhoPalpite::findOrFail($id);
+
+        // Garante que o bilhete pertence ao usuário logado
+        if ($carrinho->usuario_id !== auth()->id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Você não tem permissão para excluir este bilhete.'
+            ], 403);
+        }
+
+        $carrinho->delete();
+
+        return response()->json(['success' => true]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Erro ao excluir: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+
+
+    public function atualizarCarrinho(Request $request, $id)
+{
+    $usuarioId = Auth::id();
+    $rodadaId = $request->rodada_id;
+    $combinacao = $request->combinacao; // Ex: "1x2-1x-1x2-1x2"
+
+    $rodada = Rodada::findOrFail($rodadaId);
+    $valorBilheteBase = $rodada->valor_bilhete;
+
+    $jogos = explode('-', $combinacao);
+    $secas = $duplas = $triplas = 0;
+    $totalBilhetes = 1;
+    $opcoesJogos = [];
+
+    foreach ($jogos as $palpite) {
+        $opcoes = str_split(str_replace([' ', '-'], '', $palpite));
+        $opcoesJogos[] = $opcoes;
+
+        $qtd = count($opcoes);
+        if ($qtd === 1) $secas++;
+        elseif ($qtd === 2) $duplas++;
+        elseif ($qtd === 3) $triplas++;
+
+        $totalBilhetes *= $qtd;
+    }
+
+    $valorTotal = $totalBilhetes * $valorBilheteBase;
+    $LIMITE_BILHETES = 1000;
+
+    try {
+        $carrinho = CarrinhoPalpite::findOrFail($id);
+
+        // Atualiza dados principais
+        $carrinho->update([
+            'rodada_id' => $rodadaId,
+            'quantidade_bilhetes' => $totalBilhetes,
+            'valor_total' => $valorTotal,
+            'combinacoes_compactadas' => $combinacao,
+            'status' => 'pendente',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'modo' => 'editado',
+            'quantidade' => $totalBilhetes,
+            'secas' => $secas,
+            'duplas' => $duplas,
+            'triplas' => $triplas,
+            'valor_total' => number_format($valorTotal, 2, ',', '.'),
+            'valor_base' => number_format($valorBilheteBase, 2, ',', '.'),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Erro ao atualizar o carrinho: ' . $e->getMessage(),
+        ], 500);
+    }
+}
+
+
+
+
     /**
      * Gera todas as combinações possíveis entre os palpites.
      * Ex: [["1","x"],["1","2"]] → [["1","1"],["1","2"],["x","1"],["x","2"]]

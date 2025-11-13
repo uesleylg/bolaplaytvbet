@@ -1,4 +1,4 @@
-@extends('Layout/App')
+@extends('Layout/User/App')
 
 @section('title', 'BolaPlay Bet')
 
@@ -319,9 +319,13 @@
     @endif
 
     <!-- Botão Visualizar Detalhes -->
-    <button class="btn btn-outline-light btn-sm btn-excluir" title="Excluir">
+<button 
+  class="btn btn-outline-light btn-sm btn-excluir" 
+  title="Excluir"
+  data-id="{{ $bilhete->id }}">
   <i class="fa-solid fa-trash"></i>
 </button>
+
 
   </div>
 </div>
@@ -330,6 +334,43 @@
     @endforeach
   @endif
 </div>
+
+
+
+<script>
+document.addEventListener('click', function (e) {
+  const botao = e.target.closest('.btn-excluir');
+  if (!botao) return;
+
+  e.preventDefault(); // impede comportamento padrão
+
+  const id = botao.dataset.id;
+
+  if (!confirm('Tem certeza que deseja excluir este bilhete?')) return;
+
+  fetch(`/carrinho/${id}/excluir`, {
+    method: 'DELETE',
+    headers: {
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+      'Accept': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert('Bilhete excluído com sucesso!');
+      location.reload();
+    } else {
+      alert(data.message || 'Erro ao excluir o bilhete.');
+    }
+  })
+  .catch(error => {
+    console.error(error);
+    alert('Erro inesperado ao tentar excluir o bilhete.');
+  });
+});
+</script>
+
 @include('Modal.ModalAposta')
 @include('Modal.ModalIndicacao')
 @endsection

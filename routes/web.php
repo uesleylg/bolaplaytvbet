@@ -55,6 +55,9 @@ Route::get('/rodadas/{id}/jogos', [RodadaController::class, 'jogos'])->name('rod
 Route::post('/palpites', [PalpiteController::class, 'store'])->name('palpites.store');
 Route::post('/carrinho/salvar', [CarrinhoPalpiteController::class, 'salvarCarrinho'])->name('carrinho.salvar');
 
+Route::put('/carrinho/{id}/atualizar', [CarrinhoPalpiteController::class, 'atualizarCarrinho'])->name('carrinho.atualizar');
+Route::delete('/carrinho/{id}/excluir', [CarrinhoPalpiteController::class, 'excluir']);
+
 
 
 // 🧩 Rotas administrativas (proteção opcional)
