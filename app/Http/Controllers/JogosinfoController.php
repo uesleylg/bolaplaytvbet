@@ -60,39 +60,60 @@ $diffDias = $hoje->diffInDays($data, false);
             array_shift($partidas);
 
             foreach ($partidas as $part) {
-                preg_match('/([^¬]+)/', $part, $id_match);
-                if (!$id_match) continue;
-                $jogo_id = $id_match[1];
 
-                preg_match('/AD÷(\d+)/', $part, $ts_match);
-                if (!$ts_match) continue;
+    // ID do jogo (mid)
+    preg_match('/~AA÷([^¬]+)/', "~AA÷" . $part, $mid_match);
+    $mid = $mid_match[1] ?? null;
 
-                // Corrige fuso horário
-                $ts = (int)$ts_match[1];
-                $dataHora = Carbon::createFromTimestamp($ts)->setTimezone('America/Sao_Paulo');
-                $data_str = $dataHora->format('Y-m-d');
-                $hora_str = $dataHora->format('H:i');
+    // Timestamp
+    preg_match('/AD÷(\d+)/', $part, $ts_match);
+    if (!$ts_match) continue;
 
-                preg_match('/AE÷([^¬]+)/', $part, $mand);
-                preg_match('/AF÷([^¬]+)/', $part, $vist);
-                preg_match('/OA÷([^\¬]+)\.png/', $part, $brasao_mand);
-                preg_match('/OB÷([^\¬]+)\.png/', $part, $brasao_vist);
+    $ts = (int)$ts_match[1];
+    $dataHora = Carbon::createFromTimestamp($ts)->setTimezone('America/Sao_Paulo');
+    $data_str = $dataHora->format('Y-m-d');
+    $hora_str = $dataHora->format('H:i');
 
-                $mand_nome = $mand[1] ?? 'N/A';
-                $vist_nome = $vist[1] ?? 'N/A';
-                $brasao_mand_link = isset($brasao_mand[1]) ? "https://static.flashscore.com/res/image/data/{$brasao_mand[1]}.png" : null;
-                $brasao_vist_link = isset($brasao_vist[1]) ? "https://static.flashscore.com/res/image/data/{$brasao_vist[1]}.png" : null;
+    // Mandante
+    preg_match('/AE÷([^¬]+)/', $part, $mand);
+    preg_match('/WU÷([^¬]+)/', $part, $mand_slug);
+    preg_match('/PX÷([^¬]+)/', $part, $mand_id);
 
-                $result['ligas'][$liga_nome][] = [
-                    'data' => $data_str,
-                    'hora' => $hora_str,
-                    'mandante' => $mand_nome,
-                    'visitante' => $vist_nome,
-                    'id_jogo' => $jogo_id,
-                    'imagem_mandante' => $brasao_mand_link,
-                    'imagem_visitante' => $brasao_vist_link
-                ];
-            }
+    // Visitante
+    preg_match('/AF÷([^¬]+)/', $part, $vist);
+    preg_match('/WV÷([^¬]+)/', $part, $vist_slug);
+    preg_match('/PY÷([^¬]+)/', $part, $vist_id);
+
+    // Brasões
+    preg_match('/OA÷([^\¬]+)\.png/', $part, $brasao_mand);
+    preg_match('/OB÷([^\¬]+)\.png/', $part, $brasao_vist);
+
+    // Montar link do jogo (MESMO MODELO DO SEU SCRIPT PYTHON)
+    if ($mand_slug && $mand_id && $vist_slug && $vist_id && $mid) {
+        $mand_link = "{$mand_slug[1]}-{$mand_id[1]}";
+        $vist_link = "{$vist_slug[1]}-{$vist_id[1]}";
+
+        $link_jogo = "https://www.flashscore.com.br/jogo/futebol/{$mand_link}/{$vist_link}/?mid={$mid}";
+    } else {
+        $link_jogo = null;
+    }
+
+    $result['ligas'][$liga_nome][] = [
+        'data' => $data_str,
+        'hora' => $hora_str,
+        'mandante' => $mand[1] ?? 'N/A',
+        'visitante' => $vist[1] ?? 'N/A',
+        'id_jogo' => $mid,
+        'mandante_slug' => $mand_slug[1] ?? null,
+        'mandante_id' => $mand_id[1] ?? null,
+        'visitante_slug' => $vist_slug[1] ?? null,
+        'visitante_id' => $vist_id[1] ?? null,
+        'link_jogo' => $link_jogo,
+        'imagem_mandante' => isset($brasao_mand[1]) ? "https://static.flashscore.com/res/image/data/{$brasao_mand[1]}.png" : null,
+        'imagem_visitante' => isset($brasao_vist[1]) ? "https://static.flashscore.com/res/image/data/{$brasao_vist[1]}.png" : null
+    ];
+}
+
         }
 
         return response()->json($result);

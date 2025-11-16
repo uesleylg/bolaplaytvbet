@@ -82,6 +82,10 @@ Route::prefix('admin')
         Route::get('get/placar/{id}', [JogosInfoController::class, 'placar'])->name('get.placar');
         Route::post('rodadas/jogos', [RodadaJogoController::class, 'store'])->name('rodadas.jogos.store');
 
+        Route::delete('/rodadas/{rodada}/jogos/excluir', [RodadaController::class, 'excluirJogos'])
+    ->name('rodadas.excluirJogos');
+
+
 
 
         // CARRINHO

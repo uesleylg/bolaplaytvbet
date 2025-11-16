@@ -32,7 +32,7 @@
     border-radius: 50%;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
     transition: all 0.3s ease;
-    z-index: 9999;
+    z-index: 1;
     text-decoration: none;
     opacity: 0;
     transform: translateY(15px);
@@ -74,7 +74,7 @@
     border-radius: 50%;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
     transition: all 0.3s ease;
-    z-index: 9999;
+    z-index: 1;
     text-decoration: none;
     opacity: 0;
     transform: translateY(15px);

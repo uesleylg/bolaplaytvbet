@@ -16,6 +16,7 @@ class RodadaJogo extends Model
     protected $fillable = [
         'rodada_id',
         'id_partida',
+        'link_jogo',
         'time_casa_nome',
         'time_fora_nome',
         'time_casa_brasao',

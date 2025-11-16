@@ -77,6 +77,8 @@ class RodadaJogoController extends Controller
             '*.competicao' => 'nullable|string|max:255',
             '*.time_casa_brasao' => 'nullable|string|max:255',
             '*.time_fora_brasao' => 'nullable|string|max:255',
+            '*.link_jogo' => 'nullable|string|max:500',
+
         ], [
             '*.rodada_id.required' => 'O ID da rodada é obrigatório.',
             '*.rodada_id.exists' => 'A rodada informada não existe.',

@@ -1,5 +1,4 @@
-@extends('Layout/AppAdmin')
-
+@extends('Layout/Admin/AppAdmin')
 
 @section('title', 'BolaPlay Bet')
 
@@ -78,13 +77,25 @@
 
           <!-- Botões de ação -->
           <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
-            <button 
-              data-bs-toggle="modal" 
-              data-bs-target="#ModalJogosRodada"  
-              class="btn btn-outline-info btn-sm rounded-pill px-3 fw-semibold shadow-sm"
-              data-id="{{ $rodada->id }}">
-              <i class="fas fa-futbol me-1"></i> Jogos
-            </button>
+      @if ($rodada->status === 'Pendente')
+    <button 
+        data-bs-toggle="modal" 
+        data-bs-target="#ModalJogosRodada"  
+        class="btn btn-outline-info btn-sm rounded-pill px-3 fw-semibold shadow-sm"
+        data-id="{{ $rodada->id }}">
+        <i class="fas fa-futbol me-1"></i> ADD Jogos
+    </button>
+@elseif ($rodada->status === 'Ativo')
+    <button 
+        data-bs-toggle="modal" 
+        data-bs-target="#ModalVerJogosRodada"  
+        class="btn btn-outline-info btn-sm rounded-pill px-3 fw-semibold shadow-sm"
+        data-id="{{ $rodada->id }}">
+        <i class="fas fa-futbol me-1"></i> Ver Jogos
+    </button>
+
+@endif
+
 
            <button 
   class="btn btn-outline-warning btn-sm rounded-pill px-3 fw-semibold shadow-sm btn-editar-rodada"
@@ -101,7 +112,7 @@
   data-bs-toggle="modal" 
   data-bs-target="#ModalCadastroRodada"
 >
-  <i class="fas fa-pen me-1"></i> Editar
+  <i class="fas fa-pen me-1"></i> Editar Rodada
 </button>
 
 <button 
@@ -109,7 +120,7 @@
   data-bs-toggle="modal" 
   data-bs-target="#modalExcluirRodada"
   data-id="{{ $rodada->id }}">
-  <i class="fas fa-trash me-1"></i> Excluir
+  <i class="fas fa-trash me-1"></i> Excluir Rodada
 </button>
           </div>
         </div>
@@ -181,6 +192,7 @@
 
 
 
+@include('Admin.Modal.ModalVerJogos')
 @include('Admin.Modal.ModalJogosRodada')
 @include('Admin.Modal.ModalCriarRodada')
 @endsection

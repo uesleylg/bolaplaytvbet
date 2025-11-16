@@ -6,12 +6,49 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Rodada;
+use App\Models\RodadaJogo;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 
 
 class RodadaController extends Controller
 {
+
+public function excluirJogos($rodadaId)
+{
+    try {
+
+        // 1️⃣ Excluir todos os jogos desta rodada
+        RodadaJogo::where('rodada_id', $rodadaId)->delete();
+
+        // 2️⃣ Atualizar o status da rodada para "Pendente"
+        $rodada = Rodada::find($rodadaId);
+
+        if (!$rodada) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Rodada não encontrada.'
+            ], 404);
+        }
+
+        $rodada->status = 'Pendente';
+        $rodada->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Jogos excluídos e status da rodada atualizado para Pendente.'
+        ]);
+
+    } catch (\Exception $e) {
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Erro ao excluir jogos ou atualizar o status.',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
 
 public function jogos($id)
 {
@@ -33,7 +70,7 @@ public function jogos($id)
             'jogos' => $rodada->jogos->map(function ($jogo) {
                 return [
                     'id' => $jogo->id,
-                    'id_partida' => $jogo->id_partida, // 🔹 Necessário para buscar as odds
+                    'id_partida' => $jogo->id_partida,
                     'time_casa_nome' => $jogo->time_casa_nome,
                     'time_fora_nome' => $jogo->time_fora_nome,
                     'time_casa_brasao' => $jogo->time_casa_brasao,
@@ -42,6 +79,9 @@ public function jogos($id)
                     'competicao' => $jogo->competicao,
                     'status_jogo' => $jogo->status_jogo,
                     'resultado_real' => $jogo->resultado_real,
+
+                    // 👉 AQUI ESTAVA FALTANDO
+                    'link_jogo' => $jogo->link_jogo,
                 ];
             }),
         ]);

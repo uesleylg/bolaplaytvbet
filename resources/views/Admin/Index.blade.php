@@ -1,4 +1,4 @@
-@extends('Layout/AppAdmin')
+@extends('Layout/Admin/AppAdmin')
 
 
 @section('title', 'BolaPlay Bet')

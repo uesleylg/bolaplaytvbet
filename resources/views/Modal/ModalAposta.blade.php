@@ -110,7 +110,14 @@ document.addEventListener('DOMContentLoaded', function() {
         combinacaoOriginal = combinacao || '';
 
         carregando = true;
-        container.innerHTML = `<div class="p-3 text-secondary">⏳ Carregando jogos...</div>`;
+        container.innerHTML = `
+  <div class="placeholder-glow p-3">
+    <div class="placeholder col-12 mb-3" style="height:60px;border-radius:10px;"></div>
+    <div class="placeholder col-12 mb-3" style="height:60px;border-radius:10px;"></div>
+    <div class="placeholder col-12 mb-3" style="height:60px;border-radius:10px;"></div>
+  </div>
+`;
+
         await carregarJogos(rodadaId);
         carregando = false;
 
@@ -156,7 +163,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="d-flex align-items-center">
                         <div class="match-number">${index + 1}</div>
                         <div class="league ms-2">
-                            🔍 ${jogo.data_jogo} — <strong>${jogo.competicao}</strong>
+                          <a href="${jogo.link_jogo}" target="_blank" class="text-decoration-none ">
+        🔍 ${jogo.data_jogo} — <strong>${jogo.competicao}</strong>
+    </a>
                         </div>
                     </div>
 

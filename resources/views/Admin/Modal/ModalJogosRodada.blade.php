@@ -70,6 +70,10 @@
 <script>
 let rodadaAtualId = null;
 
+// MEMÓRIA GLOBAL
+let selecionadosMemoria = new Set();    // IDs selecionados
+let dadosSelecionados = {};             // Dados completos dos jogos
+
 // Função para exibir alert Bootstrap
 function mostrarAlerta(mensagem, tipo = 'success', duracao = 5000) {
   const alertArea = document.getElementById('alert-area');
@@ -92,8 +96,8 @@ function mostrarAlerta(mensagem, tipo = 'success', duracao = 5000) {
 
 // Função para atualizar a contagem de selecionados
 function atualizarSelecionados() {
-  const selecionados = document.querySelectorAll('.jogo-item.selecionado').length;
-  document.getElementById('jogosSelecionados').textContent = `Selecionados: ${selecionados}`;
+  document.getElementById('jogosSelecionados').textContent =
+    `Selecionados: ${selecionadosMemoria.size}`;
 }
 
 // Carrega jogos por país e data
@@ -103,7 +107,7 @@ async function carregarJogos(pais, data) {
   const selecionadosSpan = document.getElementById('jogosSelecionados');
   lista.innerHTML = '<p class="text-center text-secondary mt-3">Carregando jogos...</p>';
   totalJogosSpan.textContent = 'Total de jogos: 0';
-  selecionadosSpan.textContent = 'Selecionados: 0';
+  selecionadosSpan.textContent = `Selecionados: ${selecionadosMemoria.size}`;
 
   try {
     const response = await fetch(`/admin/get/jogos?pais=${pais}&data=${data}`);
@@ -136,7 +140,8 @@ async function carregarJogos(pais, data) {
              data-id="${jogo.id_jogo}" 
              data-hora="${jogo.hora}" 
              data-data="${jogo.data}" 
-             data-liga="${jogo.liga}" 
+             data-liga="${jogo.liga}"
+             data-link-jogo="${jogo.link_jogo}" 
              style="background-color:#161b22; transition: all 0.3s ease;">
           <div>
             <div class="fw-semibold text-light d-flex align-items-center mb-1 mandante-nome">
@@ -154,24 +159,61 @@ async function carregarJogos(pais, data) {
           </button>
         </div>
       `;
-    }).join('');
+    }).join("");
+
+    // REAPLICAR SELEÇÃO QUANDO CARREGA A LISTA
+    document.querySelectorAll('.jogo-item').forEach(jogoItem => {
+      const id = jogoItem.dataset.id;
+
+      if (selecionadosMemoria.has(id)) {
+        const btn = jogoItem.querySelector('.btn-selecionar');
+
+        jogoItem.classList.add('selecionado');
+        btn.innerHTML = '<i class="fa-solid fa-check me-1"></i> Selecionado';
+        btn.classList.replace('btn-outline-primary', 'btn-success');
+        jogoItem.style.backgroundColor = '#0d6efd20';
+        jogoItem.style.border = '1px solid #0d6efd';
+      }
+    });
 
     // Botões selecionar
     document.querySelectorAll('.btn-selecionar').forEach(btn => {
       btn.addEventListener('click', () => {
         const jogoItem = btn.closest('.jogo-item');
+        const id = jogoItem.dataset.id;
         const selecionado = jogoItem.classList.toggle('selecionado');
+
         if (selecionado) {
+          selecionadosMemoria.add(id);
+
+          // salva dados completos na memória
+          dadosSelecionados[id] = {
+            id_partida: id,
+            hora: jogoItem.dataset.hora,
+            data: jogoItem.dataset.data,
+            liga: jogoItem.dataset.liga,
+            link_jogo: jogoItem.dataset.linkJogo,
+            mandante: jogoItem.querySelector('.mandante-nome').textContent.split('vs')[0].trim(),
+            visitante: jogoItem.querySelector('.mandante-nome').textContent.split('vs')[1].trim(),
+            mandante_img: jogoItem.querySelector('.mandante-img')?.src || null,
+            visitante_img: jogoItem.querySelector('.visitante-img')?.src || null,
+          };
+
           btn.innerHTML = '<i class="fa-solid fa-check me-1"></i> Selecionado';
           btn.classList.replace('btn-outline-primary', 'btn-success');
           jogoItem.style.backgroundColor = '#0d6efd20';
           jogoItem.style.border = '1px solid #0d6efd';
+
         } else {
+          selecionadosMemoria.delete(id);
+          delete dadosSelecionados[id];
+
           btn.innerHTML = '<i class="fa-solid fa-plus me-1"></i> Selecionar';
           btn.classList.replace('btn-success', 'btn-outline-primary');
           jogoItem.style.backgroundColor = '#161b22';
           jogoItem.style.border = 'none';
         }
+
         atualizarSelecionados();
       });
     });
@@ -216,29 +258,54 @@ document.getElementById('btnCadastrarJogos').addEventListener('click', async () 
     return;
   }
 
-  const selecionados = Array.from(document.querySelectorAll('.jogo-item.selecionado'));
-  if (selecionados.length === 0) {
+  if (selecionadosMemoria.size === 0) {
     mostrarAlerta('Selecione ao menos um jogo para cadastrar.', 'warning');
     return;
   }
 
+  // Lista completa de itens: DOM ou memória
+  const selecionados = Array.from(selecionadosMemoria).map(id => {
+    const itemDOM = document.querySelector(`.jogo-item[data-id="${id}"]`);
+    if (itemDOM) return itemDOM;
+    return { dataset: dadosSelecionados[id], dadosSalvos: true };
+  });
+
+  // Montar payload unificado
   const jogosPayload = selecionados.map(jogoEl => {
-    const mandante = jogoEl.querySelector('.fw-semibold').textContent.split('vs')[0].trim();
-    const visitante = jogoEl.querySelector('.fw-semibold').textContent.split('vs')[1].trim();
-    const hora = jogoEl.dataset.hora;
-    const data = jogoEl.dataset.data;
-    const liga = jogoEl.dataset.liga;
-    const idPartida = jogoEl.dataset.id;
+    let mandante, visitante, hora, data, liga, idPartida, mandanteImg, visitanteImg, linkJogo;
+
+    if (jogoEl.dadosSalvos) {
+      mandante = jogoEl.dataset.mandante;
+      visitante = jogoEl.dataset.visitante;
+      hora = jogoEl.dataset.hora;
+      data = jogoEl.dataset.data;
+      liga = jogoEl.dataset.liga;
+      idPartida = jogoEl.dataset.id_partida;
+      mandanteImg = jogoEl.dataset.mandante_img;
+      visitanteImg = jogoEl.dataset.visitante_img;
+      linkJogo = jogoEl.dataset.link_jogo;
+    } else {
+      mandante = jogoEl.querySelector('.fw-semibold').textContent.split('vs')[0].trim();
+      visitante = jogoEl.querySelector('.fw-semibold').textContent.split('vs')[1].trim();
+      hora = jogoEl.dataset.hora;
+      data = jogoEl.dataset.data;
+      liga = jogoEl.dataset.liga;
+      idPartida = jogoEl.dataset.id;
+      mandanteImg = jogoEl.querySelector('.mandante-img')?.src || null;
+      visitanteImg = jogoEl.querySelector('.visitante-img')?.src || null;
+      linkJogo = jogoEl.dataset.linkJogo;
+    }
 
     return {
       rodada_id: rodadaAtualId,
       id_partida: idPartida,
       time_casa_nome: mandante,
       time_fora_nome: visitante,
-      time_casa_brasao: jogoEl.querySelector('.mandante-img')?.src || null,
-      time_fora_brasao: jogoEl.querySelector('.visitante-img')?.src || null,
+      time_casa_brasao: mandanteImg,
+      time_fora_brasao: visitanteImg,
       data_jogo: `${data} ${hora}:00`,
-      competicao: liga
+      competicao: liga,
+      link_jogo: linkJogo
     };
   });
 

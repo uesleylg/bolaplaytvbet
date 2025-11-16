@@ -105,6 +105,10 @@ return [
         ),
     ],
 
+
+
+    'email_suporte' => env('EMAIL_SUPORTE', 'default@email.com'),
+'telefone_suporte' => env('TELEFONE_SUPORTE', '(00) 00000-0000'),
     /*
     |--------------------------------------------------------------------------
     | Maintenance Mode Driver

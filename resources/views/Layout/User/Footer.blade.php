@@ -15,8 +15,9 @@
             </div>
             <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
                 <h6 class="fw-bold text-uppercase mb-3">Contato</h6>
-                <p><i class="bi bi-envelope-fill "></i> suporte@bolaplaybet.com</p>
-                <p><i class="bi bi-whatsapp "></i> (11) 99999-9999</p>
+              
+                <p><i class="bi bi-envelope-fill "></i> {{ config('app.email_suporte') }}</p>
+                <p><i class="bi bi-whatsapp "></i> {{ config('app.telefone_suporte') }}</p>
             </div>
         </div>
         <hr class="mb-4 text-secondary" />
