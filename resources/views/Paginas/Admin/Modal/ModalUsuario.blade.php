@@ -16,109 +16,135 @@
 <div id="alert-area"></div>
 
 <form id="formUsuario" class="needs-validation" novalidate>
-   @csrf
+  @csrf
+
   <div class="row g-3">
     <!-- Usuário -->
     <div class="col-md-6">
-      <label for="name" class="form-label fw-semibold text-secondary">
-        <i class="fa-solid fa-user me-1"></i> Usuário
-      </label>
-      <input type="text" class="form-control bg-transparent text-light border-secondary" id="name" name="name" placeholder="Digite o nome (sem espaços)" required>
+      <div class="form-floating">
+        <input type="text" class="form-control bg-slate border-0 text-light"
+               id="name" name="name" placeholder="Usuário" required>
+        <label for="name">
+          <i class="fa-solid fa-user me-2"></i> Usuário
+        </label>
+      </div>
       <div class="invalid-feedback">Por favor, insira o nome completo.</div>
     </div>
 
     <!-- Email -->
     <div class="col-md-6">
-      <label for="email" class="form-label fw-semibold text-secondary">
-        <i class="fa-solid fa-envelope me-1"></i> E-mail
-      </label>
-      <input type="email" class="form-control bg-transparent text-light border-secondary" id="email" name="email" placeholder="exemplo@email.com" required>
+      <div class="form-floating">
+        <input type="email" class="form-control bg-slate border-0 text-light"
+               id="email" name="email" placeholder="E-mail" required>
+        <label for="email">
+          <i class="fa-solid fa-envelope me-2"></i> E-mail
+        </label>
+      </div>
       <div class="invalid-feedback">Insira um e-mail válido.</div>
     </div>
 
     <!-- Senha -->
     <div class="col-md-6">
-      <label for="password" class="form-label fw-semibold text-secondary">
-        <i class="fa-solid fa-lock me-1"></i> Senha
-      </label>
-      <input type="password" class="form-control bg-transparent text-light border-secondary" id="password" name="password" placeholder="********" required>
+      <div class="form-floating">
+        <input type="password" class="form-control bg-slate border-0 text-light"
+               id="password" name="password" placeholder="Senha" required>
+        <label for="password">
+          <i class="fa-solid fa-lock me-2"></i> Senha
+        </label>
+      </div>
       <div class="invalid-feedback">Informe uma senha.</div>
     </div>
 
     <!-- Telefone -->
     <div class="col-md-6">
-      <label for="phone" class="form-label fw-semibold text-secondary">
-        <i class="fa-solid fa-phone me-1"></i> Telefone
-      </label>
-      <input type="text" class="form-control bg-transparent text-light border-secondary" id="phone" name="phone" placeholder="(11) 99999-9999">
+      <div class="form-floating">
+        <input type="text" class="form-control bg-slate border-0 text-light"
+               id="phone" name="phone" placeholder="Telefone">
+        <label for="phone">
+          <i class="fa-solid fa-phone me-2"></i> Telefone
+        </label>
+      </div>
     </div>
 
     <!-- Perfil -->
     <div class="col-md-6">
-      <label for="profile_id" class="form-label fw-semibold text-secondary">
-        <i class="fa-solid fa-id-badge me-1"></i> Perfil
-      </label>
-      <select class="form-select bg-transparent text-light border-secondary" id="profile_id" name="profile_id" required>
-        <option value="" selected disabled>Selecione o perfil</option>
-        <option value="1">Cliente</option>
-        <option value="2">Revendedor</option>
-        <option value="3">Administrador</option>
-      </select>
+      <div class="form-floating">
+        <select class="form-select bg-slate border-0 text-light"
+                id="profile_id" name="profile_id" required>
+          <option value="" disabled selected>Selecione</option>
+          <option value="1">Cliente</option>
+          <option value="2">Revendedor</option>
+          <option value="3">Administrador</option>
+        </select>
+        <label for="profile_id">
+          <i class="fa-solid fa-id-badge me-2"></i> Perfil
+        </label>
+      </div>
       <div class="invalid-feedback">Escolha um perfil.</div>
     </div>
 
     <!-- Referência -->
     <div class="col-md-6">
-      <label for="referencia_id" class="form-label fw-semibold text-secondary">
-        <i class="fa-solid fa-users me-1"></i> Referência
-      </label>
-      <input type="number" class="form-control bg-transparent text-light border-secondary" id="referencia_id" name="referencia_id" placeholder="ID do usuário de referência">
+      <div class="form-floating">
+        <input type="number" class="form-control bg-slate border-0 text-light"
+               id="referencia_id" name="referencia_id" placeholder="Referência">
+        <label for="referencia_id">
+          <i class="fa-solid fa-users me-2"></i> Referência (ID)
+        </label>
+      </div>
     </div>
   </div>
 
+  <!-- Status -->
+  <div class="mt-4" id="status-container" style="display:none;">
+    <label class="form-label fw-semibold text-light d-block">
+      <i class="fa-solid fa-toggle-on me-2"></i> Status da Conta
+    </label>
 
-<div class="mb-3" id="status-container" style="display: none;">
-  <label for="status" class="form-label fw-semibold text-secondary d-block">
-    <i class="fa-solid fa-toggle-on me-1"></i> Status da Conta
-  </label>
-
-  <div class="form-check form-switch d-flex align-items-center">
-    <input 
-      class="form-check-input me-2" 
-      type="checkbox" 
-      id="status" 
-      name="status" 
-      value="Ativo"
-      style="width: 3rem; height: 1.5rem; cursor: pointer;"
-    >
-    <label class="form-check-label fw-semibold" for="status" id="statusLabel">Ativo</label>
+    <div class="form-check form-switch d-flex align-items-center">
+      <input class="form-check-input me-2"
+             type="checkbox"
+             id="status"
+             name="status"
+             value="Ativo"
+             style="width: 3rem; height: 1.5rem; cursor:pointer;">
+      <label class="form-check-label fw-semibold text-light" id="statusLabel">Ativo</label>
+    </div>
   </div>
-</div>
 
   <!-- Botões -->
-  <div class="mt-4 d-flex justify-content-end gap-2">
-    <button type="button" class="btn btn-outline-light px-4" data-bs-dismiss="modal">
-      <i class="fa-solid fa-xmark me-1"></i> Cancelar
+  <div class="d-flex justify-content-end gap-2 mt-4">
+    <button type="button" class="btn px-4 py-2 fw-semibold"
+            data-bs-dismiss="modal"
+            style="background-color:#1e293b; color:white; border:none; border-radius:8px;">
+      <i class="fa-solid fa-xmark me-2"></i> Cancelar
     </button>
-    <button type="submit" class="btn btn-primary px-4" style="background-color:#2563eb; border:none;">
-      <i class="fa-solid fa-check me-1"></i> Salvar
+
+    <button type="submit" class="btn px-4 py-2 fw-semibold"
+            style="background-color:#2563eb; color:white; border:none; border-radius:8px;">
+      <i class="fa-solid fa-check me-2"></i> Salvar
     </button>
   </div>
+
 </form>
+
 <style>
-/* Estilo moderno pro switch */
-.form-check-input {
-  background-color: #dc3545; /* vermelho (bloqueado) */
-  border-color: #dc3545;
-  transition: all 0.3s ease;
-}
-.form-check-input:checked {
-  background-color: #198754 !important; /* verde (ativo) */
-  border-color: #198754 !important;
-}
-.form-check-input:focus {
-  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
-}
+  .bg-slate { background-color: #1e293b !important; }
+  .form-control:focus, .form-select:focus {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #fff !important;
+    box-shadow: 0 0 0 0.2rem rgba(30, 41, 59, 0.4) !important;
+  }
+  .form-select option { background-color: #1e293b; color: #f1f5f9; }
+  label { color: #94a3b8 !important; }
+  .form-check-input {
+    background-color: #334155; border-color: #475569;
+  }
+  .form-check-input:checked {
+    background-color: #2563eb; border-color: #2563eb;
+  }
+  .btn:hover { background-color: #334155 !important; }
 </style>
 
 <!-- Máscara para telefone -->

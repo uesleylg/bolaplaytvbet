@@ -21,7 +21,7 @@ class HomeController extends Controller
         ->orderBy('data_fim', 'asc')
         ->first();
 
-    return view('Index', compact('rodada'));
+    return view('Paginas.User.Index', compact('rodada'));
 }
 
 }

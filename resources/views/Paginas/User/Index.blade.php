@@ -338,9 +338,9 @@
 
  
 
-  @include('Modal.ModalIndicacao')
-  @include('Modal.ModalLoginRegistro')
-  @include('Modal.ModalAposta')
+  @include('Paginas.User.Modal.ModalIndicacao')
+  @include('Paginas.User.Modal.ModalLoginRegistro')
+  @include('Paginas.User.Modal.ModalAposta')
 
 
 

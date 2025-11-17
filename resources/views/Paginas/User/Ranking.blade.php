@@ -847,9 +847,9 @@
 
 
 </div>
-@include('Modal.ModalIndicacao')
-@include('Modal.ModalVermais')
-@include('Modal.ModalInfo')
- @include('Modal.ModalLoginRegistro')
- @include('Modal.ModalBilhete')
+@include('Paginas.User.Modal.ModalIndicacao')
+@include('Paginas.User.Modal.ModalVermais')
+@include('Paginas.User.Modal.ModalInfo')
+ @include('Paginas.User.Modal.ModalLoginRegistro')
+ @include('Paginas.User.Modal.ModalBilhete')
 @endsection

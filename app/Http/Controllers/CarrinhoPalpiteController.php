@@ -12,24 +12,73 @@ class CarrinhoPalpiteController extends Controller
 
 
 
-        public function carrinho()
-    {
-        $carrinhos = CarrinhoPalpite::with(['usuario', 'rodada'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+     public function carrinho(Request $request)
+{
+    $query = CarrinhoPalpite::with(['usuario', 'rodada']);
 
-        // Estatísticas básicas
-        $totalCarrinhos = $carrinhos->count();
-        $totalPendentes = $carrinhos->where('status', 'pendente')->count();
-        $totalConfirmados = $carrinhos->where('status', 'confirmado')->count();
+    /* -----------------------------
+       FILTRO: Busca por ID ou usuário
+       ----------------------------- */
+    if ($request->filled('busca')) {
+        $busca = $request->busca;
 
-        return view('Admin.carrinho', compact(
-            'carrinhos',
-            'totalCarrinhos',
-            'totalPendentes',
-            'totalConfirmados'
-        ));
+        $query->where(function($q) use ($busca) {
+            $q->where('id', $busca)
+              ->orWhereHas('usuario', function($q2) use ($busca) {
+                  $q2->where('name', 'like', "%$busca%")
+                     ->orWhere('phone', 'like', "%$busca%");
+              });
+        });
     }
+
+    /* -----------------------------
+       FILTRO: Status
+       ----------------------------- */
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
+    /* -----------------------------
+       FILTRO: Rodada
+       ----------------------------- */
+    if ($request->filled('rodada')) {
+        $query->where('rodada_id', $request->rodada);
+    }
+
+    /* -----------------------------
+       FILTRO: Recentes (dias)
+       ----------------------------- */
+    if ($request->filled('recentes')) {
+        if ($request->recentes === 'hoje') {
+            $query->whereDate('created_at', now()->toDateString());
+        } else {
+            $dias = intval($request->recentes);
+            $query->where('created_at', '>=', now()->subDays($dias));
+        }
+    }
+
+    /* -----------------------------
+       Ordenação (padrão: recentes)
+       ----------------------------- */
+    $carrinhos = $query->orderBy('created_at', 'desc')->get();
+
+    // Estatísticas
+    $totalCarrinhos = $carrinhos->count();
+    $totalPendentes = $carrinhos->where('status', 'pendente')->count();
+    $totalConfirmados = $carrinhos->where('status', 'confirmado')->count();
+
+    // Carregar rodadas para o select
+    $rodadas = Rodada::all();
+
+    return view('Paginas.Admin.carrinho', compact(
+        'carrinhos',
+        'totalCarrinhos',
+        'totalPendentes',
+        'totalConfirmados',
+        'rodadas'
+    ));
+}
+
     public function salvarCarrinho(Request $request)
     {
         $usuarioId = Auth::id();

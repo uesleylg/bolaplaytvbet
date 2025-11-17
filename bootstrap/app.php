@@ -3,7 +3,10 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\AdminMiddleware; // 👈 importa seu middleware
+
+// Importa os middlewares
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\UserMiddleware; // 👈 ADICIONE ESTA LINHA
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,12 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // 🔒 Middleware global (se quiser rodar para todos)
-        // $middleware->use(AdminMiddleware::class);
 
-        // 🔐 Middleware de rota (o mais recomendado)
+        // 🔐 Middleware de rota (correto)
         $middleware->alias([
             'admin' => AdminMiddleware::class,
+            'user'  => UserMiddleware::class, // 👈 ADICIONE AQUI
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

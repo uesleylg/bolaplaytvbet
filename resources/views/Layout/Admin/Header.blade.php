@@ -206,7 +206,7 @@
             <hr>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa-solid fa-gear"></i> Configurações</a>
+            <a class="nav-link {{ request()->routeIs('admin.index.conf*') ? 'active' : '' }}" href="{{ route('admin.index.conf') }}"><i class="fa-solid fa-gear"></i> Configurações</a>
           </li>
            <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('home.index*') ? 'active' : '' }}" 
@@ -234,15 +234,20 @@
             </svg>
           </button>
 
-          <h5 class="mb-0 d-none d-md-block">@yield('title-menu', 'Visão Geral')</h5>
+          <h5 class="mb-0 d-none d-md-block" style="padding-left: 10px;"> @yield('title-menu', ' Visão Geral')</h5>
         </div>
 
-        <div class="d-flex align-items-center">
-          <div class="me-3 text-muted small d-none d-md-block">Olá, Admin</div>
-          <div>
-            <button class="btn btn-sm btn-outline-secondary">Sair</button>
-          </div>
-        </div>
+   <div class="d-flex align-items-center">
+    <div class="me-3 text-muted small d-none d-md-block">
+        Olá, {{ auth()->user()->name }}
+    </div>
+
+    <form action="{{ route('logout') }}" method="POST">
+        @csrf
+        <button class="btn btn-sm btn-outline-secondary">Sair</button>
+    </form>
+</div>
+
       </header>
 
       <!-- Offcanvas sidebar for mobile -->

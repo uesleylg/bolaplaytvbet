@@ -70,59 +70,74 @@
   </div>
 
   <!-- Formulário de Filtro -->
-  <form class="row g-3 align-items-end mb-4">
+  <form method="GET" action="{{ route('admin.get.carrinho') }}" class="row g-3 align-items-end mb-4">
 
-    <!-- Busca -->
-    <div class="col-12 col-md-4">
-      <div class="input-group shadow-sm" style="border-radius: 10px; overflow: hidden;">
-        <span class="input-group-text bg-dark text-white border-0">
-          <i class="fas fa-magnifying-glass"></i>
-        </span>
-        <input type="text" class="form-control border-0 bg-dark text-white" placeholder="Buscar por ID ou usuário" style="border-radius: 0;">
-      </div>
+  <!-- Busca -->
+  <div class="col-12 col-md-4">
+    <div class="input-group shadow-sm" style="border-radius: 10px; overflow: hidden;">
+      <span class="input-group-text bg-dark text-white border-0">
+        <i class="fas fa-magnifying-glass"></i>
+      </span>
+      <input 
+        type="text" 
+        name="busca" 
+        value="{{ request('busca') }}"
+        class="form-control border-0 bg-dark text-white"
+        placeholder="Buscar por ID ou usuário"
+        style="border-radius: 0;">
     </div>
+  </div>
 
-    <!-- Status -->
-    <div class="col-6 col-md-2">
-      <select class="form-select bg-dark text-white border-0 shadow-sm" style="border-radius: 10px;">
-        <option selected>Status (todos)</option>
-        <option>Pendente</option>
-        <option>Pago</option>
-        <option>Cancelado</option>
-      </select>
-    </div>
+  <!-- Status -->
+  <div class="col-6 col-md-2">
+    <select name="status" class="form-select bg-dark text-white border-0 shadow-sm" style="border-radius: 10px;">
+      <option value="">Status (todos)</option>
+      <option value="pendente"   {{ request('status')=='pendente' ? 'selected' : '' }}>Pendente</option>
+      <option value="pago"       {{ request('status')=='pago' ? 'selected' : '' }}>Pago</option>
+      <option value="cancelado"  {{ request('status')=='cancelado' ? 'selected' : '' }}>Cancelado</option>
+    </select>
+  </div>
 
-    <!-- Rodada -->
-    <div class="col-6 col-md-2">
-      <select class="form-select bg-dark text-white border-0 shadow-sm" style="border-radius: 10px;">
-        <option selected>Rodada (todas)</option>
-        <option>Rodada 1</option>
-        <option>Rodada 2</option>
-        <option>Rodada 3</option>
-      </select>
-    </div>
+  <!-- Rodada -->
+  <div class="col-6 col-md-2">
+    <select name="rodada" class="form-select bg-dark text-white border-0 shadow-sm" style="border-radius: 10px;">
+      <option value="">Rodada (todas)</option>
 
-    <!-- Recentes -->
-    <div class="col-6 col-md-2">
-      <select class="form-select bg-dark text-white border-0 shadow-sm" style="border-radius: 10px;">
-        <option selected>Recentes</option>
-        <option>Hoje</option>
-        <option>Últimos 7 dias</option>
-        <option>Últimos 30 dias</option>
-      </select>
-    </div>
+      @foreach($rodadas as $rodada)
+        <option value="{{ $rodada->id }}" {{ request('rodada') == $rodada->id ? 'selected' : '' }}>
+            Rodada {{ $rodada->id }}
+        </option>
+      @endforeach
+    </select>
+  </div>
 
-    <!-- Botões -->
-    <div class="col-6 col-md-2 d-flex gap-2">
-      <button type="button" class="btn btn-outline-light flex-fill" style="border-radius: 10px; transition: 0.3s;">
-        <i class="fas fa-rotate"></i> Limpar
-      </button>
-      <button type="button" class="btn btn-primary flex-fill" style="border-radius: 10px; transition: 0.3s;">
-        <i class="fas fa-filter"></i> Aplicar
-      </button>
-    </div>
+  <!-- Recentes -->
+  <div class="col-6 col-md-2">
+    <select name="recentes" class="form-select bg-dark text-white border-0 shadow-sm" style="border-radius: 10px;">
+      <option value="">Recentes</option>
+      <option value="hoje"  {{ request('recentes')=='hoje' ? 'selected' : '' }}>Hoje</option>
+      <option value="7"     {{ request('recentes')=='7' ? 'selected' : '' }}>Últimos 7 dias</option>
+      <option value="30"    {{ request('recentes')=='30' ? 'selected' : '' }}>Últimos 30 dias</option>
+    </select>
+  </div>
 
-  </form>
+  <!-- Botões -->
+  <div class="col-6 col-md-2 d-flex gap-2">
+
+    <a href="{{ route('admin.get.carrinho') }}" 
+       class="btn btn-outline-light flex-fill" 
+       style="border-radius: 10px; transition: 0.3s;">
+      <i class="fas fa-rotate"></i> Limpar
+    </a>
+
+    <button type="submit" class="btn btn-primary flex-fill" style="border-radius: 10px; transition: 0.3s;">
+      <i class="fas fa-filter"></i> Aplicar
+    </button>
+
+  </div>
+
+</form>
+
 
   <!-- Tabela -->
   <div class="table-responsive">
@@ -205,7 +220,7 @@
 <!-- ==========================
      FIM DA PÁGINA DE CARRINHOS
 =========================== -->
-@include('Admin.Modal.ModalDeleteCarrinho')
-@include('Admin.Modal.ModalCarrinho')
+@include('Paginas.Admin.Modal.ModalDeleteCarrinho')
+@include('Paginas.Admin.Modal.ModalCarrinho')
 
 @endsection

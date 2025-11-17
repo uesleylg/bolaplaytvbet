@@ -101,17 +101,45 @@ public function jogos($id)
 
 
     // 🏁 Lista todas as rodadas
-    public function index()
-    {
-       $rodadas = Rodada::orderBy('id', 'desc')->get()->map(function ($rodada) {
+public function index(Request $request)
+{
+    $query = Rodada::query();
+
+    // FILTRO: busca por ID ou nome
+    if ($request->filled('busca')) {
+        $busca = $request->busca;
+
+        $query->where(function ($q) use ($busca) {
+            $q->where('id', $busca)
+              ->orWhere('nome', 'like', "%$busca%");
+        });
+    }
+
+    // FILTRO: status
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
+    // FILTRO: ordenação
+    if ($request->ordenar == 'recentes') {
+        $query->orderBy('id', 'desc');
+    } elseif ($request->ordenar == 'antigos') {
+        $query->orderBy('id', 'asc');
+    } else {
+        $query->orderBy('id', 'desc'); // padrão
+    }
+
+    // busca final
+    $rodadas = $query->get()->map(function ($rodada) {
         $rodada->data_inicio_formatada = Carbon::parse($rodada->data_inicio)->format('d/m/Y H:i');
         $rodada->data_fim_formatada = Carbon::parse($rodada->data_fim)->format('d/m/Y H:i');
         $rodada->premiacao_texto = 'R$' . number_format($rodada->premiacao_estimada, 2, ',', '.');
         return $rodada;
     });
 
-          return view('Admin.rodada', compact('rodadas'));
-    }
+    return view('Paginas.Admin.rodada', compact('rodadas'));
+}
+
 
 
 

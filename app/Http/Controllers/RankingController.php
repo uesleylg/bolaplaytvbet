@@ -10,6 +10,6 @@ class RankingController extends Controller
      public function index()
     {
         // Aqui você pode buscar dados do ranking ou retornar uma view
-        return view('Ranking'); // retorna a view resources/views/ranking/index.blade.php
+        return view('Paginas.User.Ranking'); // retorna a view resources/views/ranking/index.blade.php
     }
 }

@@ -17,6 +17,6 @@ class BilheteUsuarioController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('BilheteUsuario', compact('bilhetes'));
+        return view('Paginas.User.BilheteUsuario', compact('bilhetes'));
     }
 }

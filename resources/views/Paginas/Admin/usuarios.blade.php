@@ -59,11 +59,76 @@
         <button class="btn btn-outline-secondary btn-sm me-2">
           <i class="fa-solid fa-rotate"></i> Atualizar
         </button>
-        <button class="btn btn-outline-secondary btn-sm">
-          <i class="fa-solid fa-filter"></i> Filtros
-        </button>
+   
       </div>
     </div>
+
+<form class="row g-3 align-items-end mb-4" method="GET" action="{{ route('admin.usuarios.index') }}">
+
+  <!-- Busca -->
+  <div class="col-12 col-md-4">
+    <div class="input-group shadow-sm" style="border-radius: 10px; overflow: hidden;">
+      <span class="input-group-text bg-dark text-white border-0">
+        <i class="fas fa-magnifying-glass"></i>
+      </span>
+      <input 
+        type="text" 
+        name="busca"
+        value="{{ request('busca') }}"
+        class="form-control border-0 bg-dark text-white"
+        placeholder="Buscar usuário por nome ou telefone">
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div class="col-6 col-md-2">
+    <select name="status" class="form-select bg-dark text-white border-0 shadow-sm">
+      <option value="todos">Status (todos)</option>
+      <option value="Ativo" {{ request('status')=='Ativo'?'selected':'' }}>Ativo</option>
+      <option value="Bloqueado" {{ request('status')=='Bloqueado'?'selected':'' }}>Bloqueado</option>
+    </select>
+  </div>
+
+  <!-- Perfil -->
+  <div class="col-6 col-md-2">
+    <select name="perfil" class="form-select bg-dark text-white border-0 shadow-sm">
+      <option value="todos">Perfil (todos)</option>
+      <option value="admin" {{ request('perfil')=='admin'?'selected':'' }}>Administrador</option>
+      <option value="client" {{ request('perfil')=='client'?'selected':'' }}>Usuário</option>
+      <option value="reseller" {{ request('perfil')=='reseller'?'selected':'' }}>Revendedor</option>
+    </select>
+  </div>
+
+  <!-- Recentes -->
+  <div class="col-6 col-md-2">
+    <select name="recentes" class="form-select bg-dark text-white border-0 shadow-sm">
+      <option value="todos">Recentes</option>
+      <option value="hoje" {{ request('recentes')=='hoje'?'selected':'' }}>Hoje</option>
+      <option value="7" {{ request('recentes')=='7'?'selected':'' }}>Últimos 7 dias</option>
+      <option value="30" {{ request('recentes')=='30'?'selected':'' }}>Últimos 30 dias</option>
+    </select>
+  </div>
+
+  <!-- Botões -->
+  <div class="col-6 col-md-2 d-flex gap-2">
+    
+    <!-- LIMPAR -->
+    <a href="{{ route('admin.usuarios.index') }}" 
+       class="btn btn-outline-light flex-fill" 
+       style="border-radius: 10px;">
+      <i class="fas fa-rotate"></i> Limpar
+    </a>
+
+    <!-- APLICAR -->
+    <button class="btn btn-primary flex-fill" style="border-radius: 10px;">
+      <i class="fas fa-filter"></i> Aplicar
+    </button>
+
+  </div>
+
+</form>
+
+
 
     <div class="table-responsive">
       <table class="table table-borderless align-middle mb-0">
@@ -140,6 +205,6 @@
 =========================== -->
 
 
-@include('Admin.Modal.ModalConfirmDelete')
-@include('Admin.Modal.ModalUsuario')
+@include('Paginas.Admin.Modal.ModalConfirmDelete')
+@include('Paginas.Admin.Modal.ModalUsuario')
 @endsection

@@ -8,17 +8,57 @@
 
 @section('content')
 
-    <style>
-     
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-            transition: all 0.3s ease;
-        }
-        .card-body {
-            position: relative;
-        }
-    </style>
+<style>
+    /* ---------- EFEITOS ---------- */
+    .card-hover {
+        transition: all 0.28s ease-in-out;
+    }
+    .card-hover:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    }
+
+    /* Inputs Modernos 2025 */
+    .input-modern,
+    .select-modern {
+        background: rgba(30, 30, 40, 0.85);
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px !important;
+        color: #fff !important;
+        padding: 12px 14px !important;
+        transition: 0.25s ease-in-out;
+    }
+    .input-modern:focus,
+    .select-modern:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.35);
+    }
+
+    /* Título Premium */
+    .titulo-modern {
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        color: #e4e4e9;
+    }
+
+    .badge-modern {
+        font-size: 0.75rem;
+        padding: 6px 12px;
+        border-radius: 50px;
+        font-weight: 700;
+    }
+
+    .card-modern {
+        background: linear-gradient(145deg, #0f172a, #1e293b);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+</style>
+
+
+
+
 
 <div class="container-fluid" style="margin-top:50px;">
 
@@ -31,6 +71,56 @@
             <i class="fas fa-plus me-2"></i> Criar Rodada
         </button>
     </div>
+<form method="GET" action="{{ route('admin.cadastro.rodada') }}" class="row g-3 align-items-end mb-4">
+
+  <!-- Busca -->
+  <div class="col-12 col-md-4">
+    <div class="input-group">
+      <span class="input-group-text bg-dark border-0 text-primary">
+        <i class="fas fa-search"></i>
+      </span>
+      <input 
+        type="text" 
+        name="busca" 
+        value="{{ request('busca') }}"
+        class="form-control input-modern" 
+        placeholder="Buscar rodada por ID ou nome">
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div class="col-6 col-md-3">
+    <select name="status" class="form-select select-modern">
+      <option value="">Status (todos)</option>
+      <option value="Ativo" {{ request('status')=='Ativo' ? 'selected' : '' }}>Ativo</option>
+      <option value="Pendente" {{ request('status')=='Pendente' ? 'selected' : '' }}>Pendente</option>
+      <option value="Cancelado" {{ request('status')=='Cancelado' ? 'selected' : '' }}>Cancelado</option>
+    </select>
+  </div>
+
+  <!-- Ordenação -->
+  <div class="col-6 col-md-3">
+    <select name="ordenar" class="form-select select-modern">
+      <option value="">Ordenar por</option>
+      <option value="recentes" {{ request('ordenar')=='recentes' ? 'selected' : '' }}>Recentes</option>
+      <option value="antigos" {{ request('ordenar')=='antigos' ? 'selected' : '' }}>Antigos</option>
+    </select>
+  </div>
+
+  <!-- Botões -->
+  <div class="col-12 col-md-2 d-flex gap-2">
+    <a href="{{ route('admin.cadastro.rodada') }}" class="btn btn-outline-light flex-fill rounded-3">
+      <i class="fas fa-rotate"></i>
+    </a>
+
+    <button type="submit" class="btn btn-primary flex-fill rounded-3 fw-semibold">
+      <i class="fas fa-filter me-1"></i> Filtrar
+    </button>
+  </div>
+
+</form>
+
+
 
 <div class="row g-4">
   @forelse ($rodadas as $rodada)
@@ -192,8 +282,8 @@
 
 
 
-@include('Admin.Modal.ModalVerJogos')
-@include('Admin.Modal.ModalJogosRodada')
-@include('Admin.Modal.ModalCriarRodada')
+@include('Paginas.Admin.Modal.ModalVerJogos')
+@include('Paginas.Admin.Modal.ModalJogosRodada')
+@include('Paginas.Admin.Modal.ModalCriarRodada')
 @endsection
 

@@ -14,6 +14,8 @@ use App\Http\Controllers\PalpiteController;
 use App\Http\Controllers\JogosinfoController;
 use App\Http\Controllers\CarrinhoPalpiteController;
 
+use App\Http\Controllers\ConfiguracaoController;
+
 
 use Illuminate\Support\Facades\Http;
 
@@ -36,77 +38,59 @@ Route::get('/api/jogos-uol', function () {
 
 // 🏠 Rotas públicas
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
-Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');
-Route::get('/bilhete', [BilheteUsuarioController::class, 'index'])->name('bilhete.index');
-
-
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-
-
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
-
-
-
-
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
 Route::get('/rodadas/{id}/jogos', [RodadaController::class, 'jogos'])->name('rodadas.jogos');
-
-Route::post('/palpites', [PalpiteController::class, 'store'])->name('palpites.store');
-Route::post('/carrinho/salvar', [CarrinhoPalpiteController::class, 'salvarCarrinho'])->name('carrinho.salvar');
-
-Route::put('/carrinho/{id}/atualizar', [CarrinhoPalpiteController::class, 'atualizarCarrinho'])->name('carrinho.atualizar');
-Route::delete('/carrinho/{id}/excluir', [CarrinhoPalpiteController::class, 'excluir']);
+Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');
 
 
 
-// 🧩 Rotas administrativas (proteção opcional)
+Route::middleware(['user'])->group(function () {
+
+    Route::get('/bilhete', [BilheteUsuarioController::class, 'index'])->name('bilhete.index');
+    
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    
+    Route::post('/palpites', [PalpiteController::class, 'store'])->name('palpites.store');
+    
+    Route::post('/carrinho/salvar', [CarrinhoPalpiteController::class, 'salvarCarrinho'])->name('carrinho.salvar');
+    
+    Route::put('/carrinho/{id}/atualizar', [CarrinhoPalpiteController::class, 'atualizarCarrinho'])->name('carrinho.atualizar');
+    
+    Route::delete('/carrinho/{id}/excluir', [CarrinhoPalpiteController::class, 'excluir']);
+});
+
+
+
+// 🧩 Rotas administrativas 
 Route::prefix('admin')
     ->name('admin.')
-    ->middleware(['auth', 'admin'])
+    ->middleware(['admin'])
     ->group(function () {
         Route::get('/', [HomeAdminController::class, 'index'])->name('index');
         Route::get('/usuarios', [UsuariosAdminController::class, 'index'])->name('usuarios.index');
-        
-        
+
         Route::get('/cadastro/bolao', [RodadaController::class, 'index'])->name('cadastro.rodada');
         Route::post('/rodadas/cadastro', [RodadaController::class, 'store'])->name('rodadas.store');
         Route::put('/rodadas/{id}', [RodadaController::class, 'update'])->name('rodadas.update');
         Route::delete('/rodadas/{id}', [RodadaController::class, 'destroy'])->name('rodadas.destroy');
 
-          
-      
-    // Retorna os jogos em JSON (usado pelo front para preencher a tabela)
-    Route::get('/get/jogos', [JogosinfoController::class, 'jogos'])->name('get.jogos');
-    Route::get('get/odds/{id}', [JogosInfoController::class, 'odds'])->name('get.odds');
+        Route::get('/get/jogos', [JogosinfoController::class, 'jogos'])->name('get.jogos');
+        Route::get('get/odds/{id}', [JogosInfoController::class, 'odds'])->name('get.odds');
         Route::get('get/placar/{id}', [JogosInfoController::class, 'placar'])->name('get.placar');
         Route::post('rodadas/jogos', [RodadaJogoController::class, 'store'])->name('rodadas.jogos.store');
 
-        Route::delete('/rodadas/{rodada}/jogos/excluir', [RodadaController::class, 'excluirJogos'])
-    ->name('rodadas.excluirJogos');
+        Route::delete('/rodadas/{rodada}/jogos/excluir', [RodadaController::class, 'excluirJogos'])->name('rodadas.excluirJogos');
 
-
-
-
-        // CARRINHO
         Route::get('/carrinho', [CarrinhoPalpiteController::class, 'carrinho'])->name('get.carrinho');
         Route::delete('/carrinho/{id}', [CarrinhoPalpiteController::class, 'destroy'])->name('carrinho.destroy');
         Route::put('/carrinhos/{id}', [CarrinhoPalpiteController::class, 'update'])->name('carrinhos.update');
 
-
-
-
-
-
-
-
-
-
-    
-
         Route::post('/register', [AuthController::class, 'adminregister'])->name('register.post');
-         Route::put('/usuario/{id}', [AuthController::class, 'update'])->name('usuario.update');
-         Route::delete('/usuario/{id}', [AuthController::class, 'destroy'])->name('usuario.destroy');
+        Route::put('/usuario/{id}', [AuthController::class, 'update'])->name('usuario.update');
+        Route::delete('/usuario/{id}', [AuthController::class, 'destroy'])->name('usuario.destroy');
 
-        
+
+        Route::get('/configuracao', [ConfiguracaoController::class, 'index'])->name('index.conf');
+        Route::post('/configuracoes/salvar', [ConfiguracaoController::class, 'salvar'])->name('config.salvar');
     });

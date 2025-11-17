@@ -6,6 +6,57 @@
 @include('Slide.SlidePadrao')
 
 <style>
+
+/* Botão (parecendo select) */
+.status-filter {
+    background: #0f172a;
+    border: 1px solid #283347;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 10px;
+    transition: 0.3s ease;
+}
+
+.status-filter:hover {
+    background: #1e293b;
+    border-color: #3b475a;
+}
+
+/* Wrapper para posicionar o dropdown */
+.dropdown-wrapper {
+    position: relative;
+}
+
+/* Dropdown */
+.status-menu {
+    position: absolute;
+    top: 48px;
+    left: 0;
+    background: #0f172a;
+    border: 1px solid #283347;
+    border-radius: 10px;
+    padding: 6px;
+    display: none;
+    flex-direction: column;
+    z-index: 200;
+    min-width: 180px;
+}
+
+.status-menu button {
+    background: transparent;
+    border: none;
+    text-align: left;
+    padding: 8px 12px;
+    color: white;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.status-menu button:hover {
+    background: #1e293b;
+}
+
+
   .header-title {
     color: white;
     font-weight: 700;
@@ -255,15 +306,44 @@
   </div>
 
   <!-- 🔍 Barra de pesquisa e filtro -->
-  <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-    <div class="search-container">
-      <i class="fa-solid fa-magnifying-glass"></i>
-      <input type="text" class="search-input" placeholder="Buscar bilhete ou nome...">
-    </div>
-    <button class="btn status-filter d-flex align-items-center gap-2">
-      <i class="fa-solid fa-filter"></i> Todos os Status
-    </button>
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+
+  <!-- Busca -->
+  <div class="search-container">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input 
+      type="text" 
+      class="search-input" 
+      placeholder="Buscar bilhete ou nome..."
+      name="busca"
+      value="{{ request('busca') }}"
+    >
   </div>
+
+  <!-- Botão Select -->
+  <div class="dropdown-wrapper">
+    <button 
+      type="button" 
+      class="btn status-filter d-flex align-items-center gap-2"
+      id="btnFiltroStatus"
+    >
+      <i class="fa-solid fa-filter"></i> 
+      <span id="textoStatus">Todos os Status</span>
+    </button>
+
+    <!-- MENU DROPDOWN -->
+    <div id="menuStatus" class="status-menu">
+      <button data-value="todos">Todos os Status</button>
+      <button data-value="pendente">Pendente</button>
+      <button data-value="confirmado">Confirmado</button>
+      <button data-value="cancelado">Cancelado</button>
+    </div>
+
+    <!-- INPUT QUE MANDA PRO BACK-END -->
+    <input type="hidden" name="status" id="inputStatus" value="{{ request('status', 'todos') }}">
+  </div>
+</div>
+
 
   <!-- 🎟️ Lista de bilhetes ou estado vazio -->
   @if($bilhetes->isEmpty())
@@ -338,6 +418,43 @@
 
 
 <script>
+
+
+document.getElementById("btnFiltroStatus").addEventListener("click", () => {
+    document.getElementById("menuStatus").style.display =
+        document.getElementById("menuStatus").style.display === "flex"
+        ? "none"
+        : "flex";
+});
+
+// Selecionar item
+document.querySelectorAll("#menuStatus button").forEach(btn => {
+    btn.addEventListener("click", () => {
+
+        let texto = btn.innerText;
+        let valor = btn.getAttribute("data-value");
+
+        document.getElementById("textoStatus").innerText = texto;
+        document.getElementById("inputStatus").value = valor;
+
+        // Fecha o menu após selecionar
+        document.getElementById("menuStatus").style.display = "none";
+    });
+});
+
+// Fechar dropdown ao clicar fora
+document.addEventListener("click", function(e) {
+    if (!document.querySelector(".dropdown-wrapper").contains(e.target)) {
+        document.getElementById("menuStatus").style.display = "none";
+    }
+});
+
+
+
+
+
+
+
 document.addEventListener('click', function (e) {
   const botao = e.target.closest('.btn-excluir');
   if (!botao) return;
@@ -371,6 +488,6 @@ document.addEventListener('click', function (e) {
 });
 </script>
 
-@include('Modal.ModalAposta')
-@include('Modal.ModalIndicacao')
+@include('Paginas.User.Modal.ModalAposta')
+@include('Paginas.User.Modal.ModalIndicacao')
 @endsection
