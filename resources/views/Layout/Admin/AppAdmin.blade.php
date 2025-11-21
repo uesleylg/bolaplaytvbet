@@ -8,7 +8,11 @@
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://kit.fontawesome.com/afcee4f894.js" crossorigin="anonymous" defer></script>
-  
+  @if(!empty($configs['favicon']))
+    <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $configs['favicon']) }}">
+    <link rel="shortcut icon" href="{{ asset('storage/' . $configs['favicon']) }}">
+@endif
+
 </head>
 
 <body class="bg-dark">

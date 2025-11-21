@@ -165,54 +165,73 @@
           <!-- Linha divisória -->
           <hr class="border-secondary mb-3">
 
-          <!-- Botões de ação -->
-          <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
-      @if ($rodada->status === 'Pendente')
-    <button 
-        data-bs-toggle="modal" 
-        data-bs-target="#ModalJogosRodada"  
-        class="btn btn-outline-info btn-sm rounded-pill px-3 fw-semibold shadow-sm"
-        data-id="{{ $rodada->id }}">
-        <i class="fas fa-futbol me-1"></i> ADD Jogos
-    </button>
-@elseif ($rodada->status === 'Ativo')
-    <button 
-        data-bs-toggle="modal" 
-        data-bs-target="#ModalVerJogosRodada"  
-        class="btn btn-outline-info btn-sm rounded-pill px-3 fw-semibold shadow-sm"
-        data-id="{{ $rodada->id }}">
-        <i class="fas fa-futbol me-1"></i> Ver Jogos
-    </button>
+      <!-- Botões de ação -->
+<div class="d-flex flex-column gap-2 mt-3">
 
-@endif
+    {{-- Linha 1: Ações principais (lado a lado) --}}
+    <div class="d-flex gap-2 flex-wrap">
 
+        @if ($rodada->status === 'Pendente')
+            <button 
+                data-bs-toggle="modal" 
+                data-bs-target="#ModalJogosRodada"  
+                class="btn btn-outline-info btn-sm rounded-pill px-3 fw-semibold shadow-sm flex-fill"
+                data-id="{{ $rodada->id }}">
+                <i class="fas fa-futbol me-1"></i> ADD Jogos
+            </button>
 
-           <button 
-  class="btn btn-outline-warning btn-sm rounded-pill px-3 fw-semibold shadow-sm btn-editar-rodada"
-  data-id="{{ $rodada->id }}"
-  data-nome="{{ $rodada->nome }}"
-  data-valor="{{ $rodada->valor_bilhete }}"
-  data-premiacao="{{ $rodada->premiacao_estimada }}"
-  data-descricao="{{ $rodada->descricao }}"
-  data-inicio="{{ \Carbon\Carbon::parse($rodada->data_inicio)->format('Y-m-d\TH:i') }}"
-  data-fim="{{ \Carbon\Carbon::parse($rodada->data_fim)->format('Y-m-d\TH:i') }}"
-  data-modo="{{ $rodada->modo_jogo }}"
-  data-num="{{ $rodada->num_palpites }}"
-  data-multiplas="{{ $rodada->multiplas }}"
-  data-bs-toggle="modal" 
-  data-bs-target="#ModalCadastroRodada"
->
-  <i class="fas fa-pen me-1"></i> Editar Rodada
+        @elseif ($rodada->status === 'Ativo')
+            <button 
+                data-bs-toggle="modal" 
+                data-bs-target="#ModalVerJogosRodada"  
+                class="btn btn-outline-info btn-sm rounded-pill px-3 fw-semibold shadow-sm flex-fill"
+                data-id="{{ $rodada->id }}">
+                <i class="fas fa-futbol me-1"></i> Ver Jogos
+            </button>
+        @endif
+
+        <button 
+            class="btn btn-outline-warning btn-sm rounded-pill px-3 fw-semibold shadow-sm flex-fill btn-editar-rodada"
+            data-id="{{ $rodada->id }}"
+            data-nome="{{ $rodada->nome }}"
+            data-valor="{{ $rodada->valor_bilhete }}"
+            data-premiacao="{{ $rodada->premiacao_estimada }}"
+            data-descricao="{{ $rodada->descricao }}"
+            data-inicio="{{ \Carbon\Carbon::parse($rodada->data_inicio)->format('Y-m-d\TH:i') }}"
+            data-fim="{{ \Carbon\Carbon::parse($rodada->data_fim)->format('Y-m-d\TH:i') }}"
+            data-modo="{{ $rodada->modo_jogo }}"
+            data-num="{{ $rodada->num_palpites }}"
+            data-multiplas="{{ $rodada->multiplas }}"
+            data-bs-toggle="modal" 
+            data-bs-target="#ModalCadastroRodada">
+            <i class="fas fa-pen me-1"></i> Editar
+        </button>
+
+        <button 
+            class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-semibold shadow-sm flex-fill"
+            data-bs-toggle="modal" 
+            data-bs-target="#modalExcluirRodada"
+            data-id="{{ $rodada->id }}">
+            <i class="fas fa-trash me-1"></i> Excluir
+        </button>
+
+    </div>
+
+    {{-- Linha 2: Add Auditoria (somente em Ativo) --}}
+    @if ($rodada->status === 'Ativo')
+     <button 
+    class="btn btn-outline-primary btn-sm rounded-pill fw-semibold shadow-sm btn-add-auditoria w-100"
+    data-bs-toggle="modal" 
+    data-bs-target="#ModalAddAuditoria"
+    data-id="{{ $rodada->id }}"
+    data-link="{{ $rodada->link_auditoria }}">
+    <i class="fa-solid fa-shield-halved me-1"></i> Add Auditoria
 </button>
 
-<button 
-  class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-semibold shadow-sm"
-  data-bs-toggle="modal" 
-  data-bs-target="#modalExcluirRodada"
-  data-id="{{ $rodada->id }}">
-  <i class="fas fa-trash me-1"></i> Excluir Rodada
-</button>
-          </div>
+    @endif
+
+</div>
+
         </div>
       </div>
     </div>
@@ -266,6 +285,24 @@
 
 
 <script>
+  // Quando o modal for aberto...
+document.addEventListener('click', function(e) {
+
+    const btn = e.target.closest('.btn-add-auditoria');
+
+    if (btn) {
+        let rodadaId = btn.getAttribute('data-id');
+        let link = btn.getAttribute('data-link') || "";
+
+        // Preenche o ID oculto
+        document.getElementById('auditoriaRodadaId').value = rodadaId;
+
+        // Preenche o input com o link atual (ou vazio)
+        document.getElementById('inputLinkAuditoria').value = link;
+    }
+});
+
+
   document.addEventListener('DOMContentLoaded', function () {
     const modalExcluir = document.getElementById('modalExcluirRodada');
     const formExcluir = document.getElementById('formExcluirRodada');
@@ -281,7 +318,7 @@
 </script>
 
 
-
+@include('Paginas.Admin.Modal.ModalAddAuditoria')
 @include('Paginas.Admin.Modal.ModalVerJogos')
 @include('Paginas.Admin.Modal.ModalJogosRodada')
 @include('Paginas.Admin.Modal.ModalCriarRodada')

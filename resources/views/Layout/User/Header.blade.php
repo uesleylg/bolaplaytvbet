@@ -1,7 +1,36 @@
 <!-- ======== SIDEBAR (Desktop) ======== -->
 <div class="sidebar d-none d-lg-flex flex-column bg-dark vh-100">
   <a class="navbar-brand mb-4 d-block text-light" href="#">
-    ⚽ Bolão <span class="text-info">Play</span>
+@if (!empty($configs['logo_desktop']))
+   <img 
+    src="{{ asset('storage/' . $configs['logo_desktop']) }}" 
+    alt="Logo" 
+    style="
+        display: block;          /* Remove gaps em torno da imagem */
+        max-width: 100%;          /* Responsiva, não ultrapassa o container */
+        height: auto;             /* Mantém proporção */
+        image-rendering: auto;    /* Melhor renderização possível */
+    "
+    srcset="{{ asset('storage/' . $configs['logo_desktop']) }} 1x, 
+            {{ asset('storage/' . $configs['logo_desktop']) }} 2x"
+>
+
+
+@elseif (!empty($configs['nome_site']))
+    @php
+        $nome = trim($configs['nome_site']);
+        $partes = explode(' ', $nome);
+        $ultima = array_pop($partes); // última palavra
+        $primeiras = implode(' ', $partes); // resto do nome
+    @endphp
+
+    ⚽ {{ $primeiras }} <span class="text-info">{{ $ultima }}</span>
+
+@else
+    ⚽ Sua Logo
+@endif
+
+
   </a>
 
   <div class="mt-2 ms-3">
@@ -91,12 +120,38 @@
   <div class="container-fluid d-flex align-items-center justify-content-between">
     <!-- Botão e logo -->
     <div class="d-flex align-items-center">
-      <button class="btn text-light me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+      <button class="btn text-light " type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
         <i class="fa-solid fa-bars fa-lg"></i>
       </button>
-      <a class="navbar-brand fw-bold mb-0 h1 mobile-text text-light" href="#">
-        ⚽ BolaPlay <span style="color:#0dcaf0!important;">Bet</span>
-      </a>
+     @if (!empty($configs['logo_mobile']))
+   <img 
+    src="{{ asset('storage/' . $configs['logo_mobile']) }}" 
+    alt="Logo" 
+    style="
+        display: block;          /* Remove gaps em torno da imagem */
+        max-width: 100%;          /* Responsiva, não ultrapassa o container */
+        height: 40px;            /* Mantém proporção */
+        image-rendering: auto;    /* Melhor renderização possível */
+    "
+    srcset="{{ asset('storage/' . $configs['logo_mobile']) }} 1x, 
+            {{ asset('storage/' . $configs['logo_mobile']) }} 2x"
+>
+
+
+@elseif (!empty($configs['nome_site']))
+    @php
+        $nome = trim($configs['nome_site']);
+        $partes = explode(' ', $nome);
+        $ultima = array_pop($partes); // última palavra
+        $primeiras = implode(' ', $partes); // resto do nome
+    @endphp
+
+    ⚽ {{ $primeiras }} <span class="text-info">{{ $ultima }}</span>
+
+@else
+    ⚽ Sua Logo
+@endif
+
     </div>
 
     <!-- Login / Usuário -->
@@ -127,7 +182,34 @@
 <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="mobileMenu"
      style="background-color:#202242!important;">
   <div class="offcanvas-header">
-    <h5 class="offcanvas-title">⚽ BolaPlay <span style="color:#0dcaf0!important;">Bet</span></h5>
+        @if (!empty($configs['logo_mobile']))
+   <img 
+    src="{{ asset('storage/' . $configs['logo_mobile']) }}" 
+    alt="Logo" 
+    style="
+        display: block;          /* Remove gaps em torno da imagem */
+        max-width: 100%;          /* Responsiva, não ultrapassa o container */
+        height: 40px;            /* Mantém proporção */
+        image-rendering: auto;    /* Melhor renderização possível */
+    "
+    srcset="{{ asset('storage/' . $configs['logo_mobile']) }} 1x, 
+            {{ asset('storage/' . $configs['logo_mobile']) }} 2x"
+>
+
+
+@elseif (!empty($configs['nome_site']))
+    @php
+        $nome = trim($configs['nome_site']);
+        $partes = explode(' ', $nome);
+        $ultima = array_pop($partes); // última palavra
+        $primeiras = implode(' ', $partes); // resto do nome
+    @endphp
+
+    ⚽ {{ $primeiras }} <span class="text-info">{{ $ultima }}</span>
+
+@else
+    ⚽ Sua Logo
+@endif
     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
   </div>
 

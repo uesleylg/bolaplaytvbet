@@ -3,104 +3,151 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Em Manutenção — BolaPlay FC</title>
+  <title>Em Manutenção — {{ $configs['nome_site'] ?? 'Nome do site' }}</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://kit.fontawesome.com/afcee4f894.js" crossorigin="anonymous" defer></script>
 
-  <style>
-    :root{
-      --bg:#0b0f19;
-      --card:#131a27;
-      --accent:#ffcc00;
-      --muted:#a4b1c4;
-    }
 
-    body{
-      background:var(--bg);
-      color:#fff;
-      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto;
-      min-height:100vh;
-      display:flex;align-items:center;justify-content:center;
-      padding:2rem;
-    }
-
-    .box{
-      background:var(--card);
-      padding:40px;
-      border-radius:14px;
-      width:100%;
-      max-width:520px;
-      text-align:center;
-      box-shadow:0 0 40px rgba(0,0,0,0.4);
-    }
-
-    .icon{
-      width:80px;height:80px;
-      background:var(--accent);
-      border-radius:50%;
-      display:flex;align-items:center;justify-content:center;
-      margin:auto;
-      margin-bottom:20px;
-      color:#0b0f19;
-      font-size:32px;
-      box-shadow:0 8px 20px rgba(255,204,0,0.2);
-    }
-
-    .count{display:flex;gap:10px;justify-content:center;margin-top:25px}
-    .count div{background:#0f1520;padding:14px 20px;border-radius:10px;min-width:70px}
-    .count .num{font-size:1.4rem;font-weight:700;color:#fff}
-    .count .label{font-size:.75rem;color:var(--muted)}
-
-    a.btn-main{
-      background:var(--accent);
-      color:#000;
-      font-weight:600;
-      border:0;
-    }
-
-    footer{color:var(--muted);font-size:.8rem;margin-top:25px}
-
-  </style>
 </head>
 <body>
+<div class="manutencao-wrapper">
 
-<div class="box">
+    <div class="ball-animation">
+        <i class="fa-solid fa-futbol"></i>
+    </div>
 
-  <div class="icon"><i class="fa-solid fa-futbol"></i></div>
+    <h2 class="title-manutencao">Estamos em Manutenção</h2>
 
-  <h2 class="fw-bold">Voltamos em breve</h2>
-  <p class="mt-2" style="color:var(--muted)">Estamos realizando melhorias para trazer uma experiência ainda melhor aos torcedores.</p>
+    <p class="desc-manutencao">
+        {{ $configs['mensagem_manutencao'] ?? 'Voltaremos em instantes. Estamos ajustando o sistema para melhorar sua experiência.' }}
+    </p>
 
-  <!-- Contagem regressiva -->
-  <div class="count" id="countdown">
-    <div><div class="num" id="d">00</div><div class="label">Dias</div></div>
-    <div><div class="num" id="h">00</div><div class="label">Horas</div></div>
-    <div><div class="num" id="m">00</div><div class="label">Minutos</div></div>
-    <div><div class="num" id="s">00</div><div class="label">Seg.</div></div>
-  </div>
-
-  <a href="#" class="btn btn-main btn-lg w-100 mt-4"><i class="fa-solid fa-bell me-2"></i>Ser avisado</a>
-
-  <footer>© BolaPlay FC — Todos os direitos reservados.</footer>
+    <footer class="footer-manutencao">
+        © {{ $configs['nome_site'] ?? 'Nome do site' }} — Todos os direitos reservados.
+    </footer>
 </div>
 
-<script>
-  const target = new Date('2025-11-18T16:00:00Z');
+<style>
+    .manutencao-wrapper {
+        text-align: center;
+        padding: 60px 20px;
+        color: #fff;
+        animation: fadeIn 0.9s ease-in-out;
+        max-width: 650px;
+        margin: auto;
+    }
 
-  function update(){
-    const now = new Date();
-    let diff = Math.max(0, Math.floor((target - now) / 1000));
-    const d = Math.floor(diff / 86400); diff %= 86400;
-    const h = Math.floor(diff / 3600); diff %= 3600;
-    const m = Math.floor(diff / 60); const s = diff % 60;
-    document.getElementById('d').textContent = String(d).padStart(2,'0');
-    document.getElementById('h').textContent = String(h).padStart(2,'0');
-    document.getElementById('m').textContent = String(m).padStart(2,'0');
-    document.getElementById('s').textContent = String(s).padStart(2,'0');
-  }
-  update(); setInterval(update,1000);
-</script>
+    /* ⚽ Bola girando */
+    .ball-animation i {
+        font-size: 80px;
+        color: #0ea5e9;
+        animation: spinBall 2.2s infinite linear;
+    }
+
+    @keyframes spinBall {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    /* ✨ Título */
+    .title-manutencao {
+        font-size: 2.2rem;
+        font-weight: bold;
+        margin-top: 20px;
+        animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+        0% { opacity: 0.8; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.05); }
+        100% { opacity: 0.8; transform: scale(1); }
+    }
+
+    /* 💬 Descrição */
+    .desc-manutencao {
+        margin-top: 15px;
+        font-size: 1.1rem;
+        color: #aab4c4;
+        max-width: 520px;
+        margin-left: auto;
+        margin-right: auto;
+        animation: fadeUp 1s ease-in-out;
+        line-height: 1.6rem;
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0px); }
+    }
+
+    /* 🌙 Rodapé */
+    .footer-manutencao {
+        margin-top: 50px;
+        font-size: 0.9rem;
+        color: #6b7280;
+        letter-spacing: 0.5px;
+    }
+
+    /* 🔄 Fundo animado */
+ body {
+    background: radial-gradient(circle at center, #162032, #0d121a);
+    background-size: 150% 150%;
+    animation: bgMove 8s infinite alternate ease-in-out;
+    overflow-x: hidden;
+
+    /* CENTRALIZAÇÃO PERFEITA */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+
+    @keyframes bgMove {
+        0% { background-position: 50% 0%; }
+        100% { background-position: 50% 100%; }
+    }
+
+    /* 📱 MOBILE RESPONSIVO */
+    @media (max-width: 600px) {
+
+        .ball-animation i {
+            font-size: 60px;
+        }
+
+        .title-manutencao {
+            font-size: 1.7rem;
+            margin-top: 15px;
+        }
+
+        .desc-manutencao {
+            font-size: 1rem;
+            padding: 0 10px;
+        }
+
+        .footer-manutencao {
+            margin-top: 35px;
+            font-size: 0.8rem;
+        }
+    }
+
+    /* Extra pequeno (iPhone SE / Moto E / telas ≤ 380px) */
+    @media (max-width: 380px) {
+        .ball-animation i {
+            font-size: 50px;
+        }
+
+        .title-manutencao {
+            font-size: 1.5rem;
+        }
+
+        .desc-manutencao {
+            font-size: 0.95rem;
+        }
+    }
+</style>
+
 
 </body>
 </html>

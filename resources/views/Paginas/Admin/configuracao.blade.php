@@ -1,6 +1,6 @@
 @extends('Layout/Admin/AppAdmin')
 
-@section('title', 'Carrinhos de Apostas')
+@section('title', 'Configurações')
 
 @section('content')
 <style>
@@ -76,6 +76,42 @@
     border: 1px solid #30363d;
     border-radius: 10px;
     padding: 15px;
+  }
+
+    .upload-area {
+    background: #0d1117;
+    border: 2px dashed #30363d;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: .3s;
+        height: auto;
+  }
+
+  .upload-area:hover {
+    border-color: #4a5568;
+    background: #111827;
+  }
+
+  .upload-area i {
+    font-size: 32px;
+    color: #9ca3af;
+  }
+
+  .upload-area span {
+    display: block;
+    margin-top: 6px;
+    color: #9ca3af;
+    font-size: 14px;
+  }
+
+  .upload-area img {
+    max-width: 100%;
+    max-height: 120px;
+    margin-top: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #000;
   }
 </style>
 
@@ -168,190 +204,565 @@
 
 
     <!-- ========================= APARÊNCIA ========================= -->
-    <div class="tab-pane fade" id="aparencia">
-      <div class="config-card">
+<div class="tab-pane fade" id="aparencia">
+  <div class="config-card">
 
-        <h5 class="text-white mb-3">Aparência</h5>
+    <h5 class="text-white mb-3">Aparência</h5>
+<form action="{{ route('admin.config.salvar') }}" method="POST" enctype="multipart/form-data">
+    @csrf
 
-        <div class="row g-4">
+    <div class="row g-4">
 
-          <div class="col-md-6">
-            <label class="text-white">Logo Desktop (300x80px)</label>
-            <input type="file" class="form-control">
-          </div>
-
-          <div class="col-md-6">
-            <label class="text-white">Logo Mobile (200x60px)</label>
-            <input type="file" class="form-control">
-          </div>
-
-          <div class="col-md-6">
-            <label class="text-white">Favicon (32x32px)</label>
-            <input type="file" class="form-control">
-          </div>
-
-          <div class="col-md-6">
-            <label class="text-white">Cor primária do site</label>
-            <input type="color" class="form-control form-control-color">
-          </div>
-
+        <!-- LOGO DESKTOP -->
+        <div class="col-md-6">
+            <label class="text-white fw-semibold">Logo Desktop (300x80px)</label>
+            <div class="upload-area mt-1 position-relative" onclick="document.getElementById('logo_desktop').click()" id="area_logo_desktop">
+                @if(!empty($configs['logo_desktop']))
+                    <img id="preview_logo_desktop_saved" src="{{ asset('storage/' . $configs['logo_desktop']) }}" style="max-width:100%; margin-top:10px;">
+                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0"
+                            onclick="event.stopPropagation(); excluirImagem('logo_desktop')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                @else
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Clique para selecionar uma imagem</span>
+                    <img id="preview_logo_desktop" style="display:none; max-width:100%; margin-top:10px;">
+                @endif
+            </div>
+            <input type="file" id="logo_desktop" name="logo_desktop" class="d-none"
+                   onchange="previewImage(this, 'preview_logo_desktop', 'preview_logo_desktop_saved', 'area_logo_desktop')">
         </div>
 
-        <button class="btn btn-primary mt-3">
-          <i class="fas fa-check"></i> Salvar
-        </button>
+        <!-- LOGO MOBILE -->
+        <div class="col-md-6">
+            <label class="text-white fw-semibold">Logo Mobile (200x45px)</label>
+            <div class="upload-area mt-1 position-relative" onclick="document.getElementById('logo_mobile').click()" id="area_logo_mobile">
+                @if(!empty($configs['logo_mobile']))
+                    <img id="preview_logo_mobile_saved" src="{{ asset('storage/' . $configs['logo_mobile']) }}" style="max-width:100%; margin-top:10px;">
+                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0"
+                            onclick="event.stopPropagation(); excluirImagem('logo_mobile')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                @else
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Clique para selecionar uma imagem</span>
+                    <img id="preview_logo_mobile" style="display:none; max-width:100%; margin-top:10px;">
+                @endif
+            </div>
+            <input type="file" id="logo_mobile" name="logo_mobile" class="d-none"
+                   onchange="previewImage(this, 'preview_logo_mobile', 'preview_logo_mobile_saved', 'area_logo_mobile')">
+        </div>
 
-      </div>
+        <!-- FAVICON -->
+        <div class="col-md-6">
+            <label class="text-white fw-semibold">Favicon (32x32px)</label>
+            <div class="upload-area mt-1 position-relative" onclick="document.getElementById('favicon').click()" id="area_favicon">
+                @if(!empty($configs['favicon']))
+                    <img id="preview_favicon_saved" src="{{ asset('storage/' . $configs['favicon']) }}" style="max-height:60px; margin-top:10px;">
+                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0"
+                            onclick="event.stopPropagation(); excluirImagem('favicon')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                @else
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Clique para selecionar uma imagem</span>
+                    <img id="preview_favicon" style="display:none; max-height:60px; margin-top:10px;">
+                @endif
+            </div>
+            <input type="file" id="favicon" name="favicon" class="d-none"
+                   onchange="previewImage(this, 'preview_favicon', 'preview_favicon_saved', 'area_favicon')">
+        </div>
+
+        <!-- COR PRIMÁRIA -->
+        <div class="col-md-6">
+            <label class="text-white fw-semibold">Cor primária do site</label>
+            <input type="color" class="form-control form-control-color mt-1"
+                   name="cor_primaria"
+                   value="{{ $configs['cor_primaria'] ?? '#000000' }}"
+                   style="border-radius:10px; height:48px;">
+        </div>
+
     </div>
+
+    <button class="btn btn-primary mt-4 px-4 py-2" style="border-radius:10px;">
+        <i class="fas fa-check"></i> Salvar
+    </button>
+</form>
+  </div>
+</div>
+
+<!-- JS -->
+<script>
+function previewImage(input, previewId, savedId = null) {
+    const file = input.files[0];
+    const preview = document.getElementById(previewId);
+
+    if (savedId) {
+        const saved = document.getElementById(savedId);
+        if (saved) saved.style.display = "none";
+    }
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.style.display = "block";
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+function excluirImagem(chave) {
+    if(!confirm('Deseja realmente excluir esta imagem?')) return;
+
+    fetch("{{ route('admin.config.excluir') }}", {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ chave: chave })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success){
+            alert('Imagem excluída com sucesso!');
+            location.reload(); // Atualiza a página
+        } else {
+            alert('Erro ao excluir imagem.');
+        }
+    })
+    .catch(err => console.error(err));
+}
+
+</script>
 
     <!-- ========================= SLIDES ========================= -->
-    <div class="tab-pane fade" id="slide">
-      <div class="config-card">
+<div class="tab-pane fade" id="slide">
+    <div class="config-card">
 
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="text-white">Slides do Site</h5>
-          <button class="btn btn-success">
-            <i class="fas fa-plus"></i> Novo Slide
-          </button>
-        </div>
+        <h5 class="text-white mb-3">Slides do Site (Máximo 3)</h5>
 
-        <div class="row g-4">
+        <form action="{{ route('admin.slides.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
 
-          <!-- Slide Box -->
-          <div class="col-md-6">
-            <div class="slide-box">
+            <div class="row g-4">
 
-              <h6 class="text-info mb-3">Slide 1</h6>
+                <!-- ===================== SLIDE 1 ===================== -->
+                <div class="col-md-6">
+                    <h6 class="text-info mb-2">Slide 1</h6>
 
-              <label class="text-white">Imagem Desktop (1920x600)</label>
-              <input type="file" class="form-control mb-3">
+                    {{-- DESKTOP --}}
+                    <label class="text-white fw-semibold">Imagem Desktop (1920x600)</label>
 
-              <label class="text-white">Imagem Mobile (1080x900)</label>
-              <input type="file" class="form-control">
+                    <div class="upload-area position-relative mt-1"
+                         onclick="document.getElementById('desk1').click()">
 
-              <button class="btn btn-danger btn-sm mt-3">
-                <i class="fas fa-trash"></i> Remover
-              </button>
+                        @if (!empty($slides[0]->imagem_desktop))
+                            <img id="desk1_saved"
+                                 src="{{ asset('storage/'.$slides[0]->imagem_desktop) }}"
+                                 style="max-width:100%; margin-top:10px;">
+                            <button type="button"
+                                    class="btn btn-sm btn-danger position-absolute top-0 end-0"
+                                    onclick="event.stopPropagation(); excluirSlideImagem(1,'desktop')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        @else
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Clique para enviar imagem</span>
+                            <img id="desk1_preview" style="display:none; max-width:100%; margin-top:10px;">
+                        @endif
+                    </div>
+
+                    <input type="file"
+                           id="desk1"
+                           name="slides[1][desktop]"
+                           class="d-none"
+                           onchange="previewImage(this,'desk1_preview','desk1_saved')">
+
+                    {{-- MOBILE --}}
+                    <label class="text-white fw-semibold mt-3">Imagem Mobile (1080x900)</label>
+
+                    <div class="upload-area position-relative mt-1"
+                         onclick="document.getElementById('mob1').click()">
+
+                        @if (!empty($slides[0]->imagem_mobile))
+                            <img id="mob1_saved"
+                                 src="{{ asset('storage/'.$slides[0]->imagem_mobile) }}"
+                                 style="max-width:100%; margin-top:10px;">
+                            <button type="button"
+                                    class="btn btn-sm btn-danger position-absolute top-0 end-0"
+                                    onclick="event.stopPropagation(); excluirSlideImagem(1,'mobile')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        @else
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Clique para enviar imagem</span>
+                            <img id="mob1_preview" style="display:none; max-width:100%; margin-top:10px;">
+                        @endif
+                    </div>
+
+                    <input type="file"
+                           id="mob1"
+                           name="slides[1][mobile]"
+                           class="d-none"
+                           onchange="previewImage(this,'mob1_preview','mob1_saved')">
+                </div>
+
+                <!-- ===================== SLIDE 2 ===================== -->
+                <div class="col-md-6">
+                    <h6 class="text-info mb-2">Slide 2</h6>
+
+                    {{-- Desktop --}}
+                    <label class="text-white fw-semibold">Imagem Desktop</label>
+                    <div class="upload-area mt-1 position-relative"
+                         onclick="document.getElementById('desk2').click()">
+
+                        @if (!empty($slides[1]->imagem_desktop))
+                            <img id="desk2_saved"
+                                 src="{{ asset('storage/'.$slides[1]->imagem_desktop) }}"
+                                 style="max-width:100%; margin-top:10px;">
+                            <button type="button"
+                                    class="btn btn-danger btn-sm position-absolute top-0 end-0"
+                                    onclick="event.stopPropagation(); excluirSlideImagem(2,'desktop')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        @else
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Clique para enviar imagem</span>
+                            <img id="desk2_preview" style="display:none; max-width:100%; margin-top:10px;">
+                        @endif
+                    </div>
+
+                    <input type="file"
+                           id="desk2"
+                           name="slides[2][desktop]"
+                           class="d-none"
+                           onchange="previewImage(this,'desk2_preview','desk2_saved')">
+
+                    {{-- MOBILE --}}
+                    <label class="text-white fw-semibold mt-3">Imagem Mobile</label>
+                    <div class="upload-area mt-1 position-relative"
+                         onclick="document.getElementById('mob2').click()">
+
+                        @if (!empty($slides[1]->imagem_mobile))
+                            <img id="mob2_saved"
+                                 src="{{ asset('storage/'.$slides[1]->imagem_mobile) }}"
+                                 style="max-width:100%; margin-top:10px;">
+                            <button type="button"
+                                    class="btn btn-danger btn-sm position-absolute top-0 end-0"
+                                    onclick="event.stopPropagation(); excluirSlideImagem(2,'mobile')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        @else
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Clique para enviar imagem</span>
+                            <img id="mob2_preview" style="display:none; max-width:100%; margin-top:10px;">
+                        @endif
+                    </div>
+
+                    <input type="file"
+                           id="mob2"
+                           name="slides[2][mobile]"
+                           class="d-none"
+                           onchange="previewImage(this,'mob2_preview','mob2_saved')">
+                </div>
+
+                <!-- ===================== SLIDE 3 ===================== -->
+                <div class="col-md-6">
+                    <h6 class="text-info mb-2">Slide 3</h6>
+
+                    {{-- Desktop --}}
+                    <label class="text-white fw-semibold">Imagem Desktop</label>
+                    <div class="upload-area mt-1 position-relative"
+                         onclick="document.getElementById('desk3').click()">
+
+                        @if (!empty($slides[2]->imagem_desktop))
+                            <img id="desk3_saved"
+                                 src="{{ asset('storage/'.$slides[2]->imagem_desktop) }}"
+                                 style="max-width:100%; margin-top:10px;">
+                            <button type="button"
+                                    class="btn btn-danger btn-sm position-absolute top-0 end-0"
+                                    onclick="event.stopPropagation(); excluirSlideImagem(3,'desktop')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        @else
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Clique para enviar imagem</span>
+                            <img id="desk3_preview" style="display:none; max-width:100%; margin-top:10px;">
+                        @endif
+                    </div>
+
+                    <input type="file"
+                           id="desk3"
+                           name="slides[3][desktop]"
+                           class="d-none"
+                           onchange="previewImage(this,'desk3_preview','desk3_saved')">
+
+                    {{-- Mobile --}}
+                    <label class="text-white fw-semibold mt-3">Imagem Mobile</label>
+                    <div class="upload-area mt-1 position-relative"
+                         onclick="document.getElementById('mob3').click()">
+
+                        @if (!empty($slides[2]->imagem_mobile))
+                            <img id="mob3_saved"
+                                 src="{{ asset('storage/'.$slides[2]->imagem_mobile) }}"
+                                 style="max-width:100%; margin-top:10px;">
+                            <button type="button"
+                                    class="btn btn-danger btn-sm position-absolute top-0 end-0"
+                                    onclick="event.stopPropagation(); excluirSlideImagem(3,'mobile')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        @else
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Clique para enviar imagem</span>
+                            <img id="mob3_preview" style="display:none; max-width:100%; margin-top:10px;">
+                        @endif
+                    </div>
+
+                    <input type="file"
+                           id="mob3"
+                           name="slides[3][mobile]"
+                           class="d-none"
+                           onchange="previewImage(this,'mob3_preview','mob3_saved')">
+                </div>
 
             </div>
-          </div>
 
-        </div>
-
-      </div>
+            <button class="btn btn-primary mt-4">
+                <i class="fas fa-check"></i> Salvar Slides
+            </button>
+        </form>
     </div>
+</div>
+
+<script>
+  function previewImage(input, previewId, savedId = null) {
+    const file = input.files[0];
+    const preview = document.getElementById(previewId);
+
+    if (savedId) {
+        const saved = document.getElementById(savedId);
+        if (saved) saved.style.display = "none";
+    }
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function excluirSlideImagem(id, type) {
+
+    if (!confirm("Deseja realmente excluir esta imagem?")) return;
+
+    fetch(`/admin/slides/${id}/delete-image`, {
+        method: "DELETE",
+        headers: {
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ type: type })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) location.reload();
+        else alert("Erro ao excluir imagem!");
+    });
+}
+
+</script>
+
+
 
     <!-- ========================= CONTATO ========================= -->
-    <div class="tab-pane fade" id="contato">
-      <div class="config-card">
+   <div class="tab-pane fade" id="contato">
+  <div class="config-card">
 
-        <h5 class="text-white mb-3">Informações de Contato</h5>
+    <h5 class="text-white mb-3">Informações de Contato</h5>
 
-        <div class="row g-3">
+    <form action="{{ route('admin.config.salvar') }}" method="POST">
+      @csrf
 
-          <div class="col-md-6">
-            <label class="text-white">WhatsApp</label>
-            <input type="text" class="form-control">
-          </div>
+      <div class="row g-3">
 
-          <div class="col-md-6">
-            <label class="text-white">Email</label>
-            <input type="email" class="form-control">
-          </div>
-
-          <div class="col-md-6">
-            <label class="text-white">Instagram</label>
-            <input type="text" class="form-control">
-          </div>
-
-          <div class="col-md-6">
-            <label class="text-white">Telegram</label>
-            <input type="text" class="form-control">
-          </div>
-
+        <!-- WHATSAPP -->
+        <div class="col-md-6">
+          <label class="text-white fw-semibold">WhatsApp</label>
+          <input type="text" name="contato_whatsapp" class="form-control"
+                 value="{{ $configs['contato_whatsapp'] ?? '' }}">
         </div>
 
-        <button class="btn btn-primary mt-3">
-          <i class="fas fa-check"></i> Salvar
-        </button>
+        <!-- EMAIL -->
+        <div class="col-md-6">
+          <label class="text-white fw-semibold">Email</label>
+          <input type="email" name="contato_email" class="form-control"
+                 value="{{ $configs['contato_email'] ?? '' }}">
+        </div>
+
+        <!-- INSTAGRAM -->
+        <div class="col-md-6">
+          <label class="text-white fw-semibold">Instagram</label>
+          <input type="text" name="contato_instagram" class="form-control"
+                 value="{{ $configs['contato_instagram'] ?? '' }}">
+        </div>
+
+        <!-- TELEGRAM -->
+        <div class="col-md-6">
+          <label class="text-white fw-semibold">Telegram</label>
+          <input type="text" name="contato_telegram" class="form-control"
+                 value="{{ $configs['contato_telegram'] ?? '' }}">
+        </div>
 
       </div>
-    </div>
+
+      <button class="btn btn-primary mt-3 px-4 py-2" style="border-radius:10px;">
+        <i class="fas fa-check"></i> Salvar
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
 
     <!-- ========================= PAGAMENTOS ========================= -->
     <div class="tab-pane fade" id="pagamento">
-      <div class="config-card">
+  <div class="config-card">
 
-        <h5 class="text-white mb-3">Pagamentos</h5>
+    <h5 class="text-white mb-3">Pagamentos</h5>
 
-        <div class="row g-3">
+    <form action="{{ route('admin.config.salvar') }}" method="POST">
+      @csrf
 
-          <div class="col-md-6">
-            <label class="text-white">Chave PIX</label>
-            <input type="text" class="form-control">
-          </div>
+      <div class="row g-3">
 
-          <div class="col-md-6">
-            <label class="text-white">Nome do Dono da Conta</label>
-            <input type="text" class="form-control">
-          </div>
-
-          <div class="col-md-6">
-            <label class="text-white">Banco</label>
-            <input type="text" class="form-control">
-          </div>
-
-          <div class="col-md-6">
-            <label class="text-white">Tipo de Conta</label>
-            <select class="form-select">
-              <option>Poupança</option>
-              <option>Corrente</option>
-            </select>
-          </div>
-
+        <!-- PIX -->
+        <div class="col-md-6">
+          <label class="text-white fw-semibold">Chave PIX</label>
+          <input type="text" name="pagamento_pix" class="form-control"
+                 value="{{ $configs['pagamento_pix'] ?? '' }}">
         </div>
 
-        <button class="btn btn-primary mt-3">
-          <i class="fas fa-check"></i> Salvar
-        </button>
-
-      </div>
-    </div>
-
-    <!-- ========================= SEGURANÇA ========================= -->
-    <div class="tab-pane fade" id="seguranca">
-      <div class="config-card">
-
-        <h5 class="text-white mb-3">Segurança</h5>
-
-        <div class="row g-3">
-
-          <div class="col-md-6">
-            <label class="text-white">reCAPTCHA Site Key</label>
-            <input type="text" class="form-control">
-          </div>
-
-          <div class="col-md-6">
-            <label class="text-white">Limite de Tentativas Login</label>
-            <input type="number" class="form-control">
-          </div>
-
-          <div class="col-md-6">
-            <label class="text-white">Tempo Bloqueio (minutos)</label>
-            <input type="number" class="form-control">
-          </div>
-
+        <!-- NOME DO TITULAR -->
+        <div class="col-md-6">
+          <label class="text-white fw-semibold">Nome do Dono da Conta</label>
+          <input type="text" name="pagamento_nome_conta" class="form-control"
+                 value="{{ $configs['pagamento_nome_conta'] ?? '' }}">
         </div>
 
-        <button class="btn btn-primary mt-3">
-          <i class="fas fa-check"></i> Salvar
-        </button>
+        <!-- BANCO -->
+        <div class="col-md-6">
+          <label class="text-white fw-semibold">Banco</label>
+          <input type="text" name="pagamento_banco" class="form-control"
+                 value="{{ $configs['pagamento_banco'] ?? '' }}">
+        </div>
+
+        <!-- TIPO DE CONTA -->
+        <div class="col-md-6">
+          <label class="text-white fw-semibold">Tipo de Conta</label>
+          <select name="pagamento_tipo_conta" class="form-select">
+
+            <option value="Poupança"
+              {{ (isset($configs['pagamento_tipo_conta']) && $configs['pagamento_tipo_conta'] == 'Poupança') ? 'selected' : '' }}>
+              Poupança
+            </option>
+
+            <option value="Corrente"
+              {{ (isset($configs['pagamento_tipo_conta']) && $configs['pagamento_tipo_conta'] == 'Corrente') ? 'selected' : '' }}>
+              Corrente
+            </option>
+
+          </select>
+        </div>
 
       </div>
-    </div>
+
+      <button class="btn btn-primary mt-3 px-4 py-2" style="border-radius:10px;">
+        <i class="fas fa-check"></i> Salvar
+      </button>
+
+    </form>
 
   </div>
+</div>
+
+
+    <!-- ========================= SEGURANÇA ========================= -->
+   <div class="tab-pane fade" id="seguranca">
+  <div class="config-card">
+
+    <h5 class="text-white mb-3">Segurança</h5>
+
+    <form action="{{ route('admin.config.salvar') }}" method="POST">
+      @csrf
+
+      <div class="row g-3">
+
+        <!-- RECAPTCHA SITE KEY -->
+        <div class="col-md-6">
+          <label class="text-white fw-semibold">reCAPTCHA Site Key</label>
+          <input type="text" name="recaptcha_site_key" class="form-control"
+                 value="{{ $configs['recaptcha_site_key'] ?? '' }}">
+        </div>
+
+
+        <!-- LIMITE DE TENTATIVAS -->
+        <div class="col-md-6">
+          <label class="text-white fw-semibold">Limite de Tentativas Login</label>
+          <input type="number" name="limite_login_tentativas" class="form-control"
+                 value="{{ $configs['limite_login_tentativas'] ?? 5 }}">
+        </div>
+
+        <!-- TEMPO DE BLOQUEIO -->
+        <div class="col-md-6">
+          <label class="text-white fw-semibold">Tempo de Bloqueio (minutos)</label>
+          <input type="number" name="limite_login_tempo_bloqueio" class="form-control"
+                 value="{{ $configs['limite_login_tempo_bloqueio'] ?? 10 }}">
+        </div>
+
+      </div>
+
+      <button class="btn btn-primary mt-3 px-4 py-2" style="border-radius:10px;">
+        <i class="fas fa-check"></i> Salvar
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
 
 </div>
+
+
+<script>
+// Salvar aba ativa ao clicar
+document.querySelectorAll('.nav-tabs button[data-bs-toggle="tab"]').forEach(tab => {
+    tab.addEventListener('shown.bs.tab', function (e) {
+        localStorage.setItem('aba_config_ativa', e.target.getAttribute('data-bs-target'));
+    });
+});
+
+// Restaurar aba ao carregar a página
+document.addEventListener('DOMContentLoaded', function () {
+    let aba = localStorage.getItem('aba_config_ativa');
+
+    if (aba) {
+        let tabButton = document.querySelector(`button[data-bs-target="${aba}"]`);
+        let tabContent = document.querySelector(aba);
+
+        if (tabButton && tabContent) {
+            let tab = new bootstrap.Tab(tabButton);
+            tab.show();
+        }
+    }
+});
+</script>
+
 
 @endsection

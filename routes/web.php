@@ -7,14 +7,16 @@ use App\Http\Controllers\BilheteUsuarioController;
 use App\Http\Controllers\Admin\HomeAdminController;
 use App\Http\Controllers\Admin\UsuariosAdminController;
 use App\Http\Controllers\Admin\RodadaController;
-use App\Http\Controllers\Auth\AuthController; // 👈 adicionado
+use App\Http\Controllers\Auth\AuthController; // ðŸ‘ˆ adicionado
 use App\Http\Controllers\Admin\RodadaJogoController;
 use App\Http\Controllers\PalpiteController;
 
-use App\Http\Controllers\JogosinfoController;
+use App\Http\Controllers\JogosInfoController;
 use App\Http\Controllers\CarrinhoPalpiteController;
 
 use App\Http\Controllers\ConfiguracaoController;
+use App\Http\Controllers\LogController;
+use App\Http\Controllers\SlideController;
 
 
 use Illuminate\Support\Facades\Http;
@@ -30,18 +32,27 @@ Route::get('/api/jogos-uol', function () {
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-| Aqui é onde você registra as rotas web para sua aplicação.
-| Essas rotas são carregadas pelo RouteServiceProvider e
-| todas elas serão atribuídas ao grupo de middleware "web".
+| Aqui Ã© onde vocÃª registra as rotas web para sua aplicaÃ§Ã£o.
+| Essas rotas sÃ£o carregadas pelo RouteServiceProvider e
+| todas elas serÃ£o atribuÃ­das ao grupo de middleware "web".
 |--------------------------------------------------------------------------
 */
 
-// 🏠 Rotas públicas
+// ðŸ  Rotas pÃºblicas
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+
+Route::post('/login', [AuthController::class, 'login'])
+    ->middleware('throttle:login')
+    ->name('login.post');
+
+Route::post('/register', [AuthController::class, 'register'])
+    ->middleware('throttle:register')
+    ->name('register.post');
+
 Route::get('/rodadas/{id}/jogos', [RodadaController::class, 'jogos'])->name('rodadas.jogos');
-Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');
+Route::get('/ranking/{id?}', [RankingController::class, 'index'])->name('ranking.index');
+
+
 
 
 
@@ -62,16 +73,21 @@ Route::middleware(['user'])->group(function () {
 
 
 
-// 🧩 Rotas administrativas 
+// ðŸ§© Rotas administrativas 
 Route::prefix('admin')
     ->name('admin.')
     ->middleware(['admin'])
     ->group(function () {
+
+       
+
         Route::get('/', [HomeAdminController::class, 'index'])->name('index');
         Route::get('/usuarios', [UsuariosAdminController::class, 'index'])->name('usuarios.index');
 
         Route::get('/cadastro/bolao', [RodadaController::class, 'index'])->name('cadastro.rodada');
         Route::post('/rodadas/cadastro', [RodadaController::class, 'store'])->name('rodadas.store');
+        Route::post('/rodadas/auditoria', [RodadaController::class, 'store_auditoria'])->name('rodadas.auditoria.store');
+
         Route::put('/rodadas/{id}', [RodadaController::class, 'update'])->name('rodadas.update');
         Route::delete('/rodadas/{id}', [RodadaController::class, 'destroy'])->name('rodadas.destroy');
 
@@ -79,6 +95,8 @@ Route::prefix('admin')
         Route::get('get/odds/{id}', [JogosInfoController::class, 'odds'])->name('get.odds');
         Route::get('get/placar/{id}', [JogosInfoController::class, 'placar'])->name('get.placar');
         Route::post('rodadas/jogos', [RodadaJogoController::class, 'store'])->name('rodadas.jogos.store');
+    
+        
 
         Route::delete('/rodadas/{rodada}/jogos/excluir', [RodadaController::class, 'excluirJogos'])->name('rodadas.excluirJogos');
 
@@ -93,4 +111,15 @@ Route::prefix('admin')
 
         Route::get('/configuracao', [ConfiguracaoController::class, 'index'])->name('index.conf');
         Route::post('/configuracoes/salvar', [ConfiguracaoController::class, 'salvar'])->name('config.salvar');
+        Route::post('/config/excluir', [ConfiguracaoController::class, 'excluir'])->name('config.excluir');
+
+
+        Route::get('/logs-sistema', [LogController::class, 'logs'])->name('index.logs');
+
+        Route::resource('slides', SlideController::class)->except(['create', 'edit', 'show']);
+        Route::delete('/slides/{slide}/delete-image', [SlideController::class, 'deleteImage'])
+     ->name('slides.deleteImage');
+
+
+     
     });

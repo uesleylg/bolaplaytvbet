@@ -7,9 +7,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Logs;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+
 
 class AuthController extends Controller
 {
@@ -19,7 +21,6 @@ class AuthController extends Controller
     {
         return view('index');
     }
-
 public function login(Request $request)
 {
     // 🔍 Validação dos dados recebidos
@@ -45,12 +46,13 @@ public function login(Request $request)
 
         $user = Auth::user();
 
-        // 🧾 Log de acesso
-        Log::info('Login realizado', [
-            'user_id' => $user->id,
-            'name' => $user->name,
-            'profile' => $user->profile,
+        // 📝 Registrar log no banco usando o model Logs
+        Logs::create([
+            'usuario' => $user->name,
+            'acao' => 'Login realizado com sucesso',
+            'tipo' => 'Login',
             'ip' => $request->ip(),
+            'dispositivo' => $request->userAgent() ?? '-',
         ]);
 
         // 🔐 Redirecionamento conforme o perfil
@@ -73,6 +75,14 @@ public function login(Request $request)
     }
 
     // 🚫 Falha na autenticação
+    Logs::create([
+        'usuario' => $request->input('name'),
+        'acao' => 'Tentativa de login falhou (senha incorreta)',
+        'tipo' => 'Falha',
+        'ip' => $request->ip(),
+        'dispositivo' => $request->userAgent() ?? '-',
+    ]);
+
     return response()->json([
         'success' => false,
         'message' => 'Usuário ou senha inválidos.',
@@ -85,6 +95,7 @@ public function login(Request $request)
     {
         return view('auth.register');
     }
+
 
 public function register(Request $request)
 {
@@ -106,14 +117,12 @@ public function register(Request $request)
         'phone' => [
             'nullable',
             'string',
-            // Formato brasileiro: (XX) XXXX-XXXX ou (XX) XXXXX-XXXX
             'regex:/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/',
         ],
         'password' => [
             'required',
             'string',
             'min:6',
-         
         ],
     ], [
         'name.required' => 'O nome de usuário é obrigatório.',
@@ -126,30 +135,39 @@ public function register(Request $request)
         'phone.regex' => 'Digite um telefone válido com a quantidade correta de números.',
         'password.required' => 'A senha é obrigatória.',
         'password.min' => 'A senha deve ter no mínimo 6 caracteres.',
-
     ]);
 
     if ($validator->fails()) {
         return response()->json([
             'success' => false,
-            'message' => $validator->errors()->first(), // só retorna a primeira mensagem
+            'message' => $validator->errors()->first(),
         ], 422);
     }
 
     $validated = $validator->validated();
-    $validated['name'] = strtolower($validated['name']); // força minúsculas
+    $validated['name'] = strtolower($validated['name']);
 
-$user = User::create([
-    'name' => $validated['name'],
-    'email' => $validated['email'],
-    'phone' => $validated['phone'] ?? null,
-    'password' => Hash::make($validated['password']),
-    'referencia_id' => $request->referencia_id ?? null,
-    'profile_id' => $request->profile_id ?? 1, // 👈 define client (ID 1) como padrão
-]);
+    $user = User::create([
+        'name' => $validated['name'],
+        'email' => $validated['email'],
+        'phone' => $validated['phone'] ?? null,
+        'password' => Hash::make($validated['password']),
+        'referencia_id' => $request->referencia_id ?? null,
+        'profile_id' => $request->profile_id ?? 1,
+    ]);
 
+    // 🔐 Faz login automático
     Auth::login($user);
     $request->session()->regenerate();
+
+    // 📝 Registra log de cadastro
+    Logs::create([
+        'usuario' => $user->name,
+        'acao' => 'Cadastro realizado com sucesso',
+        'tipo' => 'Cadastro',
+        'ip' => $request->ip(),
+        'dispositivo' => $request->userAgent() ?? '-',
+    ]);
 
     return response()->json([
         'success' => true,

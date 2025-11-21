@@ -21,6 +21,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/afcee4f894.js" crossorigin="anonymous" defer></script>
+@if(!empty($configs['favicon']))
+    <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $configs['favicon']) }}">
+    <link rel="shortcut icon" href="{{ asset('storage/' . $configs['favicon']) }}">
+@endif
 
 </head>
 <body>

@@ -208,6 +208,12 @@
           <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('admin.index.conf*') ? 'active' : '' }}" href="{{ route('admin.index.conf') }}"><i class="fa-solid fa-gear"></i> Configurações</a>
           </li>
+
+          <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('admin.index.logs*') ? 'active' : '' }}" href="{{ route('admin.index.logs') }}"><i class="fa-solid fa-clipboard-list"></i> Logs Sistema</a>
+          </li>
+
+
            <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('home.index*') ? 'active' : '' }}" 
      href="{{ route('home.index') }}">

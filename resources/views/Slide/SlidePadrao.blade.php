@@ -1,52 +1,72 @@
 <link rel="stylesheet" href="{{ asset('css/index.css') }}">
 
+@php
+    // Filtra apenas slides com ao menos 1 imagem válida
+    $slides = \App\Models\Slide::whereNotNull('imagem_desktop')
+                ->orWhereNotNull('imagem_mobile')
+                ->orderBy('ordem')
+                ->get();
+@endphp
 
+@if ($slides->count() > 0)
 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-  
-  <!-- Indicadores -->
-  <div class="carousel-indicators">
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-  </div>
 
-  <!-- Slides -->
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <picture>
-        <source media="(max-width: 767px)" srcset="{{ asset('img/banner-mobile.png') }}">
-        <source media="(min-width: 768px)" srcset="{{ asset('img/banner03.png') }}">
-        <img src="{{ asset('img/banner-desktop.png') }}" class="d-block w-100" alt="Slide 1">
-      </picture>
-      
+    <!-- Indicadores -->
+    <div class="carousel-indicators">
+        @foreach ($slides as $index => $s)
+            <button type="button"
+                data-bs-target="#carouselExampleIndicators"
+                data-bs-slide-to="{{ $index }}"
+                class="{{ $index == 0 ? 'active' : '' }}"
+                aria-label="Slide {{ $index + 1 }}">
+            </button>
+        @endforeach
     </div>
-    <div class="carousel-item">
-          <picture>
-        <source media="(max-width: 767px)" srcset="{{ asset('img/banner-mobile.png') }}">
-        <source media="(min-width: 768px)" srcset="{{ asset('img/banner03.png') }}">
-        <img src="{{ asset('img/banner-desktop.png') }}" class="d-block w-100" alt="Slide 2">
-      </picture>
-    </div>
-    <div class="carousel-item">
-          <picture>
-        <source media="(max-width: 767px)" srcset="{{ asset('img/banner-mobile.png') }}">
-        <source media="(min-width: 768px)" srcset="{{ asset('img/banner03.png') }}">
-        <img src="{{ asset('img/banner-desktop.png') }}" class="d-block w-100" alt="Slide 3">
-      </picture>
-    </div>
-  </div>
 
-  <!-- Controles -->
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Anterior</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Próximo</span>
-  </button>
+    <!-- Slides -->
+    <div class="carousel-inner">
+
+        @foreach ($slides as $index => $s)
+        <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+
+            <picture>
+
+                {{-- MOBILE --}}
+                @if($s->imagem_mobile)
+                    <source media="(max-width: 767px)"
+                            srcset="{{ asset('storage/'.$s->imagem_mobile) }}">
+                @endif
+
+                {{-- DESKTOP --}}
+                @if($s->imagem_desktop)
+                    <source media="(min-width: 768px)"
+                            srcset="{{ asset('storage/'.$s->imagem_desktop) }}">
+                @endif
+
+                {{-- FALLBACK (se só tiver 1 lado) --}}
+                <img src="{{ asset('storage/' . ($s->imagem_desktop ?? $s->imagem_mobile)) }}"
+                     class="d-block w-100"
+                     alt="Slide {{ $index + 1 }}">
+
+            </picture>
+
+        </div>
+        @endforeach
+
+    </div>
+
+    <!-- Controles -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Próximo</span>
+    </button>
 
 </div>
+@endif
 
 
 

@@ -2,7 +2,7 @@
     <div class="container text-center text-md-start">
         <div class="row">
             <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mb-4">
-                <h5 class="fw-bold text-uppercase mb-3">⚽ BolaPlay <span class="text-info">Bet</span></h5>
+                <h5 class="fw-bold text-uppercase mb-3">⚽ {{ $configs['nome_site'] ?? 'Nome do Site' }}</h5>
                 <p class="text-secondary">Participe dos melhores bolões de futebol, teste seus palpites e dispute prêmios incríveis.</p>
             </div>
             <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
@@ -16,8 +16,8 @@
             <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
                 <h6 class="fw-bold text-uppercase mb-3">Contato</h6>
               
-                <p><i class="bi bi-envelope-fill "></i> {{ config('app.email_suporte') }}</p>
-                <p><i class="bi bi-whatsapp "></i> {{ config('app.telefone_suporte') }}</p>
+                <p><i class="bi bi-envelope-fill "></i> {{ $configs['contato_email'] ?? 'Nome do Site' }} </p>
+                <p><i class="bi bi-whatsapp "></i>  {{ $configs['contato_whatsapp'] ?? 'Nome do Site' }}</p>
             </div>
         </div>
         <hr class="mb-4 text-secondary" />

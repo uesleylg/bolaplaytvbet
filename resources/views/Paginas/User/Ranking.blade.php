@@ -18,7 +18,15 @@
 <div style="margin-top: 20px; color: white; background-color: rgb(30 41 59);; border: 1px solid #ffffff4d;  font-size: 18px; padding: 15px; border-radius: 10px; margin-bottom: 0px; font-family: 'Roboto', sans-serif; font-weight: bolder; box-shadow: 0 0 10px 2px #00000052; display: flex; justify-content: space-between; align-items: center;">
   
   <div class="text-mobile">
-   <i style="color: #fffb00ff;" class="fa-solid fa-trophy"></i> BOLÃO HOJE - 23/10/2025 <br> <label style="color:#00ffa9; font-weight: 200;">Premiação: R$ 2.000,00</label>
+  @if(isset($rodada))
+    <i style="color: #fffb00ff;" class="fa-solid fa-trophy"></i>
+    <strong>{{ $rodada->nome }} - {{ \Carbon\Carbon::parse($rodada->data_inicio)->format('d/m/Y') }}</strong>
+    <br>
+    <label style="color:#00ffa9; font-weight: 200;">
+        Premiação: R$ {{ number_format($rodada->premiacao_estimada, 2, ',', '.') }}
+    </label>
+@endif
+
   </div>
 
   <div style="display: flex; align-items: center; gap: 10px;">
@@ -83,9 +91,18 @@
     📄 Um PDF de Auditoria será divulgado antes dos jogos com todos os bilhetes participantes.
   </p>
 
-  <a href="#" class="btn-auditoria" target="_blank">
-    <i class="bi bi-file-earmark-pdf-fill"></i> PDF DE AUDITORIA
-  </a>
+@if ($rodada->link_auditoria)
+    <a href="{{ $rodada->link_auditoria }}" 
+       class="btn-auditoria"
+       target="_blank">
+        <i class="bi bi-file-earmark-pdf-fill"></i> PDF DE AUDITORIA
+    </a>
+@else
+    <button class="btn-auditoria disabled " style="opacity: 0.6; cursor: not-allowed;">
+        <i class="bi bi-hourglass-split"></i> AGUARDANDO
+    </button>
+@endif
+
 </div>
 
 
@@ -108,152 +125,87 @@
   <!-- Container dos Cards -->
   <div id="cardsContainer" style="padding-top: 10px;" class="d-flex overflow-auto px-3 pb-4 scroll-smooth gap-3 justify-content-start">
     
-    <!-- CARD -->
-    <div class="match-card">
-      <div class="match-header">
+ @foreach ($jogos as $jogo)
+    <div class="match-card {{ $jogo->status_jogo === 'live' ? 'live' : '' }}">
+  
+        <div class="match-header">
+        @switch($jogo->status_jogo)
+
+    @case('finalizado')
         <span class="badge bg-success">ENCERRADO</span>
-        <small class="fw-semibold text-secondary">EUROPA: Campeões</small>
-      </div>
+        @break
 
-      <div class="match-body">
-        <div class="team text-center">
-          <img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg" alt="Arsenal">
-          <p class="team-name">ARSENAL</p>
-        </div>
-
-        <div class="score text-center">
-          <span class="fw-bold fs-4 text-success">4</span>
-          <span class="fw-bold fs-5 mx-1 text-light">X</span>
-          <span class="fw-bold fs-4 text-danger">0</span>
-        </div>
-
-        <div class="team text-center">
-          <img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg" alt="Atlético Madrid">
-          <p class="team-name">ARSENAL</p>
-        </div>
-      </div>
-
-      <p class="match-stats">C: 6934 (74.5%) • E: 1356 (14.6%) • V: 1012 (10.9%)</p>
-    </div>
-
-
-      <!-- CARD -->
-    <div class="match-card">
-      <div class="match-header">
-        <span class="badge bg-success">ENCERRADO</span>
-        <small class="fw-semibold text-secondary">EUROPA: Campeões</small>
-      </div>
-
-      <div class="match-body">
-        <div class="team text-center">
-          <img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg" alt="Arsenal">
-          <p class="team-name">ARSENAL</p>
-        </div>
-
-        <div class="score text-center">
-          <span class="fw-bold fs-4 text-success">4</span>
-          <span class="fw-bold fs-5 mx-1 text-light">X</span>
-          <span class="fw-bold fs-4 text-danger">0</span>
-        </div>
-
-        <div class="team text-center">
-          <img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg" alt="Atlético Madrid">
-          <p class="team-name">ARSENAL</p>
-        </div>
-      </div>
-
-      <p class="match-stats">C: 6934 (74.5%) • E: 1356 (14.6%) • V: 1012 (10.9%)</p>
-    </div>
-
-
-
-      <!-- CARD -->
-    <div class="match-card">
-      <div class="match-header">
-        <span class="badge bg-success">ENCERRADO</span>
-        <small class="fw-semibold text-secondary">EUROPA: Campeões</small>
-      </div>
-
-      <div class="match-body">
-        <div class="team text-center">
-          <img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg" alt="Arsenal">
-          <p class="team-name">ARSENAL</p>
-        </div>
-
-        <div class="score text-center">
-          <span class="fw-bold fs-4 text-success">4</span>
-          <span class="fw-bold fs-5 mx-1 text-light">X</span>
-          <span class="fw-bold fs-4 text-danger">0</span>
-        </div>
-
-        <div class="team text-center">
-          <img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg" alt="Atlético Madrid">
-          <p class="team-name">ARSENAL</p>
-        </div>
-      </div>
-
-      <p class="match-stats">C: 6934 (74.5%) • E: 1356 (14.6%) • V: 1012 (10.9%)</p>
-    </div>
-
-
-
-      <!-- CARD -->
-    <div class="match-card">
-      <div class="match-header">
-        <span class="badge bg-success">ENCERRADO</span>
-        <small class="fw-semibold text-secondary">EUROPA: Campeões</small>
-      </div>
-
-      <div class="match-body">
-        <div class="team text-center">
-          <img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg" alt="Arsenal">
-          <p class="team-name">ARSENAL</p>
-        </div>
-
-        <div class="score text-center">
-          <span class="fw-bold fs-4 text-success">4</span>
-          <span class="fw-bold fs-5 mx-1 text-light">X</span>
-          <span class="fw-bold fs-4 text-danger">0</span>
-        </div>
-
-        <div class="team text-center">
-          <img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg" alt="Atlético Madrid">
-          <p class="team-name">ARSENAL</p>
-        </div>
-      </div>
-
-      <p class="match-stats">C: 6934 (74.5%) • E: 1356 (14.6%) • V: 1012 (10.9%)</p>
-    </div>
-
-
-
-    <!-- CARD AO VIVO -->
-    <div class="match-card live">
-      <div class="match-header">
+    @case('em_andamento')
         <span class="badge bg-warning text-dark">AO VIVO</span>
-        <small class="fw-semibold text-secondary">LIBERTADORES</small>
-      </div>
+        @break
 
-      <div class="match-body">
-        <div class="team text-center">
-          <img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg" alt="Palmeiras">
-          <p class="team-name">PALMEIRAS</p>
+    @case('aguardando')
+        <span class="badge bg-secondary">AGUARDANDO</span>
+        @break
+
+    @case('adiado')
+        <span class="badge bg-info text-dark">ADIADO</span>
+        @break
+
+    @case('cancelado')
+        <span class="badge bg-danger">CANCELADO</span>
+        @break
+
+    @default
+        <span class="badge bg-secondary">DESCONHECIDO</span>
+
+@endswitch
+
+            
         </div>
 
-        <div class="score text-center">
-          <span class="fw-bold fs-4 text-success">2</span>
-          <span class="fw-bold fs-5 mx-1 text-light">X</span>
-          <span class="fw-bold fs-4 text-danger">1</span>
-        </div>
+   <div class="match-body d-flex align-items-center justify-content-between px-2">
 
-        <div class="team text-center">
-          <img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg" alt="LDU">
-          <p class="team-name">LDU</p>
-        </div>
-      </div>
+    {{-- Time Casa --}}
+    <div class="team text-center flex-fill">
+        <img class="team-logo" src="{{ $jogo->time_casa_brasao }}" alt="{{ $jogo->time_casa_nome }}">
+        <p class="team-name mt-2">
+           {{ strtoupper(Str::limit($jogo->time_casa_nome, 12, '...', preserveWords: true)) }}
 
-      <p class="match-stats">C: 4235 (68%) • E: 903 (14.5%) • V: 1098 (17.5%)</p>
+        </p>
     </div>
+
+    {{-- Placar --}}
+    <div class="score text-center px-3">
+        <span class="score-number text-success">
+            {{ explode('-', $jogo->resultado_real)[1] ?? '1' }}
+        </span>
+
+        <span class="score-x mx-1">X</span>
+
+        <span class="score-number text-danger">
+            {{ explode('-', $jogo->resultado_real)[1] ?? '2' }}
+        </span>
+    </div>
+
+    {{-- Time Fora --}}
+    <div class="team text-center flex-fill">
+        <img class="team-logo" src="{{ $jogo->time_fora_brasao }}" alt="{{ $jogo->time_fora_nome }}">
+        <p class="team-name mt-2">
+             {{ strtoupper(Str::limit($jogo->time_fora_nome, 12, '...', preserveWords: true)) }}
+        </p>
+    </div>
+
+</div>
+
+
+        <p class="match-stats">
+            C: {{ rand(2000,9000) }} ({{ rand(50,90) }}%) • 
+            E: {{ rand(500,2000) }} ({{ rand(10,30) }}%) • 
+            V: {{ rand(500,2000) }} ({{ rand(10,30) }}%)
+        </p>
+              <small class="fw-semibold text-secondary">
+               {{ \Illuminate\Support\Str::limit($jogo->competicao, 30, '...') }}
+
+            </small>
+    </div>
+@endforeach
+
 
     <!-- Outros cards... -->
   </div>
@@ -261,6 +213,13 @@
 
 <!-- 🔹 CSS Estilo 2025 -->
 <style>
+
+
+
+
+
+
+
 
 .btn-auditoria {
   display: inline-flex;
@@ -389,7 +348,7 @@
   }
 
   .team-name {
-    font-size: .85rem;
+    font-size: .65rem;
     font-weight: 600;
     margin-top: .25rem;
     color: #f8fafc;
@@ -397,7 +356,7 @@
   }
 
   .match-stats {
-    font-size: .8rem;
+    font-size: .5rem;
     color: #94a3b8;
     text-align: center;
     margin: 0;
@@ -477,31 +436,61 @@
   });
 </script>
 
-<div class="text-title-rank"><i class="fa-solid fa-ranking-star"></i> Resumo do Ranking:</div>
 
-<div class="container my-4">
-  <div class="ranking-card p-4 rounded-4 shadow-sm">
+<div class="text-title-rank">    <i class="fa-solid fa-ranking-star"></i> Resumo do Ranking</div>
 
-    <ul class="list-unstyled mb-0">
-      <li class="d-flex justify-content-between align-items-center py-2 border-bottom border-secondary">
-        <span><i class="bi bi-trophy-fill text-warning me-2"></i>22 bilhete(s)</span>
-        <span class="fw-bold text-success">8 ponto(s)</span>
-      </li>
-      <li class="d-flex justify-content-between align-items-center py-2 border-bottom border-secondary">
-        <span><i class="bi bi-star-fill text-warning me-2"></i>360 bilhete(s)</span>
-        <span class="fw-bold text-info">7 ponto(s)</span>
-      </li>
-      <li class="d-flex justify-content-between align-items-center py-2 border-bottom border-secondary">
-        <span><i class="bi bi-lightning-fill text-warning me-2"></i>1726 bilhete(s)</span>
-        <span class="fw-bold text-primary">6 ponto(s)</span>
-      </li>
-      <li class="d-flex justify-content-between align-items-center py-2">
-        <span><i class="bi bi-x-circle-fill text-danger me-2"></i>5 bilhete(s)</span>
-        <span class="fw-bold text-danger">0 ponto(s)</span>
-      </li>
-    </ul>
+<div class="row g-3">
+  <!-- Ranking Item -->
+  <div class="col-12 col-md-6 col-lg-3">
+    <div class="card bg-dark text-light shadow-sm border-0 h-100">
+      <div class="card-body d-flex flex-column justify-content-between">
+        <div class="d-flex align-items-center mb-3">
+          <i class="bi bi-trophy-fill text-warning fs-3 me-2"></i>
+          <span class="fw-semibold">22 bilhete(s)</span>
+        </div>
+        <span class="badge rounded-pill bg-success fs-6">8 acerto(s)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6 col-lg-3">
+    <div class="card bg-dark text-light shadow-sm border-0 h-100">
+      <div class="card-body d-flex flex-column justify-content-between">
+        <div class="d-flex align-items-center mb-3">
+          <i class="bi bi-star-fill text-warning fs-3 me-2"></i>
+          <span class="fw-semibold">360 bilhete(s)</span>
+        </div>
+        <span class="badge rounded-pill bg-info fs-6">7 acerto(s)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6 col-lg-3">
+    <div class="card bg-dark text-light shadow-sm border-0 h-100">
+      <div class="card-body d-flex flex-column justify-content-between">
+        <div class="d-flex align-items-center mb-3">
+          <i class="bi bi-lightning-fill text-warning fs-3 me-2"></i>
+          <span class="fw-semibold">1726 bilhete(s)</span>
+        </div>
+        <span class="badge rounded-pill bg-primary fs-6">6 acerto(s)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6 col-lg-3">
+    <div class="card bg-dark text-light shadow-sm border-0 h-100">
+      <div class="card-body d-flex flex-column justify-content-between">
+        <div class="d-flex align-items-center mb-3">
+          <i class="bi bi-x-circle-fill text-danger fs-3 me-2"></i>
+          <span class="fw-semibold">5 bilhete(s)</span>
+        </div>
+        <span class="badge rounded-pill bg-danger fs-6">0 acerto(s)</span>
+      </div>
+    </div>
   </div>
 </div>
+
+
 
 <div class="text-title-rank"><i class="fa-solid fa-ranking-star"></i> Ranking dos Bilhetes:</div>
 <div style="position: relative; width: 100%; ">
@@ -847,7 +836,8 @@
 
 
 </div>
-@include('Paginas.User.Modal.ModalIndicacao')
+
+
 @include('Paginas.User.Modal.ModalVermais')
 @include('Paginas.User.Modal.ModalInfo')
  @include('Paginas.User.Modal.ModalLoginRegistro')

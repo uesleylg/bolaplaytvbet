@@ -368,4 +368,29 @@ public function destroy($id)
     return redirect()->back()->with('success', 'Rodada excluída com sucesso!');
 }
 
+
+
+
+public function store_auditoria(Request $request)
+{
+    // Validação (se der erro, Laravel volta automaticamente com os erros)
+    $request->validate([
+        'rodada_id' => 'required|exists:rodadas,id',
+        'link_auditoria' => 'required|url|max:255',
+    ]);
+
+    // Busca a rodada
+    $rodada = Rodada::findOrFail($request->rodada_id);
+
+    // Atualiza o link
+    $rodada->link_auditoria = $request->link_auditoria;
+    $rodada->save();
+
+    // Sempre recarrega a página onde estava
+    return redirect()->back()->with('success', 'Link de auditoria salvo com sucesso!');
+}
+
+
+
+
 }
