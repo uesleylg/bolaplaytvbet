@@ -318,9 +318,10 @@ document.addEventListener('click', function(e) {
 </script>
 
 
-@include('Paginas.Admin.Modal.ModalAddAuditoria')
+
 @include('Paginas.Admin.Modal.ModalVerJogos')
 @include('Paginas.Admin.Modal.ModalJogosRodada')
 @include('Paginas.Admin.Modal.ModalCriarRodada')
+@include('Paginas.Admin.Modal.ModalAddAuditoria')
 @endsection
 

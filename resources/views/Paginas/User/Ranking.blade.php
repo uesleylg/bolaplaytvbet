@@ -124,92 +124,137 @@
 
   <!-- Container dos Cards -->
   <div id="cardsContainer" style="padding-top: 10px;" class="d-flex overflow-auto px-3 pb-4 scroll-smooth gap-3 justify-content-start">
-    
- @foreach ($jogos as $jogo)
-    <div class="match-card {{ $jogo->status_jogo === 'live' ? 'live' : '' }}">
+    @foreach ($jogos as $jogo)
+<div id="jogo-{{ $jogo->id }}" class="match-card {{ $jogo->status_jogo === 'live' ? 'live' : '' }}">
   
-        <div class="match-header">
+    <div class="match-header">
         @switch($jogo->status_jogo)
+            @case('finalizado')
+                <span class="badge bg-success">ENCERRADO</span>
+                @break
+            @case('em_andamento')
+                <span class="badge bg-warning text-dark">AO VIVO</span>
+                @break
+            @case('aguardando')
+                <span class="badge bg-secondary">AGUARDANDO</span>
+                @break
+            @case('adiado')
+                <span class="badge bg-info text-dark">ADIADO</span>
+                @break
+            @case('cancelado')
+                <span class="badge bg-danger">CANCELADO</span>
+                @break
+            @default
+                <span class="badge bg-secondary">DESCONHECIDO</span>
+        @endswitch
+    </div>
 
-    @case('finalizado')
-        <span class="badge bg-success">ENCERRADO</span>
-        @break
-
-    @case('em_andamento')
-        <span class="badge bg-warning text-dark">AO VIVO</span>
-        @break
-
-    @case('aguardando')
-        <span class="badge bg-secondary">AGUARDANDO</span>
-        @break
-
-    @case('adiado')
-        <span class="badge bg-info text-dark">ADIADO</span>
-        @break
-
-    @case('cancelado')
-        <span class="badge bg-danger">CANCELADO</span>
-        @break
-
-    @default
-        <span class="badge bg-secondary">DESCONHECIDO</span>
-
-@endswitch
-
-            
+    <div class="match-body d-flex align-items-center justify-content-between px-2">
+        <div class="team text-center flex-fill">
+            <img class="team-logo" src="{{ $jogo->time_casa_brasao }}" alt="{{ $jogo->time_casa_nome }}">
+            <p class="team-name mt-2">{{ strtoupper(Str::limit($jogo->time_casa_nome, 12, '...', preserveWords: true)) }}</p>
         </div>
 
-   <div class="match-body d-flex align-items-center justify-content-between px-2">
+        <div class="score text-center px-3">
+            <span class="score-number text-success placar-casa">{{ $jogo->placar_casa ?? '0' }}</span>
+            <span class="score-x mx-1">X</span>
+            <span class="score-number text-danger placar-fora">{{ $jogo->placar_fora ?? '0' }}</span>
+        </div>
 
-    {{-- Time Casa --}}
-    <div class="team text-center flex-fill">
-        <img class="team-logo" src="{{ $jogo->time_casa_brasao }}" alt="{{ $jogo->time_casa_nome }}">
-        <p class="team-name mt-2">
-           {{ strtoupper(Str::limit($jogo->time_casa_nome, 12, '...', preserveWords: true)) }}
-
-        </p>
+        <div class="team text-center flex-fill">
+            <img class="team-logo" src="{{ $jogo->time_fora_brasao }}" alt="{{ $jogo->time_fora_nome }}">
+            <p class="team-name mt-2">{{ strtoupper(Str::limit($jogo->time_fora_nome, 12, '...', preserveWords: true)) }}</p>
+        </div>
     </div>
 
-    {{-- Placar --}}
-    <div class="score text-center px-3">
-        <span class="score-number text-success">
-            {{ explode('-', $jogo->resultado_real)[1] ?? '1' }}
-        </span>
-
-        <span class="score-x mx-1">X</span>
-
-        <span class="score-number text-danger">
-            {{ explode('-', $jogo->resultado_real)[1] ?? '2' }}
-        </span>
-    </div>
-
-    {{-- Time Fora --}}
-    <div class="team text-center flex-fill">
-        <img class="team-logo" src="{{ $jogo->time_fora_brasao }}" alt="{{ $jogo->time_fora_nome }}">
-        <p class="team-name mt-2">
-             {{ strtoupper(Str::limit($jogo->time_fora_nome, 12, '...', preserveWords: true)) }}
-        </p>
-    </div>
-
+    <p class="match-stats">
+        C: {{ rand(2000,9000) }} ({{ rand(50,90) }}%) • 
+        E: {{ rand(500,2000) }} ({{ rand(10,30) }}%) • 
+        V: {{ rand(500,2000) }} ({{ rand(10,30) }}%)
+    </p>
+    <small class="fw-semibold text-secondary">{{ \Illuminate\Support\Str::limit($jogo->competicao, 30, '...') }}</small>
 </div>
-
-
-        <p class="match-stats">
-            C: {{ rand(2000,9000) }} ({{ rand(50,90) }}%) • 
-            E: {{ rand(500,2000) }} ({{ rand(10,30) }}%) • 
-            V: {{ rand(500,2000) }} ({{ rand(10,30) }}%)
-        </p>
-              <small class="fw-semibold text-secondary">
-               {{ \Illuminate\Support\Str::limit($jogo->competicao, 30, '...') }}
-
-            </small>
-    </div>
 @endforeach
+
 
 
     <!-- Outros cards... -->
   </div>
 </section>
+<script>
+    const rodadaId = {{ $rodada->id }};
+    let jogosAtivos = true;
+
+    async function atualizarJogos() {
+        if (!jogosAtivos) return;
+
+        try {
+            const response = await fetch(`/api/jogos/${rodadaId}`);
+            if (!response.ok) throw new Error('Erro na requisição');
+
+            const json = await response.json();
+
+            // Agora pegamos o array dentro de json.jogos
+            const jogos = Array.isArray(json.jogos) ? json.jogos : [];
+            let aindaAtivo = false;
+
+            jogos.forEach(jogo => {
+                const matchCard = document.querySelector(`#jogo-${jogo.id}`);
+                if (!matchCard) return;
+
+                // Atualiza placares
+                const casaEl = matchCard.querySelector('.placar-casa');
+                const foraEl = matchCard.querySelector('.placar-fora');
+                if (casaEl) casaEl.textContent = jogo.placar_casa ?? '0';
+                if (foraEl) foraEl.textContent = jogo.placar_fora ?? '0';
+
+                // Atualiza badge do status
+                const badge = matchCard.querySelector('.badge');
+                if (!badge) return;
+
+                switch(jogo.status_jogo) {
+                    case 'finalizado':
+                        badge.textContent = 'ENCERRADO';
+                        badge.className = 'badge bg-success';
+                        break;
+                    case 'em_andamento':
+                        badge.textContent = 'AO VIVO';
+                        badge.className = 'badge bg-warning text-dark';
+                        aindaAtivo = true;
+                        break;
+                    case 'aguardando':
+                        badge.textContent = 'AGUARDANDO';
+                        badge.className = 'badge bg-secondary';
+                        aindaAtivo = true;
+                        break;
+                    case 'adiado':
+                        badge.textContent = 'ADIADO';
+                        badge.className = 'badge bg-info text-dark';
+                        break;
+                    case 'cancelado':
+                        badge.textContent = 'CANCELADO';
+                        badge.className = 'badge bg-danger';
+                        break;
+                    default:
+                        badge.textContent = 'DESCONHECIDO';
+                        badge.className = 'badge bg-secondary';
+                }
+            });
+
+            if (!aindaAtivo) {
+                jogosAtivos = false;
+                console.log("Todos os jogos estão finalizados. Atualização automática parada.");
+            }
+
+        } catch(e) {
+            console.error('Erro ao atualizar jogos:', e);
+        }
+    }
+
+    setInterval(atualizarJogos, 10000);
+</script>
+
+
 
 <!-- 🔹 CSS Estilo 2025 -->
 <style>

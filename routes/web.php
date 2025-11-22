@@ -11,13 +11,15 @@ use App\Http\Controllers\Auth\AuthController; // ðŸ‘ˆ adicionado
 use App\Http\Controllers\Admin\RodadaJogoController;
 use App\Http\Controllers\PalpiteController;
 
+use Illuminate\Cache\RateLimiting\Limit;
+
 use App\Http\Controllers\JogosInfoController;
 use App\Http\Controllers\CarrinhoPalpiteController;
 
 use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\SlideController;
-
+use Illuminate\Support\Facades\RateLimiter;
 
 use Illuminate\Support\Facades\Http;
 
@@ -52,7 +54,15 @@ Route::post('/register', [AuthController::class, 'register'])
 Route::get('/rodadas/{id}/jogos', [RodadaController::class, 'jogos'])->name('rodadas.jogos');
 Route::get('/ranking/{id?}', [RankingController::class, 'index'])->name('ranking.index');
 
+// Definindo throttle para a rota pública
+RateLimiter::for('jogos-publico', function ($request) {
+    return Limit::perMinute(30)->by($request->ip()); // 30 requisições/minuto por IP
+});
 
+// Rota pública para pegar os jogos
+Route::middleware('throttle:jogos-publico')
+    ->get('/api/jogos/{rodada_id}', [RankingController::class, 'jogos_live'])
+    ->name('ranking.index');
 
 
 

@@ -25,6 +25,8 @@ class RodadaJogo extends Model
         'competicao',
         'status_jogo',
         'resultado_real',
+        'placar_casa',
+        'placar_fora',
     ];
 
     // Casts automáticos para tipos específicos
