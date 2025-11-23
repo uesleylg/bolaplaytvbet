@@ -24,21 +24,10 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Http;
 
 
-Route::get('/api/jogos-uol', function () {
-    $url = "https://www.uol.com.br/esporte/service/?loadComponent=api&data=%7B%22module%22%3A%22tools%22%2C%22api%22%3A%22json%22%2C%22method%22%3A%22open%22%2C%22busca%22%3A%22commons.uol.com.br%2Fsistemas%2Fesporte%2Fmodalidades%2Ffutebol%2Fcampeonatos%2Fetc%2Fjogos%2Fresultados_e_proximos%2Fdados.json%22%7D";
-    
-    $response = Http::get($url);
-    return $response->json();
-})->name('api.jogos-uol');
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-| Aqui Ã© onde vocÃª registra as rotas web para sua aplicaÃ§Ã£o.
-| Essas rotas sÃ£o carregadas pelo RouteServiceProvider e
-| todas elas serÃ£o atribuÃ­das ao grupo de middleware "web".
-|--------------------------------------------------------------------------
-*/
+
+
+Route::post('/gerar-pix', [\App\Http\Controllers\PagamentoController::class, 'gerarPix']);
+
 
 // ðŸ  Rotas pÃºblicas
 Route::get('/', [HomeController::class, 'index'])->name('home.index');

@@ -13,24 +13,6 @@
 
 
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Exemplo: atualiza o contador do carrinho dinamicamente
-    fetch('/api/carrinho/quantidade')
-      .then(res => res.json())
-      .then(data => {
-        const contador = document.querySelector('.contador-bilhetes');
-        if (data.quantidade > 0) {
-          contador.textContent = data.quantidade;
-        } else {
-          contador.style.display = 'none';
-        }
-      })
-      .catch(() => console.log('Não foi possível carregar o total do carrinho.'));
-  });
-</script>
-
-
 
 <style>
   .card-bolao {
