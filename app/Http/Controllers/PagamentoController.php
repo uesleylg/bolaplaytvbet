@@ -6,27 +6,53 @@ use Illuminate\Http\Request;
 use MercadoPago\MercadoPagoConfig;
 use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\Exceptions\MPApiException;
+use App\Models\Bilhete;
 
 class PagamentoController extends Controller
 {
     public function gerarPix(Request $request)
     {
-        // Configurar o token secreto do Mercado Pago
-        MercadoPagoConfig::setAccessToken(env('MP_ACCESS_TOKEN'));
+        // Recebe os IDs dos bilhetes
+        $bilheteIds = $request->bilhetes;
 
+        if (!is_array($bilheteIds) || count($bilheteIds) === 0) {
+            return response()->json([
+                "status" => "error",
+                "message" => "Nenhum bilhete recebido."
+            ], 400);
+        }
+
+        // Soma o valor total dos bilhetes
+        $valorTotal = Bilhete::whereIn('id', $bilheteIds)->sum('valor');
+
+        if ($valorTotal <= 0) {
+            return response()->json([
+                "status" => "error",
+                "message" => "Valor dos bilhetes inválido."
+            ], 400);
+        }
+
+        // Configura Mercado Pago
+        MercadoPagoConfig::setAccessToken(env('MP_ACCESS_TOKEN'));
         $client = new PaymentClient();
 
         try {
-            // Criar o pagamento PIX
+            // Criação do pagamento PIX
             $payment = $client->create([
-                "transaction_amount" => (float) $request->valor ?? 5.00,
+                "transaction_amount" => (float) $valorTotal,
                 "description" => "Pagamento PIX - BolaPlayTV",
                 "payment_method_id" => "pix",
                 "payer" => [
-                    "email" => $request->email ?? "email@email.com",
+                    "email" => $request->email ?? "email@cliente.com",
                     "first_name" => $request->nome ?? "Cliente"
                 ],
             ]);
+
+            // Salva o ID do pagamento nos bilhetes
+            Bilhete::whereIn('id', $bilheteIds)
+                ->update([
+                    "payment_id" => $payment->id
+                ]);
 
             return response()->json([
                 "status" => "success",

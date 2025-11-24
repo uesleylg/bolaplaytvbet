@@ -380,9 +380,8 @@
  
 
     <button 
-    class="btn btn-outline-warning btn-sm"
-  data-bs-toggle="modal" 
-  data-bs-target="#ModalAposta"
+    class="btn btn-outline-warning btn-sm abrirAposta"
+
   data-id="{{ $bilhete->rodada_id }}"
   data-editar="true"
   data-carrinho-id="{{ $bilhete->id }}"

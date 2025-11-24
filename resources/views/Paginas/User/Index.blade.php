@@ -97,7 +97,8 @@
       {{ $rodada->nome }} | {{ $rodada->num_palpites }} Jogos
     </div>
 
-    <div class="card-bolao p-4" data-bs-toggle="modal" data-bs-target="#ModalAposta" data-id="{{ $rodada->id }}">
+  <div class="card-bolao p-4 abrirAposta" data-id="{{ $rodada->id }}">
+
       <div class="d-flex justify-content-between align-items-start flex-wrap">
         
         <div>

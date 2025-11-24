@@ -22,11 +22,11 @@ use App\Http\Controllers\SlideController;
 use Illuminate\Support\Facades\RateLimiter;
 
 use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\PagamentoController;
 
 
 
-
-Route::post('/gerar-pix', [\App\Http\Controllers\PagamentoController::class, 'gerarPix']);
+Route::post('/gerar-pix', [PagamentoController::class, 'gerarPix'])->name('gerar.pix');
 
 
 // ðŸ  Rotas pÃºblicas

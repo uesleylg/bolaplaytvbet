@@ -1,6 +1,49 @@
 
+<!-- ============================
+     MODAL DO PIX
+============================= -->
+<div class="modal fade" id="ModalPix" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 10px;">
 
-<div class="modal fade" id="ModalAposta" tabindex="-1" aria-labelledby="ModalAposta" aria-hidden="true">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title"><i class="fa-brands fa-pix"></i> Pagamento via PIX</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body text-center p-4">
+
+        <!-- 🔄 LOADER ENQUANTO GERA O PIX -->
+        <div id="pixLoading" style="display: none;">
+          <div class="spinner-border text-success mb-3" role="status"></div>
+          <p class="mt-2 text-muted">Gerando PIX, aguarde...</p>
+        </div>
+
+        <!-- 📌 CONTEÚDO FINAL DO PIX (QR + COPIA/COLA) -->
+        <div id="pixContent" style="display: none;">
+          <h5 class="mb-3">Escaneie o QR Code para pagar</h5>
+
+          <img id="pixQrImg" src="" width="230" class="mb-3 border p-2 rounded" />
+
+          <p class="text-muted small mb-1">Ou copie o código abaixo:</p>
+
+          <textarea id="pixCopiaCola" class="form-control text-center p-2" rows="3" readonly></textarea>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button class="btn btn-success">Já paguei</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="ModalAposta" tabindex="-1" aria-labelledby="ModalAposta" aria-hidden="true" >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content" style="border-radius: 10px;">
       
@@ -79,13 +122,39 @@
 </div>
 
 
-
 <script>
+
+// 🔹 Abrir modal manualmente e passar atributos
+document.querySelectorAll('.abrirAposta').forEach(card => {
+    card.addEventListener('click', function () {
+
+        const rodadaId = this.getAttribute('data-id');
+        const editar = this.getAttribute('data-editar') === 'true';
+        const carrinhoId = this.getAttribute('data-carrinho-id');
+        const combinacao = this.getAttribute('data-combinacao');
+
+        const modalEl = document.getElementById('ModalAposta');
+
+        // Passa valores ao modal
+        modalEl.setAttribute('data-id', rodadaId);
+        modalEl.setAttribute('data-editar', editar);
+        modalEl.setAttribute('data-carrinho-id', carrinhoId || '');
+        modalEl.setAttribute('data-combinacao', combinacao || '');
+
+        // Abre manualmente
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+    });
+});
+
+
 document.addEventListener('DOMContentLoaded', function() {
+
     const modalAposta = document.getElementById('ModalAposta');
     const container = document.getElementById('jogos-container');
     const btnConfirmar = document.querySelector('.btt-conf');
     const btnLimpar = document.querySelector('.btt-limpar button');
+
     let carregando = false;
     let palpites = {};
     let jogosData = {};
@@ -94,13 +163,16 @@ document.addEventListener('DOMContentLoaded', function() {
     let carrinhoEditando = null;
     let combinacaoOriginal = '';
 
+
+
     // 🔹 Quando o modal abrir
-    modalAposta.addEventListener('show.bs.modal', async function(event) {
-        const button = event.relatedTarget;
-        const rodadaId = button?.getAttribute('data-id');
-        const editar = button?.getAttribute('data-editar') === 'true';
-        const carrinhoId = button?.getAttribute('data-carrinho-id');
-        const combinacao = button?.getAttribute('data-combinacao');
+    modalAposta.addEventListener('show.bs.modal', async function() {
+
+        // Agora pegamos diretamente DO MODAL
+        const rodadaId = modalAposta.getAttribute('data-id');
+        const editar = modalAposta.getAttribute('data-editar') === 'true';
+        const carrinhoId = modalAposta.getAttribute('data-carrinho-id');
+        const combinacao = modalAposta.getAttribute('data-combinacao');
 
         if (!rodadaId || carregando) return;
 
@@ -110,28 +182,28 @@ document.addEventListener('DOMContentLoaded', function() {
         combinacaoOriginal = combinacao || '';
 
         carregando = true;
+
         container.innerHTML = `
-  <div class="placeholder-glow p-3">
-    <div class="placeholder col-12 mb-3" style="height:60px;border-radius:10px;"></div>
-    <div class="placeholder col-12 mb-3" style="height:60px;border-radius:10px;"></div>
-    <div class="placeholder col-12 mb-3" style="height:60px;border-radius:10px;"></div>
-  </div>
-`;
+            <div class="placeholder-glow p-3">
+                <div class="placeholder col-12 mb-3" style="height:60px;border-radius:10px;"></div>
+                <div class="placeholder col-12 mb-3" style="height:60px;border-radius:10px;"></div>
+                <div class="placeholder col-12 mb-3" style="height:60px;border-radius:10px;"></div>
+            </div>
+        `;
 
         await carregarJogos(rodadaId);
         carregando = false;
 
-        // Se estiver em modo edição → aplicar seleções anteriores
         if (modoEdicao && combinacaoOriginal) {
             aplicarCombinacaoAntiga(combinacaoOriginal);
         }
 
-        // Alterar texto do botão
         btnConfirmar.textContent = modoEdicao ? 'ATUALIZAR APOSTA' : 'CONFIRMAR APOSTA';
-        btnConfirmar.classList.toggle('', modoEdicao);
     });
 
-    // 🔹 Carregar jogos + odds externas
+
+
+    // 🔹 Carregar jogos + odds
     async function carregarJogos(rodadaId) {
         try {
             const response = await fetch(`/rodadas/${rodadaId}/jogos`);
@@ -159,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const card = document.createElement('div');
                 card.classList.add('p-0', 'mb-0');
 
-                card.innerHTML = `
+               card.innerHTML = `
                     <div class="d-flex align-items-center">
                         <div class="match-number">${index + 1}</div>
                         <div class="league ms-2">
@@ -191,21 +263,26 @@ document.addEventListener('DOMContentLoaded', function() {
                         </button>
                     </div>
                 `;
+
                 container.appendChild(card);
             });
 
             ativarSelecao();
             atualizarContadores();
 
-        } catch (error) {
-            console.error('Erro inesperado:', error);
+        } catch (err) {
+            console.error(err);
             container.innerHTML = `<div class="text-danger">Erro ao buscar dados.</div>`;
         }
     }
 
-    // 🔹 Buscar odds externas
+
+
+    // 🔹 Odds externas
     async function buscarOdds(eventId) {
-        const url = `https://global.ds.lsapp.eu/odds/pq_graphql?_hash=ope2&eventId=${eventId}&bookmakerId=16&betType=HOME_DRAW_AWAY&betScope=FULL_TIME`;
+        const url =
+            `https://global.ds.lsapp.eu/odds/pq_graphql?_hash=ope2&eventId=${eventId}&bookmakerId=16&betType=HOME_DRAW_AWAY&betScope=FULL_TIME`;
+
         try {
             const res = await fetch(url);
             const json = await res.json();
@@ -220,7 +297,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 🔹 Aplicar combinações anteriores ao abrir em modo edição
+
+
+    // 🔹 Aplicar combinações antigas
     function aplicarCombinacaoAntiga(combinacao) {
         const partes = combinacao.split('-');
         const botoes = document.querySelectorAll('.aposta-btn');
@@ -228,16 +307,18 @@ document.addEventListener('DOMContentLoaded', function() {
         let index = 0;
         for (const jogoId in palpites) {
             const val = partes[index] || '';
+
             if (val.includes('1')) palpites[jogoId].push('home');
             if (val.toLowerCase().includes('x')) palpites[jogoId].push('draw');
             if (val.includes('2')) palpites[jogoId].push('away');
+
             index++;
         }
 
-        // Marca os botões selecionados visualmente
         botoes.forEach(btn => {
             const jogoId = btn.getAttribute('data-jogo');
             const tipo = btn.getAttribute('data-tipo');
+
             if (palpites[jogoId].includes(tipo)) {
                 btn.classList.add('selecionado');
             }
@@ -246,10 +327,11 @@ document.addEventListener('DOMContentLoaded', function() {
         atualizarContadores();
     }
 
+
+
     // 🔹 Seleção de palpites
     function ativarSelecao() {
-        const botoes = document.querySelectorAll('.aposta-btn');
-        botoes.forEach(btn => {
+        document.querySelectorAll('.aposta-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const jogoId = btn.getAttribute('data-jogo');
                 const tipo = btn.getAttribute('data-tipo');
@@ -267,6 +349,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+
+
     // 🔹 Limpar palpites
     btnLimpar.addEventListener('click', () => {
         document.querySelectorAll('.aposta-btn').forEach(btn => btn.classList.remove('selecionado'));
@@ -274,8 +358,11 @@ document.addEventListener('DOMContentLoaded', function() {
         atualizarContadores();
     });
 
-    // 🔹 Atualizar contadores e valor total
+
+
+    // 🔹 Atualizar contadores
     function atualizarContadores() {
+
         const secoEl = document.querySelector('.bg-dark .col:nth-child(1) .fs-5');
         const duploEl = document.querySelector('.bg-dark .col:nth-child(2) .fs-5');
         const triploEl = document.querySelector('.bg-dark .col:nth-child(3) .fs-5');
@@ -288,6 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         for (const jogoId in palpites) {
             const n = palpites[jogoId].length;
+
             if (n === 1) secos++;
             else if (n === 2) duplos++;
             else if (n === 3) triplos++;
@@ -306,6 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (bilheteEl) bilheteEl.textContent = `${totalBilhetes} bilhete(s)`;
 
         const valorTotal = totalBilhetes * valorBilhete;
+
         if (valorEl) {
             valorEl.innerHTML = valorTotal.toLocaleString('pt-BR', {
                 style: 'currency',
@@ -314,8 +403,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 🔹 Confirmar palpites (criar ou editar)
+
+
+    // 🔹 Confirmar / Atualizar aposta
     btnConfirmar.addEventListener('click', async () => {
+
         const temPalpites = Object.values(palpites).some(p => p.length > 0);
         if (!temPalpites) {
             alert('⚠️ Nenhum palpite selecionado.');
@@ -326,19 +418,21 @@ document.addEventListener('DOMContentLoaded', function() {
             .map(([_, escolhas]) => {
                 if (escolhas.length === 3) return '1x2';
                 if (escolhas.length === 2) {
-                    return escolhas.map(e => e === 'home' ? '1' : e === 'draw' ? 'x' : '2').join('');
+                    return escolhas.map(e =>
+                        e === 'home' ? '1' :
+                        e === 'draw' ? 'x' : '2'
+                    ).join('');
                 }
                 if (escolhas.length === 1) {
-                    return escolhas[0] === 'home' ? '1' : escolhas[0] === 'draw' ? 'x' : '2';
+                    return escolhas[0] === 'home' ? '1' :
+                           escolhas[0] === 'draw' ? 'x' : '2';
                 }
                 return '-';
             })
             .join('-');
 
-        const quantidade = 1;
-        const valorTotal = quantidade * valorBilhete;
-
         try {
+
             const url = modoEdicao
                 ? `/carrinho/${carrinhoEditando}/atualizar`
                 : `/carrinho/salvar`;
@@ -359,230 +453,100 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             const data = await res.json();
+            const ids = data.bilhete_ids;
+            console.log(ids); 
+
 
             if (!data.success) {
                 alert('❌ Erro ao salvar: ' + data.message);
                 return;
             }
 
-            alert(`✅ ${modoEdicao ? 'Bilhete atualizado' : 'Carrinho salvo'} com sucesso!\nCombinação: ${combinacaoCompacta}\nValor: R$ ${valorTotal.toFixed(2)}`);
+    
+
+            // ✔ Mensagem de sucesso
+alert(`✅ ${modoEdicao ? 'Bilhete atualizado' : 'Carrinho salvo'} com sucesso!\nCombinação: ${combinacaoCompacta}`);
+
+// ✔ Se está EDITANDO → só mostra alert e PARA AQUI
+if (modoEdicao) {
+    return;
+}
+
+// ✔ Se está COMPRANDO (modoEdicao = false) → abrir PIX
+const modalApostaBS = bootstrap.Modal.getInstance(modalAposta);
+modalApostaBS.hide();
+
+setTimeout(async () => {
+
+    const modalPixEl = document.getElementById('ModalPix');
+    const modalPix = new bootstrap.Modal(modalPixEl);
+
+    // Exibe LOADING
+    document.getElementById("pixLoading").style.display = "block";
+    document.getElementById("pixContent").style.display = "none";
+
+    modalPix.show(); // abre com o loading
+
+    // 🔥 Chamar API Mercado Pago
+    await gerarPixPagamento(ids);
+
+    // Quando terminar → mostrar conteúdo final
+    document.getElementById("pixLoading").style.display = "none";
+    document.getElementById("pixContent").style.display = "block";
+
+}, 300);
+
+
+
+
+
+
+
+
+
         } catch (err) {
             console.error(err);
             alert('Erro inesperado ao salvar no carrinho.');
         }
     });
+
 });
-</script>
 
 
-
-
-
-
-<script>
-  /*
-document.addEventListener('DOMContentLoaded', function() {
-    const modalAposta = document.getElementById('ModalAposta');
-    const container = document.getElementById('jogos-container');
-    const btnConfirmar = document.querySelector('.btt-conf');
-    const btnLimpar = document.querySelector('.btt-limpar button');
-    let carregando = false;
-    let palpites = {}; // Armazena o palpite de cada jogo
-    let jogosData = {}; // Armazena dados dos jogos
-
-    // 🔹 Quando o modal abrir
-    modalAposta.addEventListener('show.bs.modal', async function(event) {
-        const button = event.relatedTarget;
-        const rodadaId = button?.getAttribute('data-id');
-        if (!rodadaId || carregando) return;
-
-        window.rodadaSelecionada = rodadaId;
-        carregando = true;
-        container.innerHTML = `<div class="p-3 text-secondary">⏳ Carregando jogos...</div>`;
-        await carregarJogos(rodadaId);
-        carregando = false;
-    });
-
-    // 🔹 Função para carregar jogos
-    async function carregarJogos(rodadaId) {
-        try {
-            const response = await fetch(`/rodadas/${rodadaId}/jogos`);
-            const data = await response.json();
-            if (!data.success) {
-                container.innerHTML = `<div class="text-danger">Erro ao carregar jogos.</div>`;
-                return;
-            }
-
-            const oddsPromises = data.jogos.map(j => buscarOdds(j.id_partida));
-            const oddsList = await Promise.all(oddsPromises);
-
-            container.innerHTML = '';
-            jogosData = {};
-
-            data.jogos.forEach((jogo, index) => {
-                const odds = oddsList[index];
-                jogosData[jogo.id] = jogo;
-
-                const card = document.createElement('div');
-                card.classList.add('p-0', 'mb-0');
-
-                card.innerHTML = `
-                    <div class="d-flex align-items-center">
-                        <div class="match-number">${index + 1}</div>
-                        <div class="league ms-2">
-                            🔍 ${jogo.data_jogo} — <strong>${jogo.competicao}</strong>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center odds position-relative">
-                        <button class="team-btn aposta-btn position-relative d-flex flex-column justify-content-center align-items-center px-3 py-2 text-center" 
-                                data-jogo="${jogo.id}" data-tipo="home" style="min-width: 110px;">
-                            <img src="${jogo.time_casa_brasao}" class="team-logo position-absolute start-0 top-50 translate-middle-y ms-2" width="26">
-                            <div class="fw-semibold">${jogo.time_casa_nome}</div>
-                            <small class="text-muted">${odds.home}</small>
-                        </button>
-
-                        <button class="draw-btn aposta-btn d-flex flex-column align-items-center justify-content-center px-3 py-2 text-center" 
-                                data-jogo="${jogo.id}" data-tipo="draw" style="min-width: 90px;">
-                            <div class="fw-semibold mb-1">EMPATE</div>
-                            <small class="text-muted">${odds.draw}</small>
-                        </button>
-
-                        <button class="team-btn aposta-btn position-relative d-flex flex-column justify-content-center align-items-center px-3 py-2 text-center" 
-                                data-jogo="${jogo.id}" data-tipo="away" style="min-width: 110px;">
-                            <img src="${jogo.time_fora_brasao}" class="team-logo position-absolute end-0 top-50 translate-middle-y me-2" width="26">
-                            <div class="fw-semibold">${jogo.time_fora_nome}</div>
-                            <small class="text-muted">${odds.away}</small>
-                        </button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-
-            ativarSelecao();
-
-        } catch (error) {
-            console.error('Erro inesperado:', error);
-            container.innerHTML = `<div class="text-danger">Erro ao buscar dados.</div>`;
-        }
-    }
-
-    // 🔹 Buscar odds externas
-    async function buscarOdds(eventId) {
-        const url = `https://global.ds.lsapp.eu/odds/pq_graphql?_hash=ope2&eventId=${eventId}&bookmakerId=16&betType=HOME_DRAW_AWAY&betScope=FULL_TIME`;
-        try {
-            const res = await fetch(url);
-            const json = await res.json();
-            const odds = json?.data?.findPrematchOddsForBookmaker;
-            return {
-                home: odds?.home?.value || '-',
-                draw: odds?.draw?.value || '-',
-                away: odds?.away?.value || '-'
-            };
-        } catch {
-            return { home: '-', draw: '-', away: '-' };
-        }
-    }
-
-    // 🔹 Seleção de palpites
-    function ativarSelecao() {
-        const botoes = document.querySelectorAll('.aposta-btn');
-        botoes.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const jogoId = btn.getAttribute('data-jogo');
-                const tipo = btn.getAttribute('data-tipo');
-
-                document.querySelectorAll(`.aposta-btn[data-jogo="${jogoId}"]`)
-                    .forEach(b => b.classList.remove('selecionado'));
-
-                btn.classList.add('selecionado');
-                palpites[jogoId] = tipo;
-
-                atualizarContadores();
-            });
+async function gerarPixPagamento(bilheteIds) {
+    try {
+        const res = await fetch("/gerar-pix", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({
+                bilhetes: bilheteIds
+            })
         });
-    }
 
-    // 🔹 Limpar palpites
-    btnLimpar.addEventListener('click', () => {
-        document.querySelectorAll('.aposta-btn').forEach(btn => btn.classList.remove('selecionado'));
-        palpites = {};
-        atualizarContadores();
-    });
+        const data = await res.json();
 
-    // 🔹 Atualizar contadores Seco/Duplo/Triplo
-    function atualizarContadores() {
-        const secoEl = document.querySelector('.bg-dark .col:nth-child(1) .fs-5');
-        const duploEl = document.querySelector('.bg-dark .col:nth-child(2) .fs-5');
-        const triploEl = document.querySelector('.bg-dark .col:nth-child(3) .fs-5');
-
-        const n = Object.keys(palpites).length;
-
-        // Seco = número de palpites
-        secoEl.textContent = n;
-
-        // Duplo = combinações de 2 (nC2)
-        duploEl.textContent = n >= 2 ? (n * (n - 1)) / 2 : 0;
-
-        // Triplo = combinações de 3 (nC3)
-        triploEl.textContent = n >= 3 ? (n * (n - 1) * (n - 2)) / 6 : 0;
-    }
-
-    // 🔹 Confirmar palpites e enviar para backend
-    btnConfirmar.addEventListener('click', async () => {
-        const palpitesSelecionados = Object.keys(palpites);
-        if (palpitesSelecionados.length === 0) {
-            alert('⚠️ Nenhum palpite selecionado.');
+        if (data.status !== "success") {
+            alert("Erro ao gerar PIX");
             return;
         }
 
-        const palpitesFormatados = palpitesSelecionados.map(jogoId => {
-            const jogo = jogosData[jogoId];
-            return {
-                rodada_jogo_id: jogo.id,
-                escolha: palpites[jogoId] === 'home' ? 'casa' :
-                         palpites[jogoId] === 'draw' ? 'empate' : 'fora'
-            };
-        });
+        document.getElementById("pixQrImg").src =
+            "data:image/png;base64," + data.qr_code_base64;
 
-        try {
-            const res = await fetch('/palpites', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    rodada_id: window.rodadaSelecionada,
-                    palpites: palpitesFormatados
-                })
-            });
+        document.getElementById("pixCopiaCola").value = data.copia_cola;
 
-            const data = await res.json();
+    } catch (e) {
+        console.error("Erro PIX:", e);
+        alert("Erro inesperado ao gerar PIX");
+    }
+}
 
-            if (!data.success) {
-                alert('Erro ao registrar bilhete: ' + data.message);
-                return;
-            }
 
-            const bilheteId = data.palpite_id;
-            const codigoBilhete = data.codigo_bilhete;
-
-            alert(
-                `Bilhete criado: ${codigoBilhete}\n` +
-                `Palpites: ${palpitesFormatados.map(p => `${p.rodada_jogo_id}: ${p.escolha}`).join(' | ')}`
-            );
-
-        } catch (err) {
-            console.error(err);
-            alert('Erro inesperado ao registrar o bilhete.');
-        }
-    });
-
-});
-
-*/
 </script>
+
 
 
 
