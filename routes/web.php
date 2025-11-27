@@ -23,10 +23,13 @@ use Illuminate\Support\Facades\RateLimiter;
 
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\PagamentoController;
+use App\Http\Controllers\WebhookPixController;
+use App\Http\Controllers\Admin\BilheteController;
 
 
 
 Route::post('/gerar-pix', [PagamentoController::class, 'gerarPix'])->name('gerar.pix');
+Route::post('/webhook/pix', [WebhookPixController::class, 'handle']);
 
 
 // ðŸ  Rotas pÃºblicas
@@ -120,5 +123,5 @@ Route::prefix('admin')
      ->name('slides.deleteImage');
 
 
-     
+      Route::get('/bilhetes', [BilheteController::class, 'index'])->name('index.bilhetes');
     });

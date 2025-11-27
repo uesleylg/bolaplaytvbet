@@ -123,6 +123,7 @@ public function salvarCarrinho(Request $request)
                 'status' => 'pendente',
             ]);
 
+
             $bilheteIds[] = $carrinho->id; // <<---- PEGANDO O ID
 
         } else {
@@ -146,7 +147,7 @@ public function salvarCarrinho(Request $request)
 
         return response()->json([
             'success' => true,
-            'bilhete_ids' => $bilheteIds,  // <<---- RETORNANDO PARA JS
+            'carrinho_ids' => $bilheteIds,  // <<---- RETORNANDO PARA JS
         ]);
 
     } catch (\Exception $e) {

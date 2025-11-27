@@ -1,45 +1,136 @@
-
 <!-- ============================
-     MODAL DO PIX
+     MODAL PIX - 2025 PREMIUM UI
 ============================= -->
 <div class="modal fade" id="ModalPix" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="border-radius: 10px;">
+    <div class="modal-content pix-card">
 
-      <div class="modal-header bg-success text-white">
-        <h5 class="modal-title"><i class="fa-brands fa-pix"></i> Pagamento via PIX</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      <div class="modal-header border-0 p-3 pix-header">
+        <h5 class="modal-title d-flex align-items-center gap-2">
+          <i class="fa-brands fa-pix fa-beat" style="font-size: 22px;"></i>
+          Pagamento via PIX
+        </h5>
+        <button type="button" class="btn-close btn-close-white shadow-sm" data-bs-dismiss="modal"></button>
       </div>
 
-      <div class="modal-body text-center p-4">
+      <div class="modal-body text-center px-4 pb-4">
 
-        <!-- 🔄 LOADER ENQUANTO GERA O PIX -->
-        <div id="pixLoading" style="display: none;">
-          <div class="spinner-border text-success mb-3" role="status"></div>
-          <p class="mt-2 text-muted">Gerando PIX, aguarde...</p>
+        <!-- 🔄 LOADING -->
+        <div id="pixLoading">
+          <div class="spinner-border text-success mb-3" style="width: 3rem; height: 3rem;"></div>
+          <p class="mt-3 text-muted">Gerando PIX...<br><small>Isso leva só alguns segundos.</small></p>
         </div>
 
-        <!-- 📌 CONTEÚDO FINAL DO PIX (QR + COPIA/COLA) -->
+        <!-- 📌 CONTEÚDO DO PIX -->
         <div id="pixContent" style="display: none;">
-          <h5 class="mb-3">Escaneie o QR Code para pagar</h5>
+          
+          <p class="text-muted mb-1">Valor do pagamento</p>
+          <h3 class="fw-bold text-success mb-4" id="pixValor"></h3>
 
-          <img id="pixQrImg" src="" width="230" class="mb-3 border p-2 rounded" />
+          <div class="pix-qr-wrapper mx-auto mb-3">
+            <img id="pixQrImg" src="" class="pix-qr-image" />
+          </div>
 
-          <p class="text-muted small mb-1">Ou copie o código abaixo:</p>
+          <p class="mt-3 text-muted small">Ou copie o código abaixo:</p>
 
-          <textarea id="pixCopiaCola" class="form-control text-center p-2" rows="3" readonly></textarea>
+          <div class="input-group mt-2 shadow-sm">
+            <textarea id="pixCopiaCola" class="form-control text-center p-2" rows="3" readonly></textarea>
+            <button class="btn btn-success" onclick="copiarPix()">Copiar</button>
+          </div>
+
         </div>
 
       </div>
 
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-        <button class="btn btn-success">Já paguei</button>
+      <div class="modal-footer border-0 px-4 pb-4 d-flex justify-content-between">
+        <button class="btn btn-light px-4 shadow-sm" data-bs-dismiss="modal">Fechar</button>
+        <button class="btn btn-success px-4 shadow-sm">Já paguei</button>
       </div>
 
     </div>
   </div>
 </div>
+
+
+
+<!-- ================================
+     ESTILO MODERNO PIX 2025 (SÓLIDO)
+================================ -->
+<style>
+  /* Cartão sólido, sem transparência */
+  .pix-card {
+    border-radius: 18px;
+    overflow: hidden;
+    background: #ffffff; /* <- sólido */
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Cabeçalho moderno */
+  .pix-header {
+    background: linear-gradient(135deg, #0baa57 0%, #34d399 100%);
+    color: white;
+  }
+
+  /* Caixa do QR */
+  .pix-qr-wrapper {
+    background: white;
+    padding: 12px;
+    border-radius: 12px;
+    width: 250px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #e5e7eb;
+  }
+
+  .pix-qr-image {
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  textarea {
+    resize: none;
+    font-size: 14px;
+  }
+
+  .modal-content {
+    animation: fadeSlideUp 0.25s ease-out;
+  }
+
+  @keyframes fadeSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+
+
+<!-- ======================
+     FUNÇÃO COPIAR PIX
+======================= -->
+<script>
+  function copiarPix() {
+    const input = document.getElementById("pixCopiaCola");
+    input.select();
+    document.execCommand("copy");
+
+    Swal.fire({
+      icon: "success",
+      title: "Código copiado!",
+      text: "Cole no seu app do banco para pagar.",
+      timer: 1800,
+      showConfirmButton: false
+    });
+  }
+</script>
 
 
 
@@ -110,7 +201,8 @@
 
             <div class="d-flex justify-content-between align-items-center">
               <span class="fw-semibold text-secondary">Premio Estimado</span>
-              <h4 class="fw-bold text-warning mb-0">R$ 50.000,00</h4>
+              <h4 id="premio-estimado" class="fw-bold text-warning mb-0">R$ 0,00</h4>
+
             </div>
           </div>
 
@@ -215,6 +307,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             valorBilhete = parseFloat(data.rodada.valor_bilhete);
+
+            const premioEstimadoEl = document.getElementById("premio-estimado");
+if (premioEstimadoEl) {
+    premioEstimadoEl.textContent = parseFloat(data.rodada.premiacao_estimada).toLocaleString(
+        'pt-BR',
+        { style: 'currency', currency: 'BRL' }
+    );
+}
 
             const oddsPromises = data.jogos.map(j => buscarOdds(j.id_partida));
             const oddsList = await Promise.all(oddsPromises);
@@ -405,116 +505,103 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-    // 🔹 Confirmar / Atualizar aposta
-    btnConfirmar.addEventListener('click', async () => {
+   btnConfirmar.addEventListener('click', async () => {
 
-        const temPalpites = Object.values(palpites).some(p => p.length > 0);
-        if (!temPalpites) {
-            alert('⚠️ Nenhum palpite selecionado.');
+    const temPalpites = Object.values(palpites).some(p => p.length > 0);
+    if (!temPalpites) {
+        alert('⚠️ Nenhum palpite selecionado.');
+        return;
+    }
+
+    let combinacaoCompacta = Object.entries(palpites)
+        .map(([_, escolhas]) => {
+            if (escolhas.length === 3) return '1x2';
+            if (escolhas.length === 2) {
+                return escolhas.map(e =>
+                    e === 'home' ? '1' :
+                    e === 'draw' ? 'x' : '2'
+                ).join('');
+            }
+            if (escolhas.length === 1) {
+                return escolhas[0] === 'home' ? '1' :
+                       escolhas[0] === 'draw' ? 'x' : '2';
+            }
+            return '-';
+        })
+        .join('-');
+
+    try {
+
+        const url = modoEdicao
+            ? `/carrinho/${carrinhoEditando}/atualizar`
+            : `/carrinho/salvar`;
+
+        const method = modoEdicao ? 'PUT' : 'POST';
+
+        const res = await fetch(url, {
+            method,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                rodada_id: window.rodadaSelecionada,
+                combinacao: combinacaoCompacta,
+                valor_bilhete: valorBilhete
+            })
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+            alert('❌ Erro ao salvar: ' + data.message);
             return;
         }
 
-        let combinacaoCompacta = Object.entries(palpites)
-            .map(([_, escolhas]) => {
-                if (escolhas.length === 3) return '1x2';
-                if (escolhas.length === 2) {
-                    return escolhas.map(e =>
-                        e === 'home' ? '1' :
-                        e === 'draw' ? 'x' : '2'
-                    ).join('');
-                }
-                if (escolhas.length === 1) {
-                    return escolhas[0] === 'home' ? '1' :
-                           escolhas[0] === 'draw' ? 'x' : '2';
-                }
-                return '-';
-            })
-            .join('-');
+        alert(`✅ ${modoEdicao ? 'Bilhete atualizado' : 'Carrinho salvo'} com sucesso!`);
 
-        try {
+        if (modoEdicao) return;
 
-            const url = modoEdicao
-                ? `/carrinho/${carrinhoEditando}/atualizar`
-                : `/carrinho/salvar`;
+        // ------------------------------------------------------------------
+        // 🔥 GERAR PIX — usando o controller correto
+        // ------------------------------------------------------------------
 
-            const method = modoEdicao ? 'PUT' : 'POST';
+        const carrinhoIdsArray = data.carrinho_ids; 
+        console.log("📦 Carrinhos enviados para PIX:", carrinhoIdsArray);
 
-            const res = await fetch(url, {
-                method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    rodada_id: window.rodadaSelecionada,
-                    combinacao: combinacaoCompacta,
-                    valor_bilhete: valorBilhete
-                })
-            });
+        const modalApostaBS = bootstrap.Modal.getInstance(modalAposta);
+        modalApostaBS.hide();
 
-            const data = await res.json();
-            const ids = data.bilhete_ids;
-            console.log(ids); 
+        setTimeout(async () => {
 
+            const modalPixEl = document.getElementById('ModalPix');
+            const modalPix = new bootstrap.Modal(modalPixEl);
 
-            if (!data.success) {
-                alert('❌ Erro ao salvar: ' + data.message);
-                return;
-            }
+            document.getElementById("pixLoading").style.display = "block";
+            document.getElementById("pixContent").style.display = "none";
 
-    
+            modalPix.show();
 
-            // ✔ Mensagem de sucesso
-alert(`✅ ${modoEdicao ? 'Bilhete atualizado' : 'Carrinho salvo'} com sucesso!\nCombinação: ${combinacaoCompacta}`);
+            await gerarPixPagamento(carrinhoIdsArray);
 
-// ✔ Se está EDITANDO → só mostra alert e PARA AQUI
-if (modoEdicao) {
-    return;
-}
+            document.getElementById("pixLoading").style.display = "none";
+            document.getElementById("pixContent").style.display = "block";
 
-// ✔ Se está COMPRANDO (modoEdicao = false) → abrir PIX
-const modalApostaBS = bootstrap.Modal.getInstance(modalAposta);
-modalApostaBS.hide();
+        }, 300);
 
-setTimeout(async () => {
-
-    const modalPixEl = document.getElementById('ModalPix');
-    const modalPix = new bootstrap.Modal(modalPixEl);
-
-    // Exibe LOADING
-    document.getElementById("pixLoading").style.display = "block";
-    document.getElementById("pixContent").style.display = "none";
-
-    modalPix.show(); // abre com o loading
-
-    // 🔥 Chamar API Mercado Pago
-    await gerarPixPagamento(ids);
-
-    // Quando terminar → mostrar conteúdo final
-    document.getElementById("pixLoading").style.display = "none";
-    document.getElementById("pixContent").style.display = "block";
-
-}, 300);
-
-
-
-
-
-
-
-
-
-        } catch (err) {
-            console.error(err);
-            alert('Erro inesperado ao salvar no carrinho.');
-        }
-    });
-
+    } catch (err) {
+        console.error(err);
+        alert('Erro inesperado ao salvar no carrinho.');
+    }
 });
 
 
-async function gerarPixPagamento(bilheteIds) {
+});
+
+async function gerarPixPagamento(carrinhoIdsArray) {
     try {
+        console.log("📦 Enviando carrinho_ids:", carrinhoIdsArray);
+
         const res = await fetch("/gerar-pix", {
             method: "POST",
             headers: {
@@ -522,20 +609,26 @@ async function gerarPixPagamento(bilheteIds) {
                 "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
             },
             body: JSON.stringify({
-                bilhetes: bilheteIds
+                carrinho_ids: carrinhoIdsArray
             })
         });
 
         const data = await res.json();
 
-        if (data.status !== "success") {
-            alert("Erro ao gerar PIX");
+        if (!data.success) {
+            alert("❌ Erro ao gerar PIX: " + data.message);
             return;
         }
 
-        document.getElementById("pixQrImg").src =
-            "data:image/png;base64," + data.qr_code_base64;
+        // Valor
+        document.getElementById("pixValor").innerHTML =
+            "R$ " + String(data.valor.toFixed(2)).replace(".", ",");
 
+        // QR Code base64 (campo correto)
+        document.getElementById("pixQrImg").src =
+            "data:image/png;base64," + data.qr;
+
+        // Copia e cola (campo correto)
         document.getElementById("pixCopiaCola").value = data.copia_cola;
 
     } catch (e) {
@@ -543,6 +636,7 @@ async function gerarPixPagamento(bilheteIds) {
         alert("Erro inesperado ao gerar PIX");
     }
 }
+
 
 
 </script>

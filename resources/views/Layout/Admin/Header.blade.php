@@ -182,8 +182,8 @@
 </li>
 
 <li class="nav-item mb-1">
-  <a class="nav-link " 
-     href="{{ route('admin.cadastro.rodada') }}">
+  <a class="nav-link {{ request()->routeIs('admin.index.bilhetes') ? 'active' : '' }}" 
+     href="{{ route('admin.index.bilhetes') }}">
     <i class="fa-solid fa-ticket"></i> Bilhetes
   </a>
 </li>
