@@ -161,46 +161,54 @@
 
       <nav class="sidebar-nav">
         <ul class="nav flex-column">
-         <li class="nav-item mb-1">
+<li class="nav-item mb-1">
   <a class="nav-link {{ request()->routeIs('admin.index') ? 'active' : '' }}" 
      href="{{ route('admin.index') }}">
-    <i class="fa-solid fa-gauge"></i> Visão Geral
+    <i class="fa-solid fa-gauge fa-fw"></i> Visão Geral
   </a>
 </li>
 
 <li class="nav-item mb-1">
   <a class="nav-link {{ request()->routeIs('admin.cadastro.rodada') ? 'active' : '' }}" 
      href="{{ route('admin.cadastro.rodada') }}">
-    <i class="fa-solid fa-trophy"></i> Rodadas
+    <i class="fa-solid fa-trophy fa-fw"></i> Rodadas
   </a>
 </li>
+
 <li class="nav-item mb-1">
   <a class="nav-link {{ request()->routeIs('admin.get.carrinho') ? 'active' : '' }}" 
      href="{{ route('admin.get.carrinho') }}">
-    <i class="fa-solid fa-cart-shopping"></i> Carrinho
+    <i class="fa-solid fa-cart-shopping fa-fw"></i> Carrinho
   </a>
 </li>
 
 <li class="nav-item mb-1">
   <a class="nav-link {{ request()->routeIs('admin.index.bilhetes') ? 'active' : '' }}" 
      href="{{ route('admin.index.bilhetes') }}">
-    <i class="fa-solid fa-ticket"></i> Bilhetes
+    <i class="fa-solid fa-ticket fa-fw"></i> Bilhetes
   </a>
 </li>
 
 <li class="nav-item mb-1">
   <a class="nav-link {{ request()->routeIs('admin.usuarios*') ? 'active' : '' }}" 
      href="{{ route('admin.usuarios.index') }}">
-    <i class="fa-solid fa-user"></i> Usuários
+    <i class="fa-solid fa-user fa-fw"></i> Usuários
   </a>
 </li>
+
 <li class="nav-item mb-1">
-  <a class="nav-link " 
-     href="{{ route('admin.usuarios.index') }}">
-    <i class="fa-solid fa-chart-simple"></i> Relatório
+  <a class="nav-link" href="#">
+    <i class="fa-solid fa-chart-simple fa-fw"></i> Relatório
   </a>
 </li>
-        
+
+<li class="nav-item mb-1">
+  <a class="nav-link" href="#">
+    <i class="fa-solid fa-link fa-fw"></i> Afiliados
+  </a>
+</li>
+
+
        
           <li class="nav-item mt-3">
             <hr>

@@ -141,7 +141,7 @@
           <!-- Título -->
           <h5 class="card-title fw-bold text-light mb-3">
             <i class="fa-solid fa-flag-checkered me-2 text-primary"></i>
-            {{ $rodada->nome }}
+            #{{ $rodada->id }} - {{ $rodada->nome }}
           </h5>
 
           <!-- Informações principais -->

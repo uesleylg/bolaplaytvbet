@@ -1,5 +1,5 @@
 <div class="modal fade" id="ModalAposta" tabindex="-1" aria-labelledby="ModalAposta" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-centered modal-md">
     <div class="modal-content" style="border-radius: 10px;">
 
       <!-- Cabeçalho -->
@@ -14,7 +14,7 @@
       <br>
 
       <!-- Corpo -->
-      <div class="modal-body text-center" style="max-height: 70vh; overflow-y: auto;">
+      <div class="modal-body text-center" style="max-height: 80vh; overflow-y: auto;">
         <div class="container">
 
           <div class="row">
@@ -51,7 +51,7 @@
 
           <hr style="color:#b3b3b3;">
           <h5 style="text-align: left;">
-            <i class="fa-solid fa-ticket"></i> Apostas do Bilhete - <span id="modalResumo2"></span>
+            <i class="fa-solid fa-ticket"></i> Seus Palpites - <span id="modalResumo2"></span> jogos
           </h5>
 
           <!-- LISTA DAS APOSTAS -->
@@ -61,5 +61,6 @@
       </div>
 
     </div>
+
   </div>
 </div>

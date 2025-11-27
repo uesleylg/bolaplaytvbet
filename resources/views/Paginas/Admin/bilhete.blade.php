@@ -147,7 +147,7 @@
         <tr class="text-white">
           <th>ID</th>
           <th>Código</th>
-          <th>Carrinho</th>
+          <th>Rodada</th>
           <th>Usuário</th>
           <th>Prêmio</th>
           <th>Status</th>
@@ -161,7 +161,7 @@
         <tr class="text-white">
           <td>#{{ $bilhete->id }}</td>
           <td>{{ $bilhete->codigo_bilhete }}</td>
-          <td>#{{ $bilhete->carrinho->id ?? '—' }}</td>
+          <td>#{{ $bilhete->carrinho->rodada_id ?? '—' }}</td>
           <td>{{ $bilhete->carrinho->usuario->name ?? '—' }}</td>
 
           <td>
@@ -211,7 +211,7 @@
 </a>
 
 
-            <!-- Excluir -->
+            <!-- Excluir 
             <button 
               data-bs-toggle="modal"
               data-bs-target="#ModalConfirmDelete"
@@ -221,7 +221,7 @@
               data-nome="Bilhete #{{ $bilhete->id }}">
               <i class="fa-solid fa-trash"></i>
             </button>
-
+-->
           </td>
         </tr>
         @endforeach
@@ -239,40 +239,68 @@ document.addEventListener("click", function (e) {
     const btn = e.target.closest(".abrirModalBilhete");
     if (!btn) return;
 
+    // Apostas (JSON)
+    let apostas = [];
+    try {
+        apostas = JSON.parse(btn.dataset.apostas);
+    } catch (err) {
+        console.error("JSON de apostas inválido:", err);
+    }
+
+    // Se vier null, troca por array vazio para evitar erros
+    if (!Array.isArray(apostas)) apostas = [];
+
+    // Calcula total e acertos pelo JSON
+    const total = apostas.length || 0;
+    const acertos = apostas.filter(a => (a.status || "") === "acertou").length;
+
     // Cabeçalho
-    document.getElementById("modalTitulo").innerText = "Bilhete " + btn.dataset.codigo;
-    document.getElementById("modalResumo").innerText = `${btn.dataset.acertos} acertos de ${btn.dataset.total} jogos`;
-    document.getElementById("modalResumo2").innerText = `${btn.dataset.acertos}/${btn.dataset.total}`;
+    document.getElementById("modalTitulo").innerText = "Bilhete " + (btn.dataset.codigo || "");
+    document.getElementById("modalResumo").innerText = `${acertos} acertos de ${total} jogos`;
+    document.getElementById("modalResumo2").innerText = total;
 
     // Dados gerais
-    document.getElementById("modalComprador").innerText = btn.dataset.usuario;
-    document.getElementById("modalAcertos").innerText = `${btn.dataset.acertos} de ${btn.dataset.total}`;
-    document.getElementById("modalData").innerText = btn.dataset.data;
-    document.getElementById("modalValor").innerText = "R$ " + btn.dataset.valor;
+    document.getElementById("modalComprador").innerText = btn.dataset.usuario || "";
+    document.getElementById("modalAcertos").innerText = `${acertos} de ${total}`;
+    document.getElementById("modalData").innerText = btn.dataset.data || "";
+    document.getElementById("modalValor").innerText = "R$ " + (btn.dataset.valor || "0,00");
 
-    // Apostas (JSON)
-    const apostas = JSON.parse(btn.dataset.apostas);
-
+    // Montar cards das apostas
     let html = "";
 
     apostas.forEach((aposta, index) => {
 
-        // STATUS → Ícone + Cor
+        const status = aposta.status || "aguardando";
+
+        // STATUS (ícone + cor)
         let icon = "";
-        if (aposta.status === "acertou") {
+        if (status === "acertou") {
             icon = `<i class="fa-solid fa-circle-check" style="font-size: 35px; color: rgb(16 185 129);"></i>`;
-        } else if (aposta.status === "errou") {
+        } else if (status === "errou") {
             icon = `<i class="fa-solid fa-circle-xmark" style="font-size: 35px; color: red;"></i>`;
         } else {
             icon = `<i class="fa-solid fa-clock" style="font-size: 35px; color: rgb(179 179 179 / 78%);"></i>`;
         }
 
-        // ======= TRADUÇÃO DA APOSTA =======
-        let apostaTraduzida = "";
-        if (aposta.aposta === "1") apostaTraduzida = "Casa";
-        else if (aposta.aposta === "x") apostaTraduzida = "Empate";
-        else if (aposta.aposta === "2") apostaTraduzida = "Fora";
-        else apostaTraduzida = aposta.aposta;
+        // Tradução da aposta
+        const apostaValor = aposta.aposta || "";
+        let apostaTraduzida = "—";
+
+        if (apostaValor === "1") apostaTraduzida = "Casa";
+        else if (apostaValor === "x") apostaTraduzida = "Empate";
+        else if (apostaValor === "2") apostaTraduzida = "Fora";
+
+        // Placar (null tratado como 0)
+        const placarCasa = aposta.placar_casa ?? 0;
+        const placarFora = aposta.placar_fora ?? 0;
+
+        let placar = "";
+        if (aposta.placar_casa !== null && aposta.placar_fora !== null) {
+            placar = `
+                <div style="font-size:14px; color:#475569; margin-top:2px;">
+                    Placar: <b>${placarCasa} x ${placarFora}</b>
+                </div>`;
+        }
 
         html += `
             <div class="card w-100 mb-2">
@@ -284,9 +312,12 @@ document.addEventListener("click", function (e) {
                         </span>
                         <div>
                             <div style="font-weight: bold;">
-                                JG ${index + 1} - (${aposta.status.toUpperCase()})
+                                Jogo ${index + 1} - (${status.toUpperCase()})
                             </div>
-                            <div>${aposta.time_casa} vs ${aposta.time_fora}</div>
+
+                            <div>${aposta.time_casa || ""} X ${aposta.time_fora || ""}</div>
+
+                            ${placar}
                         </div>
                     </div>
 
@@ -305,5 +336,6 @@ document.addEventListener("click", function (e) {
 });
 
 </script>
+
 
 @endsection

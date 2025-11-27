@@ -115,18 +115,23 @@ class BilheteController extends Controller
 
                 // Montar array final
                 $final[] = [
-                    'time_casa'  => $jogo->time_casa_nome,
-                    'time_fora'  => $jogo->time_fora_nome,
-                    'aposta'     => $aposta,
-                    'icon'       => $icon,
-                    'iconColor'  => $color,
+    'time_casa'  => $jogo->time_casa_nome,
+    'time_fora'  => $jogo->time_fora_nome,
+    'aposta'     => $aposta,
+    'icon'       => $icon,
+    'iconColor'  => $color,
 
-                    // resultado real do jogo
-                    'resultado'  => $resultado,
+    // resultado real do jogo
+    'resultado'  => $resultado,
 
-                    // novo campo
-                    'status'     => $status,
-                ];
+    // 🔥 ADD PLACAR
+'placar_casa' => $jogo->placar_casa ?? 0,
+'placar_fora' => $jogo->placar_fora ?? 0,
+
+    // novo campo
+    'status'     => $status,
+];
+
             }
 
             $bilhete->apostas_formatadas = $final;

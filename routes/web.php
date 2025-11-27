@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\PagamentoController;
 use App\Http\Controllers\WebhookPixController;
 use App\Http\Controllers\Admin\BilheteController;
+use App\Http\Controllers\IndicacaoController;
 
 
 
@@ -34,6 +35,7 @@ Route::post('/webhook/pix', [WebhookPixController::class, 'handle']);
 
 // ðŸ  Rotas pÃºblicas
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::get('/indicacao', [IndicacaoController::class, 'index'])->name('indicacao.index');
 
 Route::post('/login', [AuthController::class, 'login'])
     ->middleware('throttle:login')
