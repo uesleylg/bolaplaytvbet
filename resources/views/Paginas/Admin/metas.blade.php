@@ -29,11 +29,12 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="fw-bold mb-0 text-white">🎯 Gerenciamento de Metas</h4>
 
-
-       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalMeta" data-mode="create">
-  <i class="fa-solid fa-plus"></i> Nova Meta
-</button>
-
+    <button class="btn btn-primary"
+      data-bs-toggle="modal" 
+      data-bs-target="#ModalMeta"
+      data-mode="create">
+      <i class="fa-solid fa-plus"></i> Nova Meta
+    </button>
   </div>
 
   <!-- Cards -->
@@ -43,7 +44,7 @@
       <div class="stat-card p-3 d-flex justify-content-between align-items-center">
         <div>
           <small class="text-muted">Total de Metas</small>
-          <h4 class="fw-bold mb-0 text-white">12</h4>
+          <h4 class="fw-bold mb-0 text-white">{{ $metas->total() }}</h4>
         </div>
         <i class="fa-solid fa-bullseye fa-2x text-primary"></i>
       </div>
@@ -53,7 +54,9 @@
       <div class="stat-card p-3 d-flex justify-content-between align-items-center">
         <div>
           <small class="text-muted">Metas Ativas</small>
-          <h4 class="fw-bold text-success mb-0">8</h4>
+          <h4 class="fw-bold text-success mb-0">
+            {{ \App\Models\Meta::where('status','ativo')->count() }}
+          </h4>
         </div>
         <i class="fa-solid fa-check-circle fa-2x text-success"></i>
       </div>
@@ -63,7 +66,9 @@
       <div class="stat-card p-3 d-flex justify-content-between align-items-center">
         <div>
           <small class="text-muted">Inativas</small>
-          <h4 class="fw-bold text-warning mb-0">4</h4>
+          <h4 class="fw-bold text-warning mb-0">
+            {{ \App\Models\Meta::where('status','inativo')->count() }}
+          </h4>
         </div>
         <i class="fa-solid fa-clock fa-2x text-warning"></i>
       </div>
@@ -71,68 +76,55 @@
 
   </div>
 
-
-
-  <!-- ==========================
-          FILTROS – IGUAL AO ORIGINAL
-       ========================== -->
-
+  <!-- Card da Lista -->
   <div class="card stat-card p-4 mb-4">
 
-    <!-- Cabeçalho -->
     <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
       <h5 class="fw-bold mb-0 text-white">Lista de Metas</h5>
-      <button class="btn btn-outline-secondary btn-sm">
+
+      <a href="{{ route('admin.index.metas') }}" class="btn btn-outline-secondary btn-sm">
         <i class="fa-solid fa-rotate"></i> Atualizar
-      </button>
+      </a>
     </div>
 
-    <!-- Filtros -->
- <form class="row g-3 align-items-end mb-4">
+   <!-- FILTROS -->
+<form method="GET" class="row g-3 mb-4">
 
   <!-- Busca -->
   <div class="col-12 col-md-4">
     <div class="input-group shadow-sm" style="border-radius: 10px; overflow: hidden;">
       <span class="input-group-text bg-dark text-white border-0">
-        <i class="fas fa-magnifying-glass"></i>
+        <i class="fas fa-search"></i>
       </span>
-      <input 
+      <input
+        name="busca"
+        value="{{ $busca }}"
         type="text"
         class="form-control border-0 bg-dark text-white"
-        placeholder="Buscar por descrição ou nível">
+        placeholder="Buscar por descrição ou título">
     </div>
   </div>
 
-  <!-- Status -->
-  <div class="col-6 col-md-2">
-    <select class="form-select bg-dark text-white border-0 shadow-sm" style="border-radius: 10px;">
-      <option>Status (todos)</option>
-      <option>Ativo</option>
-      <option>Inativo</option>
-    </select>
-  </div>
+  <!-- Filtro por nível -->
+  <div class="col-12 col-md-4">
+    <select name="nivel"
+      class="form-select bg-dark text-white border-0 shadow-sm"
+      style="border-radius: 10px;">
+      <option value="">Nível (todos)</option>
 
-  <!-- Ordenação -->
-  <div class="col-6 col-md-2">
-    <select class="form-select bg-dark text-white border-0 shadow-sm" style="border-radius: 10px;">
-      <option>Ordenar por</option>
-      <option>Nível (menor → maior)</option>
-      <option>Nível (maior → menor)</option>
-    </select>
-  </div>
+      @for($i = 1; $i <= 20; $i++)
+        <option value="{{ $i }}" {{ $filtroNivel == $i ? 'selected' : '' }}>
+          Nível {{ $i }}
+        </option>
+      @endfor
 
-  <!-- Espaço adicional para completar 12 colunas -->
-  <div class="col-6 col-md-2">
-    <select class="form-select bg-dark text-white border-0 shadow-sm" style="border-radius: 10px;">
-      <option>Filtrar por</option>
-      <option>Descrição</option>
-      <option>Nível</option>
     </select>
   </div>
 
   <!-- Botões -->
-  <div class="col-6 col-md-2 d-flex gap-2">
-    <a href="#" class="btn btn-outline-light flex-fill" style="border-radius: 10px;">
+  <div class="col-12 col-md-4 d-flex gap-2">
+    <a href="{{ route('admin.index.metas') }}"
+      class="btn btn-outline-light flex-fill" style="border-radius: 10px;">
       <i class="fas fa-rotate"></i> Limpar
     </a>
 
@@ -143,18 +135,14 @@
 
 </form>
 
-
-    <!-- ==========================
-          TABELA – IGUAL AO CARRINHO
-       ========================== -->
-
+    <!-- TABELA -->
     <div class="table-responsive">
       <table class="table table-borderless align-middle mb-0">
         <thead>
           <tr class="text-white">
             <th>ID</th>
+            <th>Título</th>
             <th>Nível</th>
-            <th>Descrição</th>
             <th>Indicados</th>
             <th>Bônus</th>
             <th>Status</th>
@@ -165,70 +153,67 @@
 
         <tbody>
 
-          <!-- META 1 -->
+          @forelse($metas as $meta)
           <tr class="text-white">
-            <td>#1</td>
-            <td>1</td>
-            <td>Convide 5 amigos depositantes</td>
-            <td>5</td>
-            <td>R$ 10,00</td>
-            <td><span class="badge-status badge-ativo">Ativo</span></td>
-            <td>10/01/2025 14:30</td>
+
+            <td>#{{ $meta->id }}</td>
+            <td>{{ $meta->titulo }}</td>
+            <td>{{ $meta->nivel }}</td>
+            <td>{{ $meta->quantidade_indicados }}</td>
+            <td>R$ {{ number_format($meta->bonus_valor, 2, ',', '.') }}</td>
+
+            <td>
+              @if($meta->status == 'Ativo')
+                <span class="badge-status badge-ativo">Ativo</span>
+              @else
+                <span class="badge-status badge-inativo">Inativo</span>
+              @endif
+            </td>
+
+            <td>{{ $meta->created_at->format('d/m/Y H:i') }}</td>
+
             <td class="text-end">
-              <button class="btn btn-sm btn-outline-secondary me-2">
+              <button 
+                class="btn btn-sm btn-outline-secondary me-2 editarMeta"
+                data-id="{{ $meta->id }}">
                 <i class="fa-solid fa-pen"></i>
               </button>
-              <button class="btn btn-sm btn-outline-danger">
-                <i class="fa-solid fa-trash"></i>
-              </button>
+
+         <button 
+    class="btn btn-sm btn-outline-danger btnOpenDeleteModal"
+    data-id="{{ $meta->id }}"
+    data-name="{{ $meta->titulo }}"
+    data-url="{{ route('admin.metas.destroy', $meta->id) }}"
+>
+    <i class="fa-solid fa-trash"></i>
+</button>
+
+            </td>
+
+          </tr>
+
+          @empty
+
+          <tr>
+            <td colspan="8" class="text-center text-muted py-4">
+              Nenhuma meta encontrada.
             </td>
           </tr>
 
-          <!-- META 2 -->
-          <tr class="text-white">
-            <td>#2</td>
-            <td>2</td>
-            <td>Convide 10 amigos depositantes</td>
-            <td>10</td>
-            <td>R$ 25,00</td>
-            <td><span class="badge-status badge-inativo">Inativo</span></td>
-            <td>11/01/2025 09:10</td>
-            <td class="text-end">
-              <button class="btn btn-sm btn-outline-secondary me-2">
-                <i class="fa-solid fa-pen"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger">
-                <i class="fa-solid fa-trash"></i>
-              </button>
-            </td>
-          </tr>
-
-          <!-- META 3 -->
-          <tr class="text-white">
-            <td>#3</td>
-            <td>3</td>
-            <td>Convide 25 amigos depositantes</td>
-            <td>25</td>
-            <td>R$ 50,00</td>
-            <td><span class="badge-status badge-ativo">Ativo</span></td>
-            <td>12/01/2025 16:50</td>
-            <td class="text-end">
-              <button class="btn btn-sm btn-outline-secondary me-2">
-                <i class="fa-solid fa-pen"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger">
-                <i class="fa-solid fa-trash"></i>
-              </button>
-            </td>
-          </tr>
+          @endforelse
 
         </tbody>
-
       </table>
+    </div>
+
+    <!-- Paginação -->
+    <div class="mt-4">
+      {{ $metas->links('pagination::bootstrap-5') }}
     </div>
 
   </div>
 
 </div>
+@include('Paginas.Admin.Modal.ModalExclusao')
 @include('Paginas.Admin.Modal.ModalMeta')
 @endsection

@@ -159,7 +159,11 @@
           @endif
         </td>
         <td class="text-end">
-       
+         <a href="{{ route('admin.index.carteira', $user->id) }}"
+     class="btn btn-sm btn-outline-info me-2"
+     title="Carteira do Usuário">
+    <i class="fa-solid fa-wallet"></i>
+  </a>
 <button 
   class="btn btn-sm btn-outline-secondary me-2 btn-edit-user"
   title="Editar"

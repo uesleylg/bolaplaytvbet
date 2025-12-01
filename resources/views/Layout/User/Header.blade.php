@@ -72,7 +72,8 @@
           @else
             <div class="user-status">
               <i class="fa-solid fa-wallet text-success me-1"></i>
-              Saldo: {{ number_format(auth()->user()->balance ?? 0, 2, ',', '.') }}
+              Saldo: {{ number_format(auth()->user()->carteira->saldo ?? 0, 2, ',', '.') }}
+
             </div>
           @endif
         </div>

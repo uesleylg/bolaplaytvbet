@@ -27,6 +27,8 @@ use App\Http\Controllers\WebhookPixController;
 use App\Http\Controllers\Admin\BilheteController;
 use App\Http\Controllers\Admin\AfiliadoController;
 use App\Http\Controllers\IndicacaoController;
+use App\Http\Controllers\Admin\CarteiraController;
+use App\Http\Controllers\Admin\MetaController;
 
 
 
@@ -128,5 +130,13 @@ Route::prefix('admin')
 
       Route::get('/bilhetes', [BilheteController::class, 'index'])->name('index.bilhetes');
       Route::get('/dashboard-afiliados', [AfiliadoController::class, 'index'])->name('index.afiliados');
-      Route::get('/metas', [AfiliadoController::class, 'metas'])->name('index.metas');
+      Route::get('/metas', [MetaController::class, 'index'])->name('index.metas');
+      Route::post('/metas/store', [MetaController::class, 'store'])->name('metas.store');
+      Route::get('/metas/{id}', [MetaController::class, 'show'])->name('metas.show');
+      Route::delete('/metas/{id}', [MetaController::class, 'destroy'])->name('metas.destroy');
+      Route::put('/metas/update/{id}', [MetaController::class, 'update'])->name('metas.update');
+
+
+
+      Route::get('/usuarios/{id}/carteira', [CarteiraController::class, 'index'])->name('index.carteira');
     });

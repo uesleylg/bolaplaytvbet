@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Profile; // importar o model Profile
+use App\Models\Carteira; // importar o model Carteira
 
 class User extends Authenticatable
 {
@@ -44,5 +45,11 @@ class User extends Authenticatable
     public function indicados()
     {
         return $this->hasMany(User::class, 'referencia_id');
+    }
+
+    // 🔹 Relacionamento com a carteira do usuário
+    public function carteira()
+    {
+        return $this->hasOne(Carteira::class, 'usuario_id');
     }
 }

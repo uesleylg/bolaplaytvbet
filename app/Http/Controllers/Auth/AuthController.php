@@ -99,16 +99,35 @@ public function login(Request $request)
         return view('auth.register');
     }
 
-
 public function register(Request $request)
 {
+    // -------------------------------------------------------------
+    // ⭐ 1. Extrair o ID de dentro do código bruto enviado no input
+    // Exemplo: PXUXAB1X23QZ → extrai apenas "123"
+    // -------------------------------------------------------------
+    $referenciaBruta = $request->referencia_id;
+
+    $referenciaExtraida = null;
+    if (!empty($referenciaBruta)) {
+        preg_match('/(\d+)/', $referenciaBruta, $matches);
+        $referenciaExtraida = $matches[1] ?? null;
+    }
+
+    // Coloca o ID extraído no request ANTES da validação
+    $request->merge([
+        'referencia_id' => $referenciaExtraida
+    ]);
+
+    // -------------------------------------------------------------
+    // ⭐ 2. Validação normal do Laravel (agora com ID limpo)
+    // -------------------------------------------------------------
     $validator = Validator::make($request->all(), [
         'name' => [
             'required',
             'string',
             'max:10',
             'unique:users,name',
-            'regex:/^[a-z0-9]{1,10}$/', // apenas letras minúsculas e números, sem espaço
+            'regex:/^[a-z0-9]{1,10}$/',
         ],
         'email' => [
             'required',
@@ -127,6 +146,10 @@ public function register(Request $request)
             'string',
             'min:6',
         ],
+
+        // agora OK, porque referencia_id já virou um número
+        'referencia_id' => 'nullable|integer|exists:users,id',
+
     ], [
         'name.required' => 'O nome de usuário é obrigatório.',
         'name.unique' => 'Já existe um usuário com esse nome.',
@@ -138,6 +161,9 @@ public function register(Request $request)
         'phone.regex' => 'Digite um telefone válido com a quantidade correta de números.',
         'password.required' => 'A senha é obrigatória.',
         'password.min' => 'A senha deve ter no mínimo 6 caracteres.',
+
+        'referencia_id.integer' => 'Referência inválida.',
+        'referencia_id.exists' => 'Referência não encontrada.',
     ]);
 
     if ($validator->fails()) {
@@ -150,20 +176,25 @@ public function register(Request $request)
     $validated = $validator->validated();
     $validated['name'] = strtolower($validated['name']);
 
+    // -------------------------------------------------------------
+    // ⭐ 3. Criação do usuário
+    // -------------------------------------------------------------
     $user = User::create([
         'name' => $validated['name'],
         'email' => $validated['email'],
         'phone' => $validated['phone'] ?? null,
         'password' => Hash::make($validated['password']),
-        'referencia_id' => $request->referencia_id ?? null,
+        'referencia_id' => $validated['referencia_id'] ?? null,
         'profile_id' => $request->profile_id ?? 1,
     ]);
 
-    // 🔐 Faz login automático
+    $user->carteira()->create([
+    'saldo' => 0.00,
+]);
+
     Auth::login($user);
     $request->session()->regenerate();
 
-    // 📝 Registra log de cadastro
     Logs::create([
         'usuario' => $user->name,
         'acao' => 'Cadastro realizado com sucesso',
@@ -178,6 +209,7 @@ public function register(Request $request)
         'redirect' => route('home.index'),
     ]);
 }
+
 
 
 

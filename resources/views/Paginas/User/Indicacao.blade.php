@@ -212,81 +212,54 @@
     <!-- CARDS DAS METAS -->
     <div class="ind-card-wrapper">
 
-        <!-- META 1 -->
-        <div class="meta-card shadow-sm">
-            <div class="d-flex justify-content-between align-items-center">
-                <span class="badge-nivel">Nível 1</span>
+       @foreach ($metas as $meta)
+    <div class="meta-card shadow-sm">
+
+        <div class="d-flex justify-content-between align-items-center">
+            <span class="badge-nivel">Nível {{ $meta->nivel }}</span>
+
+            @if ($meta->nivel == 1)
                 <i class="fa-solid fa-medal meta-icon"></i>
-            </div>
-
-            <h5 class="text-white mt-3 mb-1">Convide 3 amigos</h5>
-            <p class="text-muted small mb-1">
-                Ao atingir esta meta, você desbloqueia recompensas iniciais.
-            </p>
-            <div class="premio">
-                <i class="fa-solid fa-gift"></i>
-                R$ 10,00 de bônus
-            </div>
-
-            <!-- PROGRESSO -->
-            <div class="progress progress-custom mt-2 bg-dark mb-2">
-                <div class="progress-bar bg-info" style="width: 40%"></div>
-            </div>
-
-            <span class="text-info small">1/3 amigos indicados</span>
-
-            <button class="btn btn-warning resgatar-btn" disabled>Resgatar</button>
-        </div>
-
-        <!-- META 2 -->
-        <div class="meta-card shadow-sm">
-            <div class="d-flex justify-content-between align-items-center">
-                <span class="badge-nivel">Nível 2</span>
+            @elseif ($meta->nivel == 2)
                 <i class="fa-solid fa-trophy meta-icon text-warning"></i>
-            </div>
-
-            <h5 class="text-white mt-3 mb-1">Convide 10 amigos</h5>
-            <p class="text-muted small mb-1">
-                Recompensas melhores! Continue convidando.
-            </p>
-            <div class="premio">
-                <i class="fa-solid fa-gift"></i>
-                R$ 50,00 de bônus
-            </div>
-
-            <div class="progress progress-custom bg-dark mb-2">
-                <div class="progress-bar bg-warning" style="width: 10%"></div>
-            </div>
-
-            <span class="text-warning small">1/10 amigos indicados</span>
-
-            <button class="btn btn-warning resgatar-btn" disabled>Resgatar</button>
-        </div>
-
-        <!-- META 3 -->
-        <div class="meta-card shadow-sm">
-            <div class="d-flex justify-content-between align-items-center">
-                <span class="badge-nivel">Nível 3</span>
+            @else
                 <i class="fa-solid fa-crown meta-icon text-warning"></i>
-            </div>
-
-            <h5 class="text-white mt-3 mb-1">Convide 25 amigos</h5>
-            <p class="text-muted small mb-1">
-                Agora é elite! Prêmios mais valiosos após conclusão.
-            </p>
-            <div class="premio">
-                <i class="fa-solid fa-gift"></i>
-                R$ 150,00 de bônus
-            </div>
-
-            <div class="progress progress-custom bg-dark mb-2">
-                <div class="progress-bar bg-success" style="width: 0%"></div>
-            </div>
-
-            <span class="text-success small">0/25 amigos indicados</span>
-
-            <button class="btn btn-warning resgatar-btn" disabled>Resgatar</button>
+            @endif
         </div>
+
+        <h5 class="text-white mt-3 mb-1">{{ $meta->titulo }}</h5>
+
+        <p class="text-muted small mb-1">
+            {{ $meta->descricao }}
+        </p>
+
+        <div class="premio">
+            <i class="fa-solid fa-gift"></i>
+            R$ {{ number_format($meta->bonus_valor, 2, ',', '.') }}
+        </div>
+
+        <!-- Barra de progresso -->
+        <div class="progress progress-custom bg-dark mb-2">
+            <div class="progress-bar 
+                {{ $meta->atingido ? 'bg-success' : 'bg-info' }}"
+                style="width: {{ $meta->progresso }}%">
+            </div>
+        </div>
+
+        <span class="small {{ $meta->atingido ? 'text-success' : 'text-info' }}">
+            {{ $indicados }}/{{ $meta->quantidade_indicados }} amigos indicados
+        </span>
+
+        <!-- Botão de resgate -->
+        <button 
+            class="btn btn-warning resgatar-btn mt-2"
+            {{ $meta->atingido ? '' : 'disabled' }}>
+            Resgatar
+        </button>
+
+    </div>
+@endforeach
+
 
     </div>
 <br>

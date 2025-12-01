@@ -202,11 +202,7 @@
   </a>
 </li>
 
-<li class="nav-item mb-1">
-  <a class="nav-link" href="#">
-    <i class="fa-solid fa-wallet fa-fw"></i> Carteira
-  </a>
-</li>
+
 
 
 <li class="nav-item mb-1">

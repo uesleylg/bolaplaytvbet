@@ -345,6 +345,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 document.addEventListener('DOMContentLoaded', function () {
+  
+   const urlParams = new URLSearchParams(window.location.search);
+const refCode = urlParams.get("reference");
+
+// Se existir um código, envia para o input hidden
+if (refCode) {
+    document.querySelector("input[name=referencia_id]").value = refCode;
+}
   const form = document.getElementById('register-form');
   const alertArea = document.getElementById('alert-area');
 
