@@ -45,14 +45,14 @@
         gap: 20px;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     }
+.top-card {
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+    border-radius: 18px;
+    padding: 25px;
+    color: #f1f5f9;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
 
-    .top-card {
-        background: linear-gradient(135deg, #38bdf8, #0ea5e9); 
-        border-radius: 18px;
-        padding: 25px;
-        color: #0f172a;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
-    }
 
     .premio {
         display: flex;
@@ -179,7 +179,20 @@
         </h5>
 
         <div class="input-group mt-3">
-            <input type="text" class="form-control" value="https://meusite.com/indicacao/SEU-CODIGO" readonly>
+     @php
+    $namePart = Str::upper(Str::substr(auth()->user()->name, 0, 2)); 
+    $ref = auth()->user()->prefixo . $namePart . 'X' . auth()->user()->id . 'QZ';
+@endphp
+
+<input 
+    type="text" 
+    class="form-control"
+    value="{{ url('/') }}?reference={{ $ref }}"
+    readonly
+>
+
+
+
             <button class="btn btn-dark">
                 <i class="fa-solid fa-copy"></i>
             </button>
@@ -190,19 +203,7 @@
         </p>
     </div>
 
-    <!-- SEÇÃO DE REGRAS -->
-    <div class="regras-card shadow-sm">
-        <h5><i class="fa-solid fa-book me-2"></i>Regras do Programa</h5>
-        <ul>
-            <li>Você precisa convidar amigos utilizando seu link exclusivo.</li>
-            <li>Apenas amigos que realizarem depósitos contam para a meta.</li>
-            <li>As recompensas só podem ser resgatadas quando a meta for atingida.</li>
-            <li>Cada meta possui uma recompensa específica, progressiva de acordo com os níveis.</li>
-            <li>O resgate de metas não afeta suas conquistas anteriores.</li>
-        </ul>
-    </div>
-
-    <!-- TÍTULO DAS METAS -->
+     <!-- TÍTULO DAS METAS -->
     <h5 class="text-white fw-bold mb-3">
         <i class="fa-solid fa-trophy me-2 text-warning"></i>
         Suas Metas
@@ -288,6 +289,78 @@
         </div>
 
     </div>
+<br>
+    <!-- SEÇÃO DE REGRAS -->
+<style>
+/* CONTAINER QUE MOSTRA SÓ UMA PARTE */
+.read-more-container {
+    max-height: 100px;
+    overflow: hidden;
+    position: relative;
+    transition: max-height 0.4s ease;
+}
+
+/* EFEITO DE GRADIENTE MOSTRANDO QUE TEM MAIS CONTEÚDO */
+.read-more-container::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent, #0f172a);
+}
+
+/* QUANDO EXPANDE, SOME O GRADIENTE */
+.read-more-container.expanded::after {
+    display: none;
+}
+
+/* BOTÃO DE VER MAIS / VER MENOS */
+.read-more-btn {
+    color: #38bdf8;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 600;
+    display: inline-block;
+}
+</style>
+
+<!-- SEÇÃO DE REGRAS -->
+<div class="regras-card shadow-sm">
+    <h5><i class="fa-solid fa-book me-2"></i>Regras do Programa</h5>
+
+    <div class="read-more-container" id="regrasBox">
+        <ul>
+            <li>Você precisa convidar amigos utilizando seu link exclusivo.</li>
+            <li>Apenas amigos que realizarem depósitos contam para a meta.</li>
+            <li>As recompensas só podem ser resgatadas quando a meta for atingida.</li>
+            <li>Cada meta possui uma recompensa específica, progressiva de acordo com os níveis.</li>
+            <li>O resgate de metas não afeta suas conquistas anteriores.</li>
+        </ul>
+    </div>
+
+    <span class="read-more-btn" id="btnToggle">Ver mais</span>
+</div>
+
+<script>
+const box = document.getElementById("regrasBox");
+const btn = document.getElementById("btnToggle");
+
+btn.addEventListener("click", () => {
+    box.classList.toggle("expanded");
+
+    if (box.classList.contains("expanded")) {
+        box.style.maxHeight = box.scrollHeight + "px";
+        btn.textContent = "Ver menos";
+    } else {
+        box.style.maxHeight = "100px";
+        btn.textContent = "Ver mais";
+    }
+});
+</script>
+
+   
 
 
 

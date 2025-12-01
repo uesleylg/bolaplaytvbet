@@ -86,7 +86,7 @@
         <i class="fa-solid fa-house"></i> Início
       </a>
     </li>
-
+ <li class="nav-item"><a class="nav-link text-light" href="{{ route('ranking.index') }}"><i class="fa-solid fa-chart-simple"></i> Ranking</a></li>
     @auth
       <li class="nav-item">
         <a class="nav-link d-flex align-items-center text-light" href="{{ route('bilhete.index') }}">
@@ -96,11 +96,12 @@
           @endif
         </a>
       </li>
-    @endauth
-
-    <li class="nav-item"><a class="nav-link text-light" href="{{ route('ranking.index') }}"><i class="fa-solid fa-chart-simple"></i> Ranking</a></li>
-    <li class="nav-item"><a class="nav-link text-light" href="#"><i class="fa-solid fa-hand"></i> Regras</a></li>
+ 
+   <li class="nav-item"><a class="nav-link text-light" href="{{ route('indicacao.index') }}"><i class="fa-solid fa-sack-dollar"></i> Ganhar Dinheiro</a></li>
+   @endauth
+    
     <li class="nav-item"><a class="nav-link text-light" href="https://bolaplaytv.com.br/"><i class="fa-solid fa-play"></i> Futebol Ao Vivo</a></li>
+    <li class="nav-item"><a class="nav-link text-light" href="#"><i class="fa-solid fa-hand"></i> Regras</a></li>
     <li class="nav-item"><a class="nav-link text-light" href="#"><i class="fa-brands fa-whatsapp"></i> Contato</a></li>
   </ul>
 

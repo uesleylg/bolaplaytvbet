@@ -204,9 +204,61 @@
 
 <li class="nav-item mb-1">
   <a class="nav-link" href="#">
-    <i class="fa-solid fa-link fa-fw"></i> Afiliados
+    <i class="fa-solid fa-wallet fa-fw"></i> Carteira
   </a>
 </li>
+
+
+<li class="nav-item mb-1">
+
+  <!-- Botão principal -->
+  <a 
+    class="nav-link d-flex justify-content-between align-items-center {{ request()->routeIs('admin.index.afiliado*') ? 'active' : '' }}" 
+    data-bs-toggle="collapse" 
+    href="#submenuAfiliados" 
+    role="button"
+    aria-expanded="false"
+    aria-controls="submenuAfiliados"
+    style="cursor:pointer;"
+  >
+      <span>
+        <i class="fa-solid fa-link fa-fw me-2"></i> Afiliados
+      </span>
+      <i class="fa-solid fa-chevron-down arrow-icon"></i>
+  </a>
+
+  <!-- Submenu -->
+  <div class="collapse" id="submenuAfiliados">
+      <ul class="nav flex-column ms-4 mt-2">
+
+
+
+
+        <li class="nav-item mb-1">
+          <a href="{{ route('admin.index.afiliados') }}" 
+             class="nav-link text-muted submenu-link">
+            <i class="fa-solid fa-users-line me-2"></i> Visão Geral
+          </a>
+        </li>
+
+       
+       <li class="nav-item mb-1">
+          <a href="{{ route('admin.index.metas') }}" class="nav-link text-muted submenu-link">
+            <i class="fa-solid fa-bullseye me-2"></i> Metas
+          </a>
+        </li>
+
+        <li class="nav-item mb-1">
+          <a href="#" class="nav-link text-muted submenu-link">
+            <i class="fa-solid fa-chart-line me-2"></i> Relatório
+          </a>
+        </li>
+
+      </ul>
+  </div>
+
+</li>
+
 
 
        

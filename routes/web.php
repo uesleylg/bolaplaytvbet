@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\PagamentoController;
 use App\Http\Controllers\WebhookPixController;
 use App\Http\Controllers\Admin\BilheteController;
+use App\Http\Controllers\Admin\AfiliadoController;
 use App\Http\Controllers\IndicacaoController;
 
 
@@ -35,7 +36,7 @@ Route::post('/webhook/pix', [WebhookPixController::class, 'handle']);
 
 // ðŸ  Rotas pÃºblicas
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
-Route::get('/indicacao', [IndicacaoController::class, 'index'])->name('indicacao.index');
+
 
 Route::post('/login', [AuthController::class, 'login'])
     ->middleware('throttle:login')
@@ -61,7 +62,7 @@ Route::middleware('throttle:jogos-publico')
 
 
 Route::middleware(['user'])->group(function () {
-
+    Route::get('/indicacao', [IndicacaoController::class, 'index'])->name('indicacao.index');
     Route::get('/bilhete', [BilheteUsuarioController::class, 'index'])->name('bilhete.index');
     
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -126,4 +127,6 @@ Route::prefix('admin')
 
 
       Route::get('/bilhetes', [BilheteController::class, 'index'])->name('index.bilhetes');
+      Route::get('/dashboard-afiliados', [AfiliadoController::class, 'index'])->name('index.afiliados');
+      Route::get('/metas', [AfiliadoController::class, 'metas'])->name('index.metas');
     });
