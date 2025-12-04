@@ -5,8 +5,10 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Profile; // importar o model Profile
-use App\Models\Carteira; // importar o model Carteira
+use App\Models\Profile;
+use App\Models\Carteira;
+use App\Models\CarrinhoPalpite;
+use App\Models\Bilhete;
 
 class User extends Authenticatable
 {
@@ -29,27 +31,49 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    // 🔹 Relacionamento com Profile
+    // 🔹 Perfil
     public function profile()
     {
         return $this->belongsTo(Profile::class, 'profile_id');
     }
 
-    // 🔹 Relacionamento com o usuário que indicou (referencia)
+    // 🔹 Quem indicou o usuário
     public function referencia()
     {
         return $this->belongsTo(User::class, 'referencia_id');
     }
 
-    // 🔹 Relacionamento com usuários indicados por este usuário
+    // 🔹 Usuários que ele indicou
     public function indicados()
     {
         return $this->hasMany(User::class, 'referencia_id');
     }
 
-    // 🔹 Relacionamento com a carteira do usuário
+    // 🔹 Carteira do usuário
     public function carteira()
     {
         return $this->hasOne(Carteira::class, 'usuario_id');
     }
+
+    // 🔹 Carrinhos do usuário
+    public function carrinhos()
+    {
+        return $this->hasMany(CarrinhoPalpite::class, 'usuario_id');
+    }
+
+    // 🔹 Bilhetes do usuário (HasManyThrough)
+  public function bilhetes()
+{
+    return $this->hasManyThrough(
+        Bilhete::class,
+        CarrinhoPalpite::class,
+        'usuario_id',   // chave em carrinho_palpites que aponta para users
+        'carrinho_id',  // chave em bilhetes que aponta para carrinho
+        'id',           // id em users
+        'id'            // id em carrinho_palpites
+    )->whereHas('carrinho', function ($q) {
+        $q->where('status', 'pago');
+    });
+}
+
 }

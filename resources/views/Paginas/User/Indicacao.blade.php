@@ -64,7 +64,7 @@
     }
 
     .resgatar-btn {
-        margin-top: 12px;
+           width: 100%;
     }
 
     .regras-card {
@@ -161,111 +161,7 @@
         background: #38bdf8;
         color: #0f172a;
     }
-</style>
-
-<div class="container py-4">
-
-    <!-- TÍTULO PRINCIPAL -->
-    <h3 class="fw-bold text-white mb-3">
-        <i class="fa-solid fa-users-line me-2"></i>
-        Programa de Indicação
-    </h3>
-
-    <!-- CARD DO LINK DE INDICAÇÃO -->
-    <div class="top-card mb-4 shadow">
-        <h5 class="fw-bold">
-            Seu link exclusivo
-            <i class="fa-solid fa-link ms-2"></i>
-        </h5>
-
-        <div class="input-group mt-3">
-     @php
-    $namePart = Str::upper(Str::substr(auth()->user()->name, 0, 2)); 
-    $ref = auth()->user()->prefixo . $namePart . 'X' . auth()->user()->id . 'QZ';
-@endphp
-
-<input 
-    type="text" 
-    class="form-control"
-    value="{{ url('/') }}?reference={{ $ref }}"
-    readonly
->
-
-
-
-            <button class="btn btn-dark">
-                <i class="fa-solid fa-copy"></i>
-            </button>
-        </div>
-
-        <p class="mt-2 mb-0 fw-semibold">
-            Compartilhe com amigos e ganhe recompensas ao bater metas!
-        </p>
-    </div>
-
-     <!-- TÍTULO DAS METAS -->
-    <h5 class="text-white fw-bold mb-3">
-        <i class="fa-solid fa-trophy me-2 text-warning"></i>
-        Suas Metas
-    </h5>
-
-    <!-- CARDS DAS METAS -->
-    <div class="ind-card-wrapper">
-
-       @foreach ($metas as $meta)
-    <div class="meta-card shadow-sm">
-
-        <div class="d-flex justify-content-between align-items-center">
-            <span class="badge-nivel">Nível {{ $meta->nivel }}</span>
-
-            @if ($meta->nivel == 1)
-                <i class="fa-solid fa-medal meta-icon"></i>
-            @elseif ($meta->nivel == 2)
-                <i class="fa-solid fa-trophy meta-icon text-warning"></i>
-            @else
-                <i class="fa-solid fa-crown meta-icon text-warning"></i>
-            @endif
-        </div>
-
-        <h5 class="text-white mt-3 mb-1">{{ $meta->titulo }}</h5>
-
-        <p class="text-muted small mb-1">
-            {{ $meta->descricao }}
-        </p>
-
-        <div class="premio">
-            <i class="fa-solid fa-gift"></i>
-            R$ {{ number_format($meta->bonus_valor, 2, ',', '.') }}
-        </div>
-
-        <!-- Barra de progresso -->
-        <div class="progress progress-custom bg-dark mb-2">
-            <div class="progress-bar 
-                {{ $meta->atingido ? 'bg-success' : 'bg-info' }}"
-                style="width: {{ $meta->progresso }}%">
-            </div>
-        </div>
-
-        <span class="small {{ $meta->atingido ? 'text-success' : 'text-info' }}">
-            {{ $indicados }}/{{ $meta->quantidade_indicados }} amigos indicados
-        </span>
-
-        <!-- Botão de resgate -->
-        <button 
-            class="btn btn-warning resgatar-btn mt-2"
-            {{ $meta->atingido ? '' : 'disabled' }}>
-            Resgatar
-        </button>
-
-    </div>
-@endforeach
-
-
-    </div>
-<br>
-    <!-- SEÇÃO DE REGRAS -->
-<style>
-/* CONTAINER QUE MOSTRA SÓ UMA PARTE */
+    /* CONTAINER QUE MOSTRA SÓ UMA PARTE */
 .read-more-container {
     max-height: 100px;
     overflow: hidden;
@@ -297,47 +193,159 @@
     font-weight: 600;
     display: inline-block;
 }
+
+
 </style>
+<div class="container py-4">
 
-<!-- SEÇÃO DE REGRAS -->
-<div class="regras-card shadow-sm">
-    <h5><i class="fa-solid fa-book me-2"></i>Regras do Programa</h5>
-
-    <div class="read-more-container" id="regrasBox">
-        <ul>
-            <li>Você precisa convidar amigos utilizando seu link exclusivo.</li>
-            <li>Apenas amigos que realizarem depósitos contam para a meta.</li>
-            <li>As recompensas só podem ser resgatadas quando a meta for atingida.</li>
-            <li>Cada meta possui uma recompensa específica, progressiva de acordo com os níveis.</li>
-            <li>O resgate de metas não afeta suas conquistas anteriores.</li>
-        </ul>
+<!-- SEÇÃO DE CARTEIRA -->
+<div class="top-card mb-4 shadow d-flex justify-content-between align-items-center"
+     style="background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid rgba(255,255,255,0.1);">
+    <div>
+        <h5 class="fw-bold text-white mb-1">
+            Saldo da Carteira
+        </h5>
+        <p class="text-warning fw-bold fs-5 mb-0">
+            R$ {{ number_format(auth()->user()->carteira->saldo ?? 0, 2, ',', '.') }}
+        </p>
     </div>
+   <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#modalSaque">
+    <i class="fa-solid fa-wallet me-2"></i> Solicitar Saque
+</button>
 
-    <span class="read-more-btn" id="btnToggle">Ver mais</span>
 </div>
 
-<script>
-const box = document.getElementById("regrasBox");
-const btn = document.getElementById("btnToggle");
 
-btn.addEventListener("click", () => {
-    box.classList.toggle("expanded");
 
-    if (box.classList.contains("expanded")) {
-        box.style.maxHeight = box.scrollHeight + "px";
-        btn.textContent = "Ver menos";
-    } else {
-        box.style.maxHeight = "100px";
-        btn.textContent = "Ver mais";
-    }
-});
-</script>
+
+    
+    <!-- CARD DO LINK DE INDICAÇÃO -->
+    <div class="top-card mb-4 shadow">
+        <h5 class="fw-bold">
+            Seu link exclusivo <i class="fa-solid fa-link ms-2"></i>
+        </h5>
+
+        <div class="input-group mt-3">
+            @php
+                $namePart = Str::upper(Str::substr(auth()->user()->name, 0, 2));
+                $ref = auth()->user()->prefixo . $namePart . 'X' . auth()->user()->id . 'QZ';
+            @endphp
+
+            <input type="text" class="form-control" value="{{ url('/') }}?reference={{ $ref }}" readonly>
+            <button class="btn btn-dark">
+                <i class="fa-solid fa-copy"></i>
+            </button>
+        </div>
+
+        <p class="mt-2 mb-0 fw-semibold">
+            Compartilhe com amigos e ganhe recompensas ao bater metas!
+        </p>
+    </div>
+    
+
+    <!-- TÍTULO DAS METAS -->
+    <h5 class="text-white fw-bold mb-3">
+        <i class="fa-solid fa-trophy me-2 text-warning"></i> Suas Missões
+    </h5>
+
+    <!-- CARDS DAS METAS -->
+    <div class="ind-card-wrapper">
+
+        @foreach ($metas as $meta)
+            <div class="meta-card shadow-sm">
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="badge-nivel">Nível {{ $meta->nivel }}</span>
+
+                    @if ($meta->nivel == 1)
+                        <i style="color:#8f4814;" class="fa-solid fa-medal meta-icon"></i>
+                    @elseif ($meta->nivel == 2)
+                        <i style="color:#cdcdcd;" class="fa-solid fa-trophy meta-icon "></i>
+                    @else
+                        <i class="fa-solid fa-crown meta-icon text-warning"></i>
+                    @endif
+                </div>
+
+                <h5 class="text-white mt-3 mb-1">{{ $meta->titulo }}</h5>
+                <p class="text-muted small mb-1">{{ $meta->descricao }}</p>
+
+                <div class="premio">
+                    <i class="fa-solid fa-gift"></i>
+                    R$ {{ number_format($meta->bonus_valor, 2, ',', '.') }}
+                </div>
+
+                <!-- Barra de progresso -->
+                <div class="progress progress-custom bg-dark mb-2">
+                    <div class="progress-bar {{ $meta->atingido ? 'bg-success' : 'bg-info' }}"
+                        style="width: {{ $meta->progresso }}%">
+                    </div>
+                </div>
+
+                <span class="small {{ $meta->atingido ? 'text-success' : 'text-info' }}">
+                    {{ $indicados }}/{{ $meta->quantidade_indicados }} amigos indicados
+                </span>
 
    
+          <!-- BOTÕES DE RESGATE DE META -->
+    @if ($meta->atingido)
+    <form action="{{ route('resgatar.meta', $meta->id) }}" method="POST" class="d-inline">
+        @csrf
+        <button type="submit" class="btn btn-warning resgatar-btn mt-2">
+            Resgatar Bônus
+        </button>
+    </form>
+@else
+    <button class="btn btn-secondary mt-2" disabled>
+        Meta Incompleta
+    </button>
+@endif
 
 
+            </div>
+        @endforeach
 
- <!-- HISTÓRICO DE INDICAÇÕES -->
+    </div>
+
+    <br>
+
+    <!-- SEÇÃO DE REGRAS -->
+    <div class="regras-card shadow-sm">
+
+        <h5>
+            <i class="fa-solid fa-book me-2"></i>Regras do Programa
+        </h5>
+
+        <div class="read-more-container" id="regrasBox">
+            <ul>
+                <li>Você precisa convidar amigos utilizando seu link exclusivo.</li>
+                <li>Apenas amigos que realizarem depósitos contam para a meta.</li>
+                <li>As recompensas só podem ser resgatadas quando a meta for atingida.</li>
+                <li>Cada meta possui uma recompensa específica, progressiva de acordo com os níveis.</li>
+                <li>O resgate de metas não afeta suas conquistas anteriores.</li>
+            </ul>
+        </div>
+
+        <span class="read-more-btn" id="btnToggle">Ver mais</span>
+    </div>
+
+    <script>
+        const box = document.getElementById("regrasBox");
+        const btn = document.getElementById("btnToggle");
+
+        btn.addEventListener("click", () => {
+            box.classList.toggle("expanded");
+
+            if (box.classList.contains("expanded")) {
+                box.style.maxHeight = box.scrollHeight + "px";
+                btn.textContent = "Ver menos";
+            } else {
+                box.style.maxHeight = "100px";
+                btn.textContent = "Ver mais";
+            }
+        });
+    </script>
+
+    <!-- HISTÓRICO DE INDICAÇÕES -->
     <div class="historico-card shadow-sm">
         <h5><i class="fa-solid fa-history me-2"></i>Histórico de Indicações</h5>
 
@@ -349,26 +357,75 @@ btn.addEventListener("click", () => {
                     <th>Data de Cadastro</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>João Silva</td>
-                    <td><span class="status-badge status-pendente">Pendente</span></td>
-                    <td>25/11/2025</td>
-                </tr>
-                <tr>
-                    <td>Maria Souza</td>
-                    <td><span class="status-badge status-aprovado">Aprovado</span></td>
-                    <td>24/11/2025</td>
-                </tr>
-                <tr>
-                    <td>Carlos Lima</td>
-                    <td><span class="status-badge status-pendente">Pendente</span></td>
-                    <td>23/11/2025</td>
-                </tr>
-            </tbody>
+
+       <tbody>
+@foreach($indicadosLista as $ind)
+    <tr>
+        <td>{{ $ind->nome_indicado }}</td>
+
+        <td>
+            @if($ind->status_indicacao === 'aprovado')
+                <span class="status-badge status-aprovado">Resgatado</span>
+            @elseif($ind->status_indicacao === 'aguardando_validacao')
+                <span class="status-badge status-aguardando">Pendente a Resgate</span>
+            @else
+                <span class="status-badge status-pendente">Pendente</span>
+            @endif
+        </td>
+
+        <td>{{ $ind->created_at->format('d/m/Y') }}</td>
+    </tr>
+@endforeach
+
+</tbody>
+
         </table>
+
     </div>
 
+
+
+
+
+
+<!-- HISTÓRICO DE RESGATE -->
+<div class="historico-card shadow-sm">
+    <h5><i class="fa-solid fa-history me-2"></i>Histórico de Resgate</h5>
+
+    <table class="historico-table">
+        <thead>
+            <tr>
+                <th>Meta</th>
+                <th>Valor do Bônus</th>
+                <th>Status</th>
+                <th>Data do Resgate</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        @foreach($resgates as $resgate)
+            <tr>
+                <td>{{ $resgate->meta->titulo ?? '—' }}</td>
+                <td>R$ {{ number_format($resgate->valor_bonus, 2, ',', '.') }}</td>
+                <td>
+                    @if(strtolower($resgate->status) === 'aprovado')
+                        <span class="status-badge status-aprovado"> Resgatado</span>
+                    @else
+                        <span class="status-badge status-pendente">{{ $resgate->status }}</span>
+                    @endif
+                </td>
+                <td>{{ $resgate->created_at->format('d/m/Y') }}</td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
 </div>
+
+
+</div>
+
+
+
+  @include('Paginas.User.Modal.ModalSaque')
 
 @endsection

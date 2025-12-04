@@ -29,7 +29,7 @@ use App\Http\Controllers\Admin\AfiliadoController;
 use App\Http\Controllers\IndicacaoController;
 use App\Http\Controllers\Admin\CarteiraController;
 use App\Http\Controllers\Admin\MetaController;
-
+use App\Http\Controllers\ResgateMetaController;
 
 
 Route::post('/gerar-pix', [PagamentoController::class, 'gerarPix'])->name('gerar.pix');
@@ -76,6 +76,10 @@ Route::middleware(['user'])->group(function () {
     Route::put('/carrinho/{id}/atualizar', [CarrinhoPalpiteController::class, 'atualizarCarrinho'])->name('carrinho.atualizar');
     
     Route::delete('/carrinho/{id}/excluir', [CarrinhoPalpiteController::class, 'excluir']);
+
+        Route::post('/resgatar-meta/{meta}', [ResgateMetaController::class, 'resgatar'])
+        ->name('resgatar.meta');
+
 });
 
 
