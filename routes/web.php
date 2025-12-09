@@ -30,6 +30,8 @@ use App\Http\Controllers\IndicacaoController;
 use App\Http\Controllers\Admin\CarteiraController;
 use App\Http\Controllers\Admin\MetaController;
 use App\Http\Controllers\ResgateMetaController;
+use App\Http\Controllers\Admin\SaqueController;
+use App\Http\Controllers\SaqueUsuarioController;
 
 
 Route::post('/gerar-pix', [PagamentoController::class, 'gerarPix'])->name('gerar.pix');
@@ -79,6 +81,9 @@ Route::middleware(['user'])->group(function () {
 
         Route::post('/resgatar-meta/{meta}', [ResgateMetaController::class, 'resgatar'])
         ->name('resgatar.meta');
+
+            Route::post('/solicitar-saque', [SaqueUsuarioController ::class, 'solicitar'])->name('usuario.solicitar.saque');
+
 
 });
 
@@ -143,4 +148,9 @@ Route::prefix('admin')
 
 
       Route::get('/usuarios/{id}/carteira', [CarteiraController::class, 'index'])->name('index.carteira');
+      Route::get('/usuarios/saques', [SaqueController::class, 'index'])->name('index.saques');
+          Route::post('saques/limite', [SaqueController::class, 'salvarLimite'])->name('saques.limite');
+
+
+
     });

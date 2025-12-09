@@ -6,12 +6,19 @@ use App\Models\Meta;
 use App\Models\IndicacaoUtilizada;
 use App\Models\ResgateMeta;
 use Illuminate\Http\Request;
+use App\Models\Saque;
+
 
 class IndicacaoController extends Controller
 {
     public function index()
     {
         $user = auth()->user();
+
+        // 🔹 Histórico de pedidos de saque do usuário
+$saques = Saque::where('user_id', $user->id)
+    ->orderByDesc('created_at')
+    ->get();
 
         // 🔹 Lista de indicados com status
         $indicadosLista = IndicacaoUtilizada::with('indicado')
@@ -48,6 +55,13 @@ class IndicacaoController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        return view('Paginas.User.indicacao', compact('metas', 'indicados', 'indicadosLista', 'resgates'));
+      return view('Paginas.User.indicacao', compact(
+    'metas',
+    'indicados',
+    'indicadosLista',
+    'resgates',
+    'saques' // adicionando
+));
+
     }
 }

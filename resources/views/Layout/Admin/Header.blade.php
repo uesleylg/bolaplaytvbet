@@ -203,6 +203,12 @@
 </li>
 
 
+<li class="nav-item mb-1">
+  <a class="nav-link {{ request()->routeIs('admin.index.saques*') ? 'active' : '' }}" href="{{ route('admin.index.saques') }}">
+    <i class="fa-solid fa-money-bill-transfer fa-fw"></i> Saques
+  </a>
+</li>
+
 
 
 <li class="nav-item mb-1">

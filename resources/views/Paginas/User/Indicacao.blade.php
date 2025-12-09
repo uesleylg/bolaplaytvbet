@@ -347,7 +347,7 @@
 
     <!-- HISTÓRICO DE INDICAÇÕES -->
     <div class="historico-card shadow-sm">
-        <h5><i class="fa-solid fa-history me-2"></i>Histórico de Indicações</h5>
+        <h5><i class="fa-solid fa-user-group me-2"></i>Indicações</h5>
 
         <table class="historico-table">
             <thead>
@@ -390,7 +390,8 @@
 
 <!-- HISTÓRICO DE RESGATE -->
 <div class="historico-card shadow-sm">
-    <h5><i class="fa-solid fa-history me-2"></i>Histórico de Resgate</h5>
+    <h5><i class="fa-solid fa-check-double me-2"></i>Missões Realizadas
+</h5>
 
     <table class="historico-table">
         <thead>
@@ -417,6 +418,47 @@
                 <td>{{ $resgate->created_at->format('d/m/Y') }}</td>
             </tr>
         @endforeach
+        </tbody>
+    </table>
+</div>
+
+
+<!-- HISTÓRICO DE PEDIDOS DE SAQUES -->
+<!-- HISTÓRICO DE PEDIDOS DE SAQUE -->
+<div class="historico-card shadow-sm mt-4">
+    <h5><i class="fa-solid fa-hand-holding-dollar me-2"></i>Saques</h5>
+
+    <table class="historico-table">
+        <thead>
+            <tr>
+                <th>Valor</th>
+                <th>Chave PIX</th>
+                <th>Status</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        @forelse($saques as $saque)
+            <tr>
+                <td>R$ {{ number_format($saque->valor, 2, ',', '.') }}</td>
+                <td>{{ $saque->chave_pix }}</td>
+                <td>
+                    @if($saque->status === 'pendente')
+                        <span class="status-badge status-pendente">Pendente</span>
+                    @elseif($saque->status === 'aprovado')
+                        <span class="status-badge status-aprovado">Aprovado</span>
+                    @else
+                        <span class="status-badge status-negado">Negado</span>
+                    @endif
+                </td>
+                <td>{{ $saque->created_at->format('d/m/Y H:i') }}</td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="4" class="text-center py-3 text-muted">Nenhum saque solicitado ainda.</td>
+            </tr>
+        @endforelse
         </tbody>
     </table>
 </div>
