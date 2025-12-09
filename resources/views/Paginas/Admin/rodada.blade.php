@@ -218,17 +218,23 @@
     </div>
 
     {{-- Linha 2: Add Auditoria (somente em Ativo) --}}
-    @if ($rodada->status === 'Ativo')
-     <button 
-    class="btn btn-outline-primary btn-sm rounded-pill fw-semibold shadow-sm btn-add-auditoria w-100"
-    data-bs-toggle="modal" 
-    data-bs-target="#ModalAddAuditoria"
-    data-id="{{ $rodada->id }}"
-    data-link="{{ $rodada->link_auditoria }}">
-    <i class="fa-solid fa-shield-halved me-1"></i> Add Auditoria
-</button>
+@if ($rodada->status === 'Ativo')
+    <button 
+        class="btn btn-outline-primary btn-sm rounded-pill fw-semibold shadow-sm btn-add-auditoria w-100 mt-2"
+        data-bs-toggle="modal" 
+        data-bs-target="#ModalAddAuditoria"
+        data-id="{{ $rodada->id }}"
+        data-link="{{ $rodada->link_auditoria }}">
+        <i class="fa-solid fa-shield-halved me-1"></i> Add Auditoria
+    </button>
 
-    @endif
+    <a 
+        href="{{ route('admin.gerar.relatorio', $rodada->id) }}" 
+        class="btn btn-outline-success btn-sm rounded-pill fw-semibold shadow-sm w-100 mt-2">
+        <i class="fa-solid fa-file-lines me-1"></i> Relatório
+    </a>
+@endif
+
 
 </div>
 

@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\MetaController;
 use App\Http\Controllers\ResgateMetaController;
 use App\Http\Controllers\Admin\SaqueController;
 use App\Http\Controllers\SaqueUsuarioController;
+use App\Http\Controllers\Admin\BilheteRelatorioController;
 
 
 Route::post('/gerar-pix', [PagamentoController::class, 'gerarPix'])->name('gerar.pix');
@@ -151,6 +152,9 @@ Route::prefix('admin')
       Route::get('/usuarios/saques', [SaqueController::class, 'index'])->name('index.saques');
           Route::post('saques/limite', [SaqueController::class, 'salvarLimite'])->name('saques.limite');
 
+
+    Route::get('/relatorio/rodada/{id}/bilhetes', [BilheteRelatorioController::class, 'gerar'])
+    ->name('gerar.relatorio');
 
 
     });

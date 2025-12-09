@@ -35,8 +35,27 @@ class CarrinhoPalpite extends Model
     }
 
     // Descompactar combinações
-    public static function descompactarCombinacoes(string $compactado)
-    {
-        return json_decode(gzuncompress(base64_decode($compactado)), true);
+  //  public static function descompactarCombinacoes(string $compactado)
+  //  {
+  //      return json_decode(gzuncompress(base64_decode($compactado)), true);
+  //  }
+
+public static function descompactarCombinacoes(string $valor)
+{
+    $decoded = base64_decode($valor, true);
+
+    if ($decoded === false) {
+        return [$valor];
     }
+
+    $uncompressed = @gzuncompress($decoded);
+
+    if ($uncompressed === false) {
+        return [$valor];
+    }
+
+    return json_decode($uncompressed, true);
+}
+
+    
 }

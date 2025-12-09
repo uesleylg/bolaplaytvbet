@@ -19,4 +19,6 @@ class Bilhete extends Model
     {
         return $this->belongsTo(CarrinhoPalpite::class, 'carrinho_id');
     }
+
+
 }
