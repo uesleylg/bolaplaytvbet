@@ -1,165 +1,170 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <style>
-        @page { margin: 10px; }
+<meta charset="UTF-8">
+<style>
+body {
+    font-family: Arial, sans-serif;
+    font-size: 8px;
+    margin: 0;
+    padding: 0;
+}
 
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 10px;
-            margin: 0;
-            padding: 0;
-        }
+/* tabela pai 4x6 */
+.parent-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 10px; /* mantém horizontal e vertical */
+}
 
-        .pagina {
-            page-break-after: always;
-            padding: 5px;
-        }
+.parent-table td.td-personalizado {
+    width: 25%;
+    vertical-align: top;
+    padding: 0;
+}
 
-        .header {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            font-size: 26px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+/* tabela interna do bilhete */
+.bilhete-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
 
-        /* ------ GRID DE 4 COLUNAS ------ */
-   
+.bilhete-table td {
+    border: 1px solid #000;
+    height: 14px; /* menor altura vertical */
+    padding-top: 0;
+    padding-bottom: 0;
+    vertical-align: middle;
+}
 
-       
-        /* ------ BOX DO BILHETE ------ */
-        .bilhete-box {
-            border: 2px solid #000;
-            padding: 4px;
-            font-size: 10px;
-            font-weight: bold;
-            box-sizing: border-box;
-        }
+/* colunas pequenas */
+.col-small {
+    width: 8%;
+    text-align: center;
+    padding-top: 0;
+    padding-bottom: 0;
+}
 
-        .titulo-bilhete {
-            text-align: center;
-            font-size: 11px;
-            margin-bottom: 3px;
-        }
+/* colunas de nome */
+.col-name {
+    width: 42.5%;
+    padding-left: 4px;
+    padding-right: 2px;
+    padding-top: 0;    /* reduz espaço vertical */
+    padding-bottom: 0; /* reduz espaço vertical */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
-        /* ------ TABELA DE JOGOS ------ */
-        table.jogos {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
+/* círculos */
+.circle {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
 
-        table.jogos td, table.jogos th {
-            border: 1px solid #000;
-            padding: 1px 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+.circle.filled {
+    border: 1px solid #000;
+    background: #000;
+}
 
-        /* ------ COLUNAS DOS PONTOS ------- */
-        /* EXTREMAMENTE ESTREITAS PARA DAR LUGAR AOS TIMES */
-        .col-ponto {
-            width: 20% !important;
-            max-width: 20% !important;
-            min-width: 20% !important;
-            text-align: center;
-        }
+/* cabeçalho da página */
+.page-header {
+    display: flex;
+    justify-content: space-between; /* coloca um item à esquerda e outro à direita */
+    font-weight: bold;
+    font-size: 8px;
+    margin-bottom: 3px;
+}
 
-        .ponto {
-            font-size: 15px;
-            display: block;
-            width: 100%;
-        }
 
-        /* ------ NOME DOS TIMES ------ */
-        .time {
-             width: 100%;
-            font-size: 9px;
-      
-        }
+/* cabeçalho do bilhete */
+.bilhete-header {
+    text-align: center;
+    font-weight: bold;
+    font-size: 7px;
+    border-top: 1px solid #000;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    margin-bottom: 0;
+}
 
-        .rodape {
-            text-align: center;
-            font-size: 11px;
-            margin-top: 3px;
-            font-weight: bold;
-        }
-    </style>
+/* rodapé do bilhete */
+.bilhete-footer {
+    font-weight: bold;
+    font-size: 7px;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+    border-bottom: 1px solid #000;
+    border-top: none;
+padding:5px;
+    line-height: 1em;
+    display: flex;
+    justify-content: space-between;
+}
+</style>
 </head>
 <body>
 
-@foreach($paginas as $pagina)
-
-<div class="pagina">
-
-    <div class="header">
-        <div>{{ strtoupper($rodada->nome) }}</div>
-        <div>Nº <u>{{ $rodada->id }}</u></div>
-    </div>
-
-    <table class="grid" style=" width: 100%;">
-
-        @foreach($pagina->chunk(4) as $linha)
-        <tr>
-
-            @foreach($linha as $bilhete)
-            <td>
-                <div class="bilhete-box">
-
-                    <div class="titulo-bilhete">PARCEIROS</div>
-
-                    <table class="jogos">
-
-                        @foreach($rodada->jogos as $i => $jogo)
-                        @php $p = strtolower($bilhete->palpites[$i] ?? '-'); @endphp
-<tr>
-    <!-- MANDANTE PONTO -->
-    <td class="col-ponto">
-        <span class="ponto">{{ $p === '1' ? '•' : '' }}</span>
-    </td>
-
-    <!-- TIME MANDANTE -->
-    <td class="time">{{ $jogo->time_casa_nome }}</td>
-
-    <!-- EMPATE PONTO -->
-    <td class="col-ponto">
-        <span class="ponto">{{ $p === 'x' ? '•' : '' }}</span>
-    </td>
-
-    <!-- TIME VISITANTE -->
-    <td class="time">{{ $jogo->time_fora_nome }}</td>
-
-    <!-- VISITANTE PONTO -->
-    <td class="col-ponto">
-        <span class="ponto">{{ $p === '2' ? '•' : '' }}</span>
-    </td>
-</tr>
-
-                        @endforeach
-
-                    </table>
-
-                    <div class="rodape">
-                        {{ $bilhete->id }} - REI DO PI1 &nbsp;&nbsp;&nbsp; {{ $bilhete->codigo_bilhete }}
-                    </div>
-
-                </div>
-            </td>
-            @endforeach
-
-            @for($n = count($linha); $n < 4; $n++)
-                <td></td>
-            @endfor
-
-        </tr>
-        @endforeach
-
-    </table>
-
+<div class="page-header">
+    <span class="title">BOLÃO PLAY</span>
+    <span class="number">Nº 078</span>
 </div>
+
+
+@foreach ($paginas as $pagina)
+<table class="parent-table">
+    @for ($row = 0; $row < 6; $row++)
+        <tr>
+            @for ($col = 0; $col < 4; $col++)
+                @php
+                    $index = ($row * 4) + $col;
+                    $bilhete = $pagina[$index] ?? null;
+                @endphp
+                <td class="td-personalizado">
+                    @if($bilhete)
+                        <div class="bilhete-header">
+                            RODADA DO DIA {{ strtoupper(\Carbon\Carbon::parse($rodada->data_fim)->locale('pt_BR')->translatedFormat('d \D\e F - Y')) }}
+                        </div>
+
+                        <table class="bilhete-table">
+                            @foreach ($rodada->jogos as $i => $jogo)
+                                @php $p = $bilhete->palpites[$i] ?? ''; @endphp
+                                <tr>
+                                    <td class="col-small">
+                                        <span class="circle {{ $p == '1' ? 'filled' : '' }}"></span>
+                                    </td>
+                                    <td class="col-name">{{ $jogo->time_casa_nome }}</td>
+                                    <td class="col-small">
+                                        <span class="circle {{ strtoupper($p) == 'X' ? 'filled' : '' }}"></span>
+                                    </td>
+                                    <td class="col-name">{{ $jogo->time_fora_nome }}</td>
+                                    <td class="col-small">
+                                        <span class="circle {{ $p == '2' ? 'filled' : '' }}"></span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </table>
+
+                        <div class="bilhete-footer">
+                            <span>CÓDIGO: fgfgfgf</span>
+                            <span>CLIENTE: teste</span>
+                        </div>
+                    @endif
+                </td>
+            @endfor
+        </tr>
+    @endfor
+</table>
+
+@if (!$loop->last)
+<div style="page-break-after: always;"></div>
+@endif
 
 @endforeach
 
