@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <style>
+    @page {
+    margin: 20px 20px;
+}
+
 body {
     font-family: Arial, sans-serif;
     font-size: 8px;
@@ -12,9 +16,11 @@ body {
 
 /* tabela pai 4x6 */
 .parent-table {
+       margin: 0;
+    padding: 0;
     width: 100%;
     border-collapse: separate;
-    border-spacing: 10px; /* mantém horizontal e vertical */
+    border-spacing: 5px; /* mantém horizontal e vertical */
 }
 
 .parent-table td.td-personalizado {
@@ -73,13 +79,11 @@ body {
 
 /* cabeçalho da página */
 .page-header {
-    display: flex;
-    justify-content: space-between; /* coloca um item à esquerda e outro à direita */
+    text-align: center;
     font-weight: bold;
-    font-size: 8px;
+    font-size: 10px;
     margin-bottom: 3px;
 }
-
 
 /* cabeçalho do bilhete */
 .bilhete-header {
@@ -111,10 +115,17 @@ padding:5px;
 </head>
 <body>
 
-<div class="page-header">
-    <span class="title">BOLÃO PLAY</span>
-    <span class="number">Nº 078</span>
-</div>
+<table class="parent-table">
+    <tr>
+        <td style="text-align:left; font-weight:bold; font-size:20px;">
+        {{ mb_strtoupper($configs['nome_site'] ?? 'Nome do Site', 'UTF-8') }}
+
+        </td>
+        <td style="text-align:right; font-weight:bold; font-size:20px;">
+            Nº 078
+        </td>
+    </tr>
+</table>
 
 
 @foreach ($paginas as $pagina)

@@ -140,6 +140,9 @@ Route::prefix('admin')
 
       Route::get('/bilhetes', [BilheteController::class, 'index'])->name('index.bilhetes');
       Route::get('/dashboard-afiliados', [AfiliadoController::class, 'index'])->name('index.afiliados');
+      Route::get('/afiliados/{id}', [AfiliadoController::class, 'index_individual'])->name('afiliados.individual');
+
+      
       Route::get('/metas', [MetaController::class, 'index'])->name('index.metas');
       Route::post('/metas/store', [MetaController::class, 'store'])->name('metas.store');
       Route::get('/metas/{id}', [MetaController::class, 'show'])->name('metas.show');
@@ -150,8 +153,8 @@ Route::prefix('admin')
 
       Route::get('/usuarios/{id}/carteira', [CarteiraController::class, 'index'])->name('index.carteira');
       Route::get('/usuarios/saques', [SaqueController::class, 'index'])->name('index.saques');
-          Route::post('saques/limite', [SaqueController::class, 'salvarLimite'])->name('saques.limite');
-
+      Route::post('saques/limite', [SaqueController::class, 'salvarLimite'])->name('saques.limite');
+      Route::post('/saques/{id}/validar', [SaqueController::class, 'validarSaque'])->name('saques.validar');
 
     Route::get('/relatorio/rodada/{id}/bilhetes', [BilheteRelatorioController::class, 'gerar'])
     ->name('gerar.relatorio');

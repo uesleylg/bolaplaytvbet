@@ -107,7 +107,7 @@
             <th>ID</th>
             <th>Usuário</th>
             <th>Valor</th>
-            <th>Método</th>
+  
             <th>Data</th>
             <th>Status</th>
             <th class="text-end">Ações</th>
@@ -121,32 +121,38 @@
     <td>#{{ $saque->id }}</td>
     <td>{{ $saque->user->name ?? 'Usuário removido' }}</td>
     <td>R$ {{ number_format($saque->valor, 2, ',', '.') }}</td>
-    <td>{{ $saque->metodo }}</td>
+
     <td>{{ $saque->created_at->format('d/m/Y') }}</td>
 
     <td>
-        @if($saque->status == 'Pendente')
+        @if($saque->status == 'pendente')
           <span class="badge bg-warning text-dark">Pendente</span>
-        @elseif($saque->status == 'Aprovado')
+        @elseif($saque->status == 'aprovado')
           <span class="badge bg-success">Aprovado</span>
         @else
-          <span class="badge bg-danger">Rejeitado</span>
+          <span class="badge bg-danger">Rejeitado</span> 
         @endif
     </td>
 
     <td class="text-end">
-        @if($saque->status == 'Pendente')
-          <button class="btn btn-sm btn-outline-primary me-2"
-                  data-id="{{ $saque->id }}"
-                  data-bs-toggle="modal" data-bs-target="#ModalAprovar">
-            <i class="fa-solid fa-check"></i>
-          </button>
+        @if($saque->status == 'pendente')
+     <button class="btn btn-sm btn-outline-primary me-2"
+        data-id="{{ $saque->id }}"
+        data-acao="aprovar"
+        data-bs-toggle="modal"
+        data-bs-target="#ModalAprovar">
+    <i class="fa-solid fa-check"></i>
+</button>
 
-          <button class="btn btn-sm btn-outline-danger"
-                  data-id="{{ $saque->id }}"
-                  data-bs-toggle="modal" data-bs-target="#ModalAprovar">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
+<button class="btn btn-sm btn-outline-danger"
+        data-id="{{ $saque->id }}"
+        data-acao="rejeitar"
+        data-bs-toggle="modal"
+        data-bs-target="#ModalAprovar">
+    <i class="fa-solid fa-xmark"></i>
+</button>
+
+
         @else
           <button class="btn btn-sm btn-outline-secondary" disabled>
             <i class="fa-solid fa-ban"></i>
@@ -172,22 +178,30 @@
 =========================== -->
 <div class="modal fade" id="ModalAprovar" tabindex="-1">
   <div class="modal-dialog">
-    <div class="modal-content" style="border-radius: 12px;">
-      <div class="modal-header bg-dark text-white">
-        <h5 class="modal-title">Confirmar Ação</h5>
-        <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    <form method="POST" id="formValidar">
+      @csrf
+
+      <input type="hidden" name="acao" id="acao">
+
+      <div class="modal-content" style="border-radius: 12px;">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title">Confirmar Ação</h5>
+          <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <p class="mb-0" id="textoConfirmacao"></p>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn" id="btnConfirmar"></button>
+        </div>
       </div>
-      <div class="modal-body">
-        <p class="mb-0">Tem certeza que deseja aprovar ou rejeitar este saque?</p>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button class="btn btn-danger">Rejeitar</button>
-        <button class="btn btn-success">Aprovar</button>
-      </div>
-    </div>
+    </form>
   </div>
 </div>
+
 
 
 <!-- ==========================
@@ -231,6 +245,43 @@
     </div>
   </div>
 </div>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const modal = document.getElementById('ModalAprovar');
+    const form  = document.getElementById('formValidar');
+    const acao  = document.getElementById('acao');
+    const texto = document.getElementById('textoConfirmacao');
+    const botao = document.getElementById('btnConfirmar');
+
+    const rotaValidar = "{{ route('admin.saques.validar', ':id') }}";
+
+    modal.addEventListener('show.bs.modal', function (event) {
+        const btn = event.relatedTarget;
+
+        const saqueId = btn.dataset.id;
+        const tipo    = btn.dataset.acao;
+
+        form.action = rotaValidar.replace(':id', saqueId);
+        acao.value  = tipo;
+
+        if (tipo === 'aprovar') {
+            texto.innerText = 'Tem certeza que deseja APROVAR este saque?';
+            botao.className = 'btn btn-success';
+            botao.innerText = 'Aprovar';
+        } else {
+            texto.innerText = 'Tem certeza que deseja REJEITAR este saque?';
+            botao.className = 'btn btn-danger';
+            botao.innerText = 'Rejeitar';
+        }
+    });
+
+});
+</script>
+
 
 
 @endsection

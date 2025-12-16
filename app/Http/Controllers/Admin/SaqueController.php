@@ -59,6 +59,28 @@ class SaqueController extends Controller
     }
 
 
+    public function validarSaque(Request $request, $id)
+{
+    $request->validate([
+        'acao' => 'required|in:aprovar,rejeitar',
+    ]);
+
+    $saque = Saque::findOrFail($id);
+
+    if ($saque->status !== 'pendente') {
+        return back()->with('error', 'Este saque já foi processado.');
+    }
+
+    $saque->status = $request->acao === 'aprovar'
+        ? 'aprovado'
+        : 'rejeitado';
+
+    $saque->save();
+
+    return back()->with('success', 'Saque processado com sucesso!');
+}
+
+
     // 🔥 SALVAR LIMITE DO MODAL
     public function salvarLimite(Request $request)
     {

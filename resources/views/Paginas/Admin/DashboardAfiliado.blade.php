@@ -145,9 +145,11 @@
             <th>ID</th>
             <th>Afiliado</th>
             <th>Email</th>
-            <th>Indicados</th>
-            <th>Comissão Total</th>
-            <th>Criado em</th>
+    
+            <th style="text-align: center;"> Indicados</th>
+              <th style="text-align: center;"> Validos</th>
+       
+           
             <th class="text-end">Ações</th>
           </tr>
         </thead>
@@ -158,9 +160,10 @@
             <td>#{{ $afi->id }}</td>
             <td>{{ $afi->name }}</td>
             <td>{{ $afi->email }}</td>
-            <td>{{ $afi->total_indicados }}</td>
-            <td>R$ {{ number_format($afi->comissao_total, 2, ',', '.') }}</td>
-            <td>{{ $afi->created_at->format('d/m/Y H:i') }}</td>
+     
+            <td style="text-align: center;">{{ $afi->total_indicados }}</td>
+              <td style="text-align: center;">10</td>
+          
             <td class="text-end">
               <button class="btn btn-sm btn-outline-secondary me-2">
                 <i class="fa-solid fa-eye"></i>

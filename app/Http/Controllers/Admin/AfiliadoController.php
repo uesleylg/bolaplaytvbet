@@ -51,5 +51,13 @@ class AfiliadoController extends Controller
         'afiliados', 'busca', 'filtroIndicacao', 'filtroNivel'
     ));
 }
+ public function index_individual(Request $request)
+{
+return view('Paginas.Admin.indicadoindividual');
+
+}
+
+
+
 
 }
