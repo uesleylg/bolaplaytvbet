@@ -244,9 +244,16 @@
     
 
     <!-- TÍTULO DAS METAS -->
-    <h5 class="text-white fw-bold mb-3">
-        <i class="fa-solid fa-trophy me-2 text-warning"></i> Suas Missões
-    </h5>
+<h5 class="text-white fw-bold mb-2">
+    <i class="fa-solid fa-unlock-keyhole text-warning me-2"></i>
+    REALIZE MISSÕES E DESBLOQUEIE RECOMPENSAS
+</h5>
+
+<!-- SEPARADOR OPCIONAL -->
+<hr class="border-secondary my-2" style="opacity:0.3;">
+
+<!-- MISSÃO 1 -->
+
 
     <!-- CARDS DAS METAS -->
     <div class="ind-card-wrapper">
@@ -267,7 +274,90 @@
                 </div>
 
                 <h5 class="text-white mt-3 mb-1">{{ $meta->titulo }}</h5>
-                <p class="text-muted small mb-1">{{ $meta->descricao }}</p>
+                <small class="text-secondary fw-semibold d-block my-2" style="font-size:16px;">
+    <i class="fa-solid fa-flag-checkered text-secondary me-2"></i>
+    1ª PRIMEIRA COMPRA DO INDICADO
+</small>
+           
+
+                <div class="premio">
+                    <i class="fa-solid fa-gift"></i>
+                    R$ {{ number_format($meta->bonus_valor, 2, ',', '.') }} (Recompensa)
+                </div>
+
+                <!-- Barra de progresso -->
+                <div class="progress progress-custom bg-dark mb-2">
+                    <div class="progress-bar {{ $meta->atingido ? 'bg-success' : 'bg-info' }}"
+                        style="width: {{ $meta->progresso }}%">
+                    </div>
+                </div>
+
+                <span class="small {{ $meta->atingido ? 'text-success' : 'text-info' }}">
+                    {{ $indicados }}/{{ $meta->quantidade_indicados }} amigos indicados
+                </span>
+
+   
+          <!-- BOTÕES DE RESGATE DE META -->
+    @if ($meta->atingido)
+    <form action="{{ route('resgatar.meta', $meta->id) }}" method="POST" class="d-inline">
+        @csrf
+        <button type="submit" class="btn btn-warning resgatar-btn mt-2">
+            Resgatar Bônus
+        </button>
+    </form>
+@else
+    <button class="btn btn-secondary mt-2" disabled>
+        Meta Incompleta
+    </button>
+@endif
+
+
+            </div>
+        @endforeach
+
+    </div>
+
+
+
+
+
+
+
+
+ <hr class="border-secondary my-4" style="opacity:0.3;">
+
+
+
+
+
+
+    <!-- CARDS DAS METAS -->
+    <div class="ind-card-wrapper">
+
+        @foreach ($metas as $meta)
+            <div class="meta-card shadow-sm">
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="badge-nivel">Nível {{ $meta->nivel }}</span>
+
+                    @if ($meta->nivel == 1)
+                        <i style="color:#8f4814;" class="fa-solid fa-medal meta-icon"></i>
+                    @elseif ($meta->nivel == 2)
+                        <i style="color:#cdcdcd;" class="fa-solid fa-trophy meta-icon "></i>
+                    @else
+                        <i class="fa-solid fa-crown meta-icon text-warning"></i>
+                    @endif
+                </div>
+
+                <h5 class="text-white mt-3 mb-1">{{ $meta->titulo }}</h5>
+                   <small class="text-secondary fw-semibold d-block my-2" style="font-size:16px;">
+    <i class="fa-solid fa-arrows-rotate text-secondary me-2"></i>
+    INDICADO RECORRENTE
+</small>
+
+
+      
+
 
                 <div class="premio">
                     <i class="fa-solid fa-gift"></i>
@@ -305,6 +395,7 @@
         @endforeach
 
     </div>
+
 
     <br>
 
@@ -344,6 +435,11 @@
             }
         });
     </script>
+
+
+
+
+
 
     <!-- HISTÓRICO DE INDICAÇÕES -->
     <div class="historico-card shadow-sm">
