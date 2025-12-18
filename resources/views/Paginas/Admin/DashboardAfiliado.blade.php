@@ -53,15 +53,19 @@
       </div>
     </div>
 
-    <div class="col-md-4">
-      <div class="stat-card p-3 d-flex justify-content-between align-items-center">
-        <div>
-          <small class="text-muted">Comissão Total</small>
-          <h4 class="fw-bold text-warning mb-0">R$ 0,00</h4>
-        </div>
-        <i class="fa-solid fa-money-bill-trend-up fa-2x text-warning"></i>
-      </div>
+<div class="col-md-4">
+  <div class="stat-card p-3 d-flex justify-content-between align-items-center">
+    <div>
+      <small class="text-muted">Indicação Valida</small>
+      <h4 class="fw-bold text-warning mb-0">
+        {{ $totalPessoasIndicadas }}
+      </h4>
     </div>
+    <i class="fa-solid fa-user-check fa-2x text-success"></i>
+
+  </div>
+</div>
+
 
   </div>
 
@@ -161,13 +165,15 @@
             <td>{{ $afi->name }}</td>
             <td>{{ $afi->email }}</td>
      
-            <td style="text-align: center;">{{ $afi->total_indicados }}</td>
-              <td style="text-align: center;">10</td>
+        <td style="text-align: center;">{{ $afi->total_indicados }}</td>
+<td style="text-align: center;">{{ $afi->total_validos }}</td>
           
             <td class="text-end">
-              <button class="btn btn-sm btn-outline-secondary me-2">
-                <i class="fa-solid fa-eye"></i>
-              </button>
+        <button class="btn btn-sm btn-outline-secondary me-2"
+        onclick="window.location='{{ route('admin.afiliados.individual', $afi->id) }}'">
+    <i class="fa-solid fa-eye"></i>
+</button>
+
 
           
             </td>

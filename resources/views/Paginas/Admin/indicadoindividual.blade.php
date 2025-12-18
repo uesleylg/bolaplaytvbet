@@ -27,10 +27,10 @@
   <!-- Cabeçalho -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="fw-bold mb-0 text-white">
-      👤 Afiliado: João Silva
+      👤 Afiliado: {{ $user->name }}
     </h4>
 
-    <a href="#" class="btn btn-outline-light">
+    <a href="{{ url()->previous() }}" class="btn btn-outline-light">
       <i class="fa-solid fa-arrow-left"></i> Voltar
     </a>
   </div>
@@ -41,21 +41,25 @@
     <div class="col-md-4">
       <div class="stat-card p-3">
         <small class="text-muted">Total de Indicados</small>
-        <h4 class="fw-bold text-white mb-0">15</h4>
+        <h4 class="fw-bold text-white mb-0">{{ $indicados->count() }}</h4>
       </div>
     </div>
 
     <div class="col-md-4">
       <div class="stat-card p-3">
         <small class="text-muted">Indicados Ativos</small>
-        <h4 class="fw-bold text-success mb-0">6</h4>
+        <h4 class="fw-bold text-success mb-0">
+          {{ $indicados->where('status', 'ativo')->count() }}
+        </h4>
       </div>
     </div>
 
     <div class="col-md-4">
       <div class="stat-card p-3">
         <small class="text-muted">Pendentes</small>
-        <h4 class="fw-bold text-warning mb-0">9</h4>
+        <h4 class="fw-bold text-warning mb-0">
+          {{ $indicados->where('status', 'pendente')->count() }}
+        </h4>
       </div>
     </div>
 
@@ -113,55 +117,31 @@
             <th>Email</th>
             <th>Registro</th>
             <th>Última compra</th>
-               <th>Compras</th>
+            <th>Compras</th>
             <th>Status</th>
-           
-       
+            <th>Ações</th>
           </tr>
         </thead>
 
         <tbody>
-
+          @foreach ($indicados as $afi)
           <tr class="text-white">
-            <td>#1021</td>
-            <td>Maria Souza</td>
-            <td>maria@email.com</td>
-            <td>12/01/2025</td>
-            <td>10/01/2025</td>
-            <td>0</td>
+            <td>#{{ $afi->id }}</td>
+            <td>{{ $afi->indicado->name ?? $afi->nome ?? '—' }}</td>
+            <td>{{ $afi->indicado->email ?? $afi->email ?? '—' }}</td>
+            <td>{{ $afi->created_at->format('d/m/Y') }}</td>
+            <td>{{ $afi->ultima_compra ? $afi->ultima_compra->format('d/m/Y') : '-' }}</td>
+            <td>{{ $afi->compras ?? 0 }}</td>
             <td>
-              <span class="badge-status badge-pendente">Pendente</span>
+              <span class="badge-status {{ $afi->status == 'ativo' ? 'badge-ativo' : 'badge-pendente' }}">
+                {{ ucfirst($afi->status) }}
+              </span>
             </td>
-
+  
           </tr>
-
-          <tr class="text-white">
-            <td>#1022</td>
-            <td>Carlos Lima</td>
-            <td>carlos@email.com</td>
-            <td>10/01/2025</td>
-            <td>10/01/2025</td>
-            <td>10</td>
-            <td>
-              <span class="badge-status badge-ativo">Ativo</span>
-            </td>
-
-          </tr>
-
-          <tr class="text-white">
-            <td>#1023</td>
-            <td>Ana Paula</td>
-            <td>ana@email.com</td>
-            <td>08/01/2025</td>
-            <td>10/01/2025</td>
-            <td>2</td>
-            <td>
-              <span class="badge-status badge-pendente">Pendente</span>
-            </td>
- 
-          </tr>
-
+          @endforeach
         </tbody>
+
       </table>
     </div>
 

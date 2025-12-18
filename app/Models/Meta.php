@@ -16,6 +16,7 @@ class Meta extends Model
     'titulo',
     'descricao',
     'quantidade_indicados',
+    'modo',
     'bonus_valor',
     'status',
 ];

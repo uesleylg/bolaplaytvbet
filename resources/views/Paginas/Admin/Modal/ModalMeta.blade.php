@@ -69,8 +69,24 @@
               <div class="invalid-feedback">Informe a quantidade mínima.</div>
             </div>
 
+                      <!-- Modo -->
+<div class="col-md-6">
+  <div class="form-floating">
+    <select class="form-select bg-slate border-0 text-light"
+            id="modo" name="modo" required>
+      <option value="" disabled selected>Selecione o modo</option>
+      <option value="primeira">Primeira</option>
+      <option value="recorrente">Recorrente</option>
+    </select>
+    <label for="modo">
+      <i class="fa-solid fa-repeat me-2"></i> Modo da Meta
+    </label>
+  </div>
+  <div class="invalid-feedback">Selecione o modo da meta.</div>
+</div>
+
             <!-- Bônus -->
-            <div class="col-md-6">
+            <div class="col-md-12">
               <div class="form-floating">
                 <input type="number" step="0.01" class="form-control bg-slate border-0 text-light"
                        id="bonus_valor" name="bonus_valor" placeholder="Bônus" required>
@@ -100,6 +116,9 @@
               <label class="form-check-label fw-semibold text-light" id="statusMetaLabel">Ativo</label>
             </div>
           </div>
+
+
+
 
           <!-- Botões -->
           <div class="d-flex justify-content-end gap-2 mt-4">

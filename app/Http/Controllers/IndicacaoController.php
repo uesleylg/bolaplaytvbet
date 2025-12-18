@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Meta;
-use App\Models\IndicacaoUtilizada;
+use App\Models\Indicacao;
 use App\Models\ResgateMeta;
-use Illuminate\Http\Request;
 use App\Models\Saque;
-
+use Illuminate\Http\Request;
 
 class IndicacaoController extends Controller
 {
@@ -16,36 +15,55 @@ class IndicacaoController extends Controller
         $user = auth()->user();
 
         // 🔹 Histórico de pedidos de saque do usuário
-$saques = Saque::where('user_id', $user->id)
-    ->orderByDesc('created_at')
-    ->get();
+        $saques = Saque::where('user_id', $user->id)
+            ->orderByDesc('created_at')
+            ->get();
 
         // 🔹 Lista de indicados com status
-        $indicadosLista = IndicacaoUtilizada::with('indicado')
-            ->where('indicador_id', $user->id)
-            ->orderByDesc('created_at')
-            ->get()
-            ->map(function ($registro) {
-                $registro->nome_indicado = $registro->indicado->name ?? '—';
-                $registro->status_indicacao = match($registro->status) {
-                    'ativo' => 'aguardando_validacao',
-                    'resgatado' => 'aprovado',
-                    default => 'pendente',
-                };
-                return $registro;
-            });
+     $indicadosLista = Indicacao::with('indicado')
+    ->where('indicador_id', $user->id)
+    ->orderByDesc('created_at')
+    ->get()
+    ->map(function ($registro) {
+        // Define o modo: se não comprou, 'aguardando', senão mantém 'primeira' ou 'recorrente'
+        $modo = $registro->bilhete_id ? $registro->status : 'aguardando';
 
-        // 🔹 Contagem de indicados válidos
-        $indicados = IndicacaoUtilizada::where('indicador_id', $user->id)
-            ->where('status', 'ativo')
+        return (object)[
+            'nome_indicado' => $registro->indicado->name ?? '—',
+            'modo' => $modo,
+            'resgatado' => $registro->resgatado,
+            'created_at' => $registro->created_at,
+        ];
+    });
+
+
+        // 🔹 Contagem de indicados válidos por tipo (não resgatados)
+        $indicadosPrimeira = Indicacao::where('indicador_id', $user->id)
+            ->where('status', 'primeira')
+            ->where('resgatado', 0) // <-- só conta quem ainda não resgatou
+            ->count();
+
+        $indicadosRecorrente = Indicacao::where('indicador_id', $user->id)
+            ->where('status', 'recorrente')
+            ->where('resgatado', 0) // <-- só conta quem ainda não resgatou
             ->count();
 
         // 🔹 Carrega metas e progresso
-        $metas = Meta::orderBy('nivel')
+        $metas_primeira = Meta::where('modo', 'primeira')
+            ->orderBy('nivel')
             ->get()
-            ->map(function ($meta) use ($indicados) {
-                $meta->progresso = min(100, ($indicados / $meta->quantidade_indicados) * 100);
-                $meta->atingido = $indicados >= $meta->quantidade_indicados;
+            ->map(function ($meta) use ($indicadosPrimeira) {
+                $meta->progresso = min(100, ($indicadosPrimeira / $meta->quantidade_indicados) * 100);
+                $meta->atingido = $indicadosPrimeira >= $meta->quantidade_indicados;
+                return $meta;
+            });
+
+        $metas_recorrencia = Meta::where('modo', 'recorrente')
+            ->orderBy('nivel')
+            ->get()
+            ->map(function ($meta) use ($indicadosRecorrente) {
+                $meta->progresso = min(100, ($indicadosRecorrente / $meta->quantidade_indicados) * 100);
+                $meta->atingido = $indicadosRecorrente >= $meta->quantidade_indicados;
                 return $meta;
             });
 
@@ -55,13 +73,14 @@ $saques = Saque::where('user_id', $user->id)
             ->orderByDesc('created_at')
             ->get();
 
-      return view('Paginas.User.indicacao', compact(
-    'metas',
-    'indicados',
-    'indicadosLista',
-    'resgates',
-    'saques' // adicionando
-));
-
+        return view('Paginas.User.indicacao', compact(
+            'metas_primeira',
+            'metas_recorrencia',
+            'indicadosPrimeira',
+            'indicadosRecorrente',
+            'indicadosLista',
+            'resgates',
+            'saques'
+        ));
     }
 }

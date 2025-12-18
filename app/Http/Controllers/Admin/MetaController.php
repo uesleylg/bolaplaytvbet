@@ -41,7 +41,7 @@ public function index(Request $request)
 
 
 
-  public function store(Request $request)
+public function store(Request $request)
 {
     $request->validate([
         'titulo' => 'required|string|max:255',
@@ -50,6 +50,7 @@ public function index(Request $request)
         'quantidade_indicados' => 'required|integer',
         'bonus_valor' => 'required|numeric',
         'status' => 'required|in:Ativo,Inativo',
+        'modo' => 'required|in:primeira,recorrente',
     ]);
 
     $meta = Meta::create([
@@ -59,6 +60,7 @@ public function index(Request $request)
         'quantidade_indicados' => $request->quantidade_indicados,
         'bonus_valor' => $request->bonus_valor,
         'status' => $request->status,
+        'modo' => $request->modo,
     ]);
 
     return response()->json([
@@ -67,6 +69,7 @@ public function index(Request $request)
         'data' => $meta
     ]);
 }
+
 
 public function destroy($id)
 {

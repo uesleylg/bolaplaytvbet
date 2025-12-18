@@ -144,6 +144,7 @@
             <th>Título</th>
             <th>Nível</th>
             <th>Indicados</th>
+            <th>Modo</th>
             <th>Bônus</th>
             <th>Status</th>
             <th>Criado em</th>
@@ -160,6 +161,8 @@
             <td>{{ $meta->titulo }}</td>
             <td>{{ $meta->nivel }}</td>
             <td>{{ $meta->quantidade_indicados }}</td>
+             <td>{{ \Illuminate\Support\Str::ucfirst($meta->modo) }}</td>
+
             <td>R$ {{ number_format($meta->bonus_valor, 2, ',', '.') }}</td>
 
             <td>

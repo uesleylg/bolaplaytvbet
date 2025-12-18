@@ -258,22 +258,22 @@
     <!-- CARDS DAS METAS -->
     <div class="ind-card-wrapper">
 
-        @foreach ($metas as $meta)
+        @foreach ($metas_primeira as $meta_p)
             <div class="meta-card shadow-sm">
 
                 <div class="d-flex justify-content-between align-items-center">
-                    <span class="badge-nivel">Nível {{ $meta->nivel }}</span>
+                    <span class="badge-nivel">Nível {{ $meta_p->nivel }}</span>
 
-                    @if ($meta->nivel == 1)
+                    @if ($meta_p->nivel == 1)
                         <i style="color:#8f4814;" class="fa-solid fa-medal meta-icon"></i>
-                    @elseif ($meta->nivel == 2)
-                        <i style="color:#cdcdcd;" class="fa-solid fa-trophy meta-icon "></i>
+                    @elseif ($meta_p->nivel == 2)
+                        <i style="color:#cdcdcd;" class="fa-solid fa-medal meta-icon "></i>
                     @else
-                        <i class="fa-solid fa-crown meta-icon text-warning"></i>
+                        <i class="fa-solid fa-medal meta-icon text-warning"></i>
                     @endif
                 </div>
 
-                <h5 class="text-white mt-3 mb-1">{{ $meta->titulo }}</h5>
+                <h5 class="text-white mt-3 mb-1">{{ $meta_p->titulo }}</h5>
                 <small class="text-secondary fw-semibold d-block my-2" style="font-size:16px;">
     <i class="fa-solid fa-flag-checkered text-secondary me-2"></i>
     1ª PRIMEIRA COMPRA DO INDICADO
@@ -282,24 +282,25 @@
 
                 <div class="premio">
                     <i class="fa-solid fa-gift"></i>
-                    R$ {{ number_format($meta->bonus_valor, 2, ',', '.') }} (Recompensa)
+                    R$ {{ number_format($meta_p->bonus_valor, 2, ',', '.') }} (Recompensa)
                 </div>
 
                 <!-- Barra de progresso -->
                 <div class="progress progress-custom bg-dark mb-2">
-                    <div class="progress-bar {{ $meta->atingido ? 'bg-success' : 'bg-info' }}"
-                        style="width: {{ $meta->progresso }}%">
+                    <div class="progress-bar {{ $meta_p->atingido ? 'bg-success' : 'bg-info' }}"
+                        style="width: {{ $meta_p->progresso }}%">
                     </div>
                 </div>
 
-                <span class="small {{ $meta->atingido ? 'text-success' : 'text-info' }}">
-                    {{ $indicados }}/{{ $meta->quantidade_indicados }} amigos indicados
-                </span>
+           <span class="small {{ $meta_p->atingido ? 'text-success' : 'text-info' }}">
+    {{ $indicadosPrimeira }}/{{ $meta_p->quantidade_indicados }} amigos indicados
+</span>
+
 
    
           <!-- BOTÕES DE RESGATE DE META -->
-    @if ($meta->atingido)
-    <form action="{{ route('resgatar.meta', $meta->id) }}" method="POST" class="d-inline">
+    @if ($meta_p->atingido)
+    <form action="{{ route('resgatar.meta', $meta_p->id) }}" method="POST" class="d-inline">
         @csrf
         <button type="submit" class="btn btn-warning resgatar-btn mt-2">
             Resgatar Bônus
@@ -334,22 +335,22 @@
     <!-- CARDS DAS METAS -->
     <div class="ind-card-wrapper">
 
-        @foreach ($metas as $meta)
+        @foreach ($metas_recorrencia as $meta_r)
             <div class="meta-card shadow-sm">
 
                 <div class="d-flex justify-content-between align-items-center">
-                    <span class="badge-nivel">Nível {{ $meta->nivel }}</span>
+                    <span class="badge-nivel">Nível {{ $meta_r->nivel }}</span>
 
-                    @if ($meta->nivel == 1)
+                    @if ($meta_r->nivel == 1)
                         <i style="color:#8f4814;" class="fa-solid fa-medal meta-icon"></i>
-                    @elseif ($meta->nivel == 2)
+                    @elseif ($meta_r->nivel == 2)
                         <i style="color:#cdcdcd;" class="fa-solid fa-trophy meta-icon "></i>
                     @else
                         <i class="fa-solid fa-crown meta-icon text-warning"></i>
                     @endif
                 </div>
 
-                <h5 class="text-white mt-3 mb-1">{{ $meta->titulo }}</h5>
+                <h5 class="text-white mt-3 mb-1">{{ $meta_r->titulo }}</h5>
                    <small class="text-secondary fw-semibold d-block my-2" style="font-size:16px;">
     <i class="fa-solid fa-arrows-rotate text-secondary me-2"></i>
     INDICADO RECORRENTE
@@ -361,24 +362,24 @@
 
                 <div class="premio">
                     <i class="fa-solid fa-gift"></i>
-                    R$ {{ number_format($meta->bonus_valor, 2, ',', '.') }}
+                    R$ {{ number_format($meta_r->bonus_valor, 2, ',', '.') }}
                 </div>
 
                 <!-- Barra de progresso -->
                 <div class="progress progress-custom bg-dark mb-2">
-                    <div class="progress-bar {{ $meta->atingido ? 'bg-success' : 'bg-info' }}"
-                        style="width: {{ $meta->progresso }}%">
+                    <div class="progress-bar {{ $meta_r->atingido ? 'bg-success' : 'bg-info' }}"
+                        style="width: {{ $meta_r->progresso }}%">
                     </div>
                 </div>
 
-                <span class="small {{ $meta->atingido ? 'text-success' : 'text-info' }}">
-                    {{ $indicados }}/{{ $meta->quantidade_indicados }} amigos indicados
-                </span>
+            <span class="small {{ $meta_r->atingido ? 'text-success' : 'text-info' }}">
+    {{ $indicadosRecorrente }}/{{ $meta_r->quantidade_indicados }} amigos indicados
+</span>
 
    
           <!-- BOTÕES DE RESGATE DE META -->
-    @if ($meta->atingido)
-    <form action="{{ route('resgatar.meta', $meta->id) }}" method="POST" class="d-inline">
+    @if ($meta_r->atingido)
+    <form action="{{ route('resgatar.meta', $meta_r->id) }}" method="POST" class="d-inline">
         @csrf
         <button type="submit" class="btn btn-warning resgatar-btn mt-2">
             Resgatar Bônus
@@ -439,45 +440,75 @@
 
 
 
+<div class="historico-card shadow-sm">
+    <h5><i class="fa-solid fa-user-group me-2"></i>Indicações</h5>
 
+    <table class="historico-table">
+        <thead>
+            <tr>
+                <th>Nome do Indicado</th>
+                <th>Status</th>
+                <th>Resgate</th>
+                <th>Data de Cadastro</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach($indicadosLista as $ind)
+            <tr>
+                <!-- Nome do indicado -->
+                <td>{{ $ind->nome_indicado }}</td>
+                
+                <!-- Modo da compra -->
+                <td>
+                    @switch($ind->modo)
+                        @case('primeira')
+                            <span class="status-badge modo-primeira">Primeira Compra</span>
+                            @break
+                        @case('recorrente')
+                            <span class="status-badge modo-recorrente">Recorrente</span>
+                            @break
+                        @default
+                            <span class="status-badge modo-novo">Novo Usuário</span>
+                    @endswitch
+                </td>
 
-    <!-- HISTÓRICO DE INDICAÇÕES -->
-    <div class="historico-card shadow-sm">
-        <h5><i class="fa-solid fa-user-group me-2"></i>Indicações</h5>
+                <!-- Status do resgate -->
+                <td>
+                    @if($ind->resgatado)
+                        <span class="status-badge resgate-aprovado">Resgatado</span>
+                    @else
+                        <span class="status-badge resgate-pendente">Aguardando</span>
+                    @endif
+                </td>
 
-        <table class="historico-table">
-            <thead>
-                <tr>
-                    <th>Nome do Indicado</th>
-                    <th>Status</th>
-                    <th>Data de Cadastro</th>
-                </tr>
-            </thead>
+                <!-- Data de cadastro -->
+                <td>{{ $ind->created_at->format('d/m/Y') }}</td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
+</div>
 
-       <tbody>
-@foreach($indicadosLista as $ind)
-    <tr>
-        <td>{{ $ind->nome_indicado }}</td>
+<style>
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+}
 
-        <td>
-            @if($ind->status_indicacao === 'aprovado')
-                <span class="status-badge status-aprovado">Resgatado</span>
-            @elseif($ind->status_indicacao === 'aguardando_validacao')
-                <span class="status-badge status-aguardando">Pendente a Resgate</span>
-            @else
-                <span class="status-badge status-pendente">Pendente</span>
-            @endif
-        </td>
+/* Modo do usuário */
+.modo-primeira { background-color: #4caf50; }    /* Verde */
+.modo-recorrente { background-color: #2196f3; }  /* Azul */
+.modo-novo { background-color: #ff9800; }        /* Laranja */
 
-        <td>{{ $ind->created_at->format('d/m/Y') }}</td>
-    </tr>
-@endforeach
+/* Status do resgate */
+.resgate-aprovado { background-color: #28a745; }  /* Verde escuro */
+.resgate-pendente { background-color: #ffc107; }  /* Amarelo */
+</style>
 
-</tbody>
-
-        </table>
-
-    </div>
 
 
 
@@ -494,6 +525,7 @@
             <tr>
                 <th>Meta</th>
                 <th>Valor do Bônus</th>
+                <th>Modo</th>
                 <th>Status</th>
                 <th>Data do Resgate</th>
             </tr>
@@ -504,6 +536,8 @@
             <tr>
                 <td>{{ $resgate->meta->titulo ?? '—' }}</td>
                 <td>R$ {{ number_format($resgate->valor_bonus, 2, ',', '.') }}</td>
+               <td>{{ \Illuminate\Support\Str::ucfirst($resgate->meta->modo) }}</td>
+
                 <td>
                     @if(strtolower($resgate->status) === 'aprovado')
                         <span class="status-badge status-aprovado"> Resgatado</span>

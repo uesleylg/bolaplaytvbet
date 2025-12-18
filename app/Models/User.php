@@ -48,6 +48,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(User::class, 'referencia_id');
     }
+    public function indicacoes()
+{
+    return $this->hasMany(\App\Models\Indicacao::class, 'indicador_id');
+}
+
 
     // 🔹 Carteira do usuário
     public function carteira()
