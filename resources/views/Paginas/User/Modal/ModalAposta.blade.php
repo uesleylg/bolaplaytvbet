@@ -14,6 +14,28 @@
       </div>
 
       <div class="modal-body text-center px-4 pb-4">
+<!-- 💳 ESCOLHA DE PAGAMENTO -->
+<div id="paymentChoice" class="text-center py-4">
+
+  <p class="text-muted mb-4">Como deseja pagar?</p>
+
+  <div class="d-flex justify-content-center gap-3">
+
+    <button class="btn btn-outline-success px-4 py-2 shadow-sm"
+            onclick="pagarComSaldo()">
+      <i class="fa-solid fa-wallet me-2"></i>
+      Pagar com saldo
+    </button>
+
+    <button class="btn btn-success px-4 py-2 shadow-sm"
+            onclick="pagarComPix()">
+      <i class="fa-brands fa-pix me-2"></i>
+      Pagar com PIX
+    </button>
+
+  </div>
+
+</div>
 
         <!-- 🔄 LOADING -->
         <div id="pixLoading">
@@ -57,6 +79,18 @@
      ESTILO MODERNO PIX 2025 (SÓLIDO)
 ================================ -->
 <style>
+
+#paymentChoice button {
+  border-radius: 12px;
+  transition: all .2s ease;
+}
+
+#paymentChoice button:hover {
+  transform: translateY(-2px);
+}
+
+
+
   /* Cartão sólido, sem transparência */
   .pix-card {
     border-radius: 18px;
@@ -560,34 +594,71 @@ if (premioEstimadoEl) {
 
         alert(`✅ ${modoEdicao ? 'Bilhete atualizado' : 'Carrinho salvo'} com sucesso!`);
 
+
+    const contadores = document.querySelectorAll('.contador-bilhetes');
+
+if (contadores.length && data.total_bilhetes !== undefined) {
+    contadores.forEach(contador => {
+        contador.textContent = data.total_bilhetes;
+    });
+}
+
+
         if (modoEdicao) return;
 
         // ------------------------------------------------------------------
         // 🔥 GERAR PIX — usando o controller correto
         // ------------------------------------------------------------------
 
-        const carrinhoIdsArray = data.carrinho_ids; 
-        console.log("📦 Carrinhos enviados para PIX:", carrinhoIdsArray);
+        const carrinhoIdsArray = data.carrinho_ids;
+const saldoCarteira = parseFloat(data.saldo_carteira);
 
-        const modalApostaBS = bootstrap.Modal.getInstance(modalAposta);
-        modalApostaBS.hide();
+const modalApostaBS = bootstrap.Modal.getInstance(modalAposta);
+modalApostaBS.hide();
 
-        setTimeout(async () => {
+window.seguirFluxoPix = async function () {
 
-            const modalPixEl = document.getElementById('ModalPix');
-            const modalPix = new bootstrap.Modal(modalPixEl);
+    document.getElementById("paymentChoice").style.display = "none";
+    document.getElementById("pixLoading").style.display = "block";
 
-            document.getElementById("pixLoading").style.display = "block";
-            document.getElementById("pixContent").style.display = "none";
+    await gerarPixPagamento(carrinhoIdsArray);
 
-            modalPix.show();
+    document.getElementById("pixLoading").style.display = "none";
+    document.getElementById("pixContent").style.display = "block";
+};
 
-            await gerarPixPagamento(carrinhoIdsArray);
+window.pagarComPix = function () {
+    window.seguirFluxoPix();
+};
 
-            document.getElementById("pixLoading").style.display = "none";
-            document.getElementById("pixContent").style.display = "block";
+window.pagarComSaldo = function () {
+    console.log('Usuário escolheu pagar com saldo');
+};
 
-        }, 300);
+
+setTimeout(async () => {
+
+    const modalPixEl = document.getElementById('ModalPix');
+    const modalPix = new bootstrap.Modal(modalPixEl);
+
+    // reset visual
+    document.getElementById("paymentChoice").style.display = "none";
+    document.getElementById("pixLoading").style.display = "none";
+    document.getElementById("pixContent").style.display = "none";
+
+    modalPix.show();
+
+    // 🔥 SE TIVER SALDO >= 10 → MOSTRA ESCOLHA
+    if (saldoCarteira >= 10) {
+        document.getElementById("paymentChoice").style.display = "block";
+        return;
+    }
+
+    // 🔥 SE NÃO → SEGUE DIRETO PARA O PIX
+    seguirFluxoPix();
+
+}, 300);
+
 
     } catch (err) {
         console.error(err);

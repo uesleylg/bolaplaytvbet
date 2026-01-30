@@ -57,9 +57,12 @@
   </div>
 
 
-  <button type="submit" id="login-user" class="btn w-100 text-dark fw-bold" style="background:#FAEF5C; border:0;">
+<button type="submit" id="login-user" class="btn w-100 text-dark fw-bold" style="background:#FAEF5C; border:0;">
+  <span id="login-text">
     <i class="fa-solid fa-right-to-bracket"></i> Entrar
-  </button>
+  </span>
+</button>
+
 </form>
 
 
@@ -102,9 +105,10 @@
 
   <input type="hidden" name="referencia_id" value="">
 
-  <button type="submit" id="cadastrar-user" class="btn w-100 text-dark fw-bold" style="background:#FAEF5C; border:0;">
-    Continuar
-  </button>
+ <button type="submit" id="cadastrar-user" class="btn w-100 text-dark fw-bold" style="background:#FAEF5C; border:0;">
+  <span id="cadastrar-text">Continuar</span>
+</button>
+
 </form>
 
           </div>
@@ -255,29 +259,24 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-  document.querySelectorAll('.btn-show-password').forEach(button => {
-    button.addEventListener('mousedown', () => {
-      const input = button.parentElement.querySelector('.password-input');
-      if (input) input.type = 'text';
-    });
-    button.addEventListener('mouseup', () => {
-      const input = button.parentElement.querySelector('.password-input');
-      if (input) input.type = 'password';
-    });
-    button.addEventListener('mouseleave', () => {
-      const input = button.parentElement.querySelector('.password-input');
-      if (input) input.type = 'password';
-    });
-    button.addEventListener('touchstart', () => {
-      const input = button.parentElement.querySelector('.password-input');
-      if (input) input.type = 'text';
-    }, { passive: true });
-    button.addEventListener('touchend', () => {
-      const input = button.parentElement.querySelector('.password-input');
-      if (input) input.type = 'password';
-    });
-  });
+document.querySelectorAll('.btn-show-password').forEach(button => {
+  button.addEventListener('click', () => {
+    const input = button.parentElement.querySelector('.password-input');
+    const icon = button.querySelector('i');
 
+    if (!input) return;
+
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      input.type = 'password';
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  });
+});
 
 
 
@@ -288,6 +287,8 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function () {
   const form = document.getElementById('login-form');
   const alertArea = document.getElementById('alert-area');
+  const loginButton = document.getElementById('login-user');
+  const loginText = document.getElementById('login-text');
 
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -300,16 +301,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
     alertArea.innerHTML = '';
 
+    // 🔒 Desabilita o botão e muda o texto
+    loginButton.disabled = true;
+    loginText.innerHTML = `
+      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      Entrando...
+    `;
+
     try {
       const response = await axios.post('/login', data, {
-        headers: { 'X-CSRF-TOKEN': document.querySelector('input[name=_token]').value }
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('input[name=_token]').value
+        }
       });
 
-      // backend sempre envia success e message
-      showAlert(response.data.message, response.data.success ? 'success' : 'danger');
+      showAlert(
+        response.data.message,
+        response.data.success ? 'success' : 'danger'
+      );
 
       if (response.data.success && response.data.redirect) {
-        setTimeout(() => window.location.href = response.data.redirect, 1500);
+        setTimeout(() => {
+          window.location.href = response.data.redirect;
+        }, 1500);
+        return; // não reativa o botão porque vai redirecionar
       }
 
     } catch (error) {
@@ -319,6 +334,12 @@ document.addEventListener('DOMContentLoaded', function () {
         showAlert('Ocorreu um erro inesperado.', 'danger');
       }
     }
+
+    // 🔓 Reativa o botão se der erro
+    loginButton.disabled = false;
+    loginText.innerHTML = `
+      <i class="fa-solid fa-right-to-bracket"></i> Entrar
+    `;
   });
 
   function showAlert(message, type = 'danger') {
@@ -333,7 +354,6 @@ document.addEventListener('DOMContentLoaded', function () {
     alertArea.innerHTML = '';
     alertArea.appendChild(alert);
 
-    // Remove automaticamente após 4 segundos
     setTimeout(() => {
       const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
       bsAlert.close();
@@ -344,63 +364,81 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-document.addEventListener('DOMContentLoaded', function () {
-  
-   const urlParams = new URLSearchParams(window.location.search);
-const refCode = urlParams.get("reference");
 
-// Se existir um código, envia para o input hidden
-if (refCode) {
-    document.querySelector("input[name=referencia_id]").value = refCode;
-}
+document.addEventListener('DOMContentLoaded', function () {
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const refCode = urlParams.get("reference");
+
+  // Se existir um código, envia para o input hidden
+  if (refCode) {
+    const refInput = document.querySelector("input[name=referencia_id]");
+    if (refInput) {
+      refInput.value = refCode;
+    }
+  }
+
   const form = document.getElementById('register-form');
   const alertArea = document.getElementById('alert-area');
+  const registerButton = document.getElementById('cadastrar-user');
+  const registerText = document.getElementById('cadastrar-text');
 
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const formData = new FormData(form);
-    alertArea.innerHTML = ''; // limpa alertas anteriores
+    alertArea.innerHTML = '';
+
+    // 🔒 Desabilita botão e mostra loading
+    registerButton.disabled = true;
+    registerText.innerHTML = `
+      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      Processando...
+    `;
 
     try {
       const response = await axios.post('/register', formData, {
-        headers: { 'X-CSRF-TOKEN': document.querySelector('input[name=_token]').value }
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('input[name=_token]').value
+        }
       });
 
-      // ✅ Sucesso no cadastro
       if (response.data.success) {
         showAlert(response.data.message, 'success');
+
         setTimeout(() => {
           window.location.href = response.data.redirect;
         }, 1500);
-      } 
-      // ⚠️ Caso de erro retornado (mas sem exception)
-      else {
+
+        return; // não reativa o botão (vai redirecionar)
+      } else {
         showAlert(response.data.message || 'Erro ao cadastrar.', 'danger');
       }
 
     } catch (error) {
-      // ⚠️ Erro de validação (Laravel retorna 422)
       if (error.response && error.response.data && error.response.data.message) {
         showAlert(error.response.data.message, 'danger');
-      } 
-      // ⚠️ Erro inesperado
-      else {
+      } else {
         showAlert('Erro inesperado. Tente novamente.', 'danger');
       }
     }
+
+    // 🔓 Reativa botão se houve erro
+    registerButton.disabled = false;
+    registerText.innerHTML = 'Continuar';
   });
 
-  // Função para mostrar alerta
+  // Função de alerta
   function showAlert(message, type = 'danger') {
     const alert = `
       <div class="alert alert-${type} alert-dismissible fade show mt-3" role="alert">
         ${message}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>`;
+      </div>
+    `;
+
     alertArea.innerHTML = alert;
 
-    // Fecha automaticamente após 4 segundos
     setTimeout(() => {
       const alertElement = alertArea.querySelector('.alert');
       if (alertElement) {
@@ -411,5 +449,6 @@ if (refCode) {
     }, 4000);
   }
 });
+
 </script>
 

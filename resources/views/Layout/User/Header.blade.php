@@ -93,7 +93,7 @@
         <a class="nav-link d-flex align-items-center text-light" href="{{ route('bilhete.index') }}">
           <i class="fa-solid fa-ticket me-1"></i> Meus Bilhetes
           @if($bilhetesCount > 0)
-            <span class="badge bg-danger ms-2">{{ $bilhetesCount }}</span>
+            <span class="badge bg-danger ms-2 contador-bilhetes">{{ $bilhetesCount }}</span>
           @endif
         </a>
       </li>
@@ -102,8 +102,8 @@
    @endauth
     
     <li class="nav-item"><a class="nav-link text-light" href="https://bolaplaytv.com.br/"><i class="fa-solid fa-play"></i> Futebol Ao Vivo</a></li>
-    <li class="nav-item"><a class="nav-link text-light" href="#"><i class="fa-solid fa-hand"></i> Regras</a></li>
-    <li class="nav-item"><a class="nav-link text-light" href="#"><i class="fa-brands fa-whatsapp"></i> Contato</a></li>
+    <li class="nav-item"><a class="nav-link text-light" href="{{ route('home.regras') }}"><i class="fa-solid fa-hand"></i> Regras</a></li>
+    <li class="nav-item"><a class="nav-link text-light" target="_blank" href="https://wa.me/{{ preg_replace('/\D/', '', $configs['contato_whatsapp']) }}"><i class="fa-brands fa-whatsapp"></i> Contato</a></li>
   </ul>
 
   @auth
@@ -265,16 +265,16 @@
            @auth
              <li class="nav-item"><a class="nav-link text-light" href="{{ route('bilhete.index') }}"><i class="fa-solid fa-ticket"></i> Meus Bilhetes
           @if($bilhetesCount > 0)
-            <span class="badge bg-danger ms-2">{{ $bilhetesCount }}</span>
+            <span class="badge bg-danger ms-2 contador-bilhetes">{{ $bilhetesCount }}</span>
           @endif
             </a></li>
     @endauth
        
        
         <li class="nav-item"><a class="nav-link text-light" href="{{ route('ranking.index') }}"><i class="fa-solid fa-chart-simple"></i> Ranking</a></li>
-        <li class="nav-item"><a class="nav-link text-light" href="#"><i class="fa-solid fa-hand"></i> Regras</a></li>
+        <li class="nav-item"><a class="nav-link text-light" href="{{ route('home.regras') }}"><i class="fa-solid fa-hand"></i> Regras</a></li>
         <li class="nav-item"><a class="nav-link text-light" href="https://bolaplaytv.com.br/"><i class="fa-solid fa-play"></i> Futebol Ao Vivo</a></li>
-        <li class="nav-item"><a class="nav-link text-light" href="#"><i class="fa-brands fa-whatsapp"></i> Contato</a></li>
+        <li class="nav-item"><a class="nav-link text-light" target="_blank" href="https://wa.me/{{ preg_replace('/\D/', '', $configs['contato_whatsapp']) }}"><i class="fa-brands fa-whatsapp"></i> Contato</a></li>
       </ul>
     </div>
 

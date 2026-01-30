@@ -17,7 +17,11 @@
                 <h6 class="fw-bold text-uppercase mb-3">Contato</h6>
               
                 <p><i class="bi bi-envelope-fill "></i> {{ $configs['contato_email'] ?? 'Nome do Site' }} </p>
-                <p><i class="bi bi-whatsapp "></i>  {{ $configs['contato_whatsapp'] ?? 'Nome do Site' }}</p>
+                <p><i class="bi bi-whatsapp "></i> <a 
+    href="https://wa.me/{{ preg_replace('/\D/', '', $configs['contato_whatsapp']) }}" 
+    target="_blank"
+    class=""
+>{{ $configs['contato_whatsapp'] }}</a></p>
             </div>
         </div>
         <hr class="mb-4 text-secondary" />

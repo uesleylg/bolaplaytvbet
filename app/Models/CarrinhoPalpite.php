@@ -17,6 +17,12 @@ class CarrinhoPalpite extends Model
         'status',
     ];
 
+
+    public function bilhete()
+{
+    return $this->hasOne(Bilhete::class, 'carrinho_id');
+}
+
     // Relacionamentos
     public function usuario()
     {

@@ -88,9 +88,9 @@
       </div>
       <div class="story-name">JOGO AO VIVO</div>
     </div>
-
+  
     <!-- Regras -->
-    <div class="story-card" data-bs-toggle="modal" data-bs-target="#ModalIndicacao">
+    <div class="story-card" onclick="window.location.href='  {{ route('home.regras') }}';">
       <div class="icon-wrapper">
         <i style="color:white;" class="fa-solid fa-file-lines"></i>
       </div>

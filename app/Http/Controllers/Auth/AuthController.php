@@ -35,7 +35,7 @@ public function login(Request $request)
     if ($validator->fails()) {
         return response()->json([
             'success' => false,
-            'message' => 'Dados inválidos.',
+            'message' => 'Usuário ou senha inválidos!',
             'errors' => $validator->errors(),
         ], 422);
     }

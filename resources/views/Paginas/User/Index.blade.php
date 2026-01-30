@@ -229,57 +229,72 @@
 
   <div class="row g-3 pd-bolao"> <!-- g-3 = espaçamento entre colunas e linhas -->
 
-    <!-- Card Bolão -->
-    <div class="col-12 col-sm-6 col-lg-3">
-      <div class="card bg-bilhete text-white border-0 shadow-sm p-3 rounded-4 h-100">
-        <h5 class="fw-bold mb-1 text-warning">Premiação - 26/10</h5>
-        <h3 class="fw-bold">R$ 2.000,00</h3>
-        <p class="mb-1"><i class="fa-solid fa-ticket me-1 text-info"></i>255 bilhetes</p>
-        <p class="mb-3"><i class="fa-solid fa-crown me-1 text-success"></i>8 ganhadores</p>
-        <button class="btn btn-warning-personalizado text-dark fw-semibold px-4 rounded-pill w-100">
-          <i class="fa-solid fa-magnifying-glass me-2"></i> Consultar
-        </button>
-      </div>
-    </div>
+
+
+  @forelse($rodadasCards as $card)
 
     <!-- Card Bolão -->
     <div class="col-12 col-sm-6 col-lg-3">
       <div class="card bg-bilhete text-white border-0 shadow-sm p-3 rounded-4 h-100">
-        <h5 class="fw-bold mb-1 text-warning">Premiação</h5>
-        <h3 class="fw-bold">R$ 1.500,00</h3>
-        <p class="mb-1"><i class="fa-solid fa-ticket me-1 text-info"></i>190 bilhetes</p>
-        <p class="mb-3"><i class="fa-solid fa-crown me-1 text-success"></i>5 ganhadores</p>
-        <button class="btn btn-warning-personalizado text-dark fw-semibold px-4 rounded-pill w-100">
-          <i class="fa-solid fa-magnifying-glass me-2"></i> Consultar
-        </button>
+
+        {{-- Data da premiação --}}
+        <h5 class="fw-bold mb-1 text-warning">
+          Bolão - {{ $card['data'] }}
+        </h5>
+
+        {{-- Valor --}}
+        <h3 class="fw-bold">
+          R$ {{ number_format($card['premiacao'], 2, ',', '.') }}
+        </h3>
+
+        {{-- Total de bilhetes --}}
+        <p class="mb-1">
+          <i class="fa-solid fa-ticket me-1 text-info"></i>
+          {{ $card['total_bilhetes'] }} bilhetes no site
+        </p>
+
+        {{-- Ganhadores --}}
+        <p class="mb-3">
+          <i class="fa-solid fa-crown me-1 text-success"></i>
+          {{ $card['ganhadores'] }}
+          {{ $card['ganhadores'] === 1 ? 'ganhador' : 'ganhadores' }}
+        </p>
+
+        {{-- Botão --}}
+        <a href="{{ route('ranking.index', $card['id']) }}"
+           class="btn btn-warning-personalizado text-dark fw-semibold px-4 rounded-pill w-100">
+          <i class="fa-solid fa-magnifying-glass me-2"></i>
+          Consultar
+        </a>
+
       </div>
     </div>
 
-    <!-- Card Bolão -->
-    <div class="col-12 col-sm-6 col-lg-3">
-      <div class="card bg-bilhete text-white border-0 shadow-sm p-3 rounded-4 h-100">
-        <h5 class="fw-bold mb-1 text-warning">Premiação</h5>
-        <h3 class="fw-bold">R$ 3.200,00</h3>
-        <p class="mb-1"><i class="fa-solid fa-ticket me-1 text-info"></i>312 bilhetes</p>
-        <p class="mb-3"><i class="fa-solid fa-crown me-1 text-success"></i>10 ganhadores</p>
-        <button class="btn btn-warning-personalizado text-dark fw-semibold px-4 rounded-pill w-100">
-          <i class="fa-solid fa-magnifying-glass me-2"></i> Consultar
-        </button>
-      </div>
+  @empty
+    <div class="col-12 text-center text-muted py-4">
+      Nenhuma rodada encerrada encontrada.
     </div>
+  @endforelse
 
-    <!-- Card Bolão -->
-    <div class="col-12 col-sm-6 col-lg-3">
-      <div class="card bg-bilhete text-white border-0 shadow-sm p-3 rounded-4 h-100">
-        <h5 class="fw-bold mb-1 text-warning">Premiação</h5>
-        <h3 class="fw-bold">R$ 850,00</h3>
-        <p class="mb-1"><i class="fa-solid fa-ticket me-1 text-info"></i>120 bilhetes</p>
-        <p class="mb-3"><i class="fa-solid fa-crown me-1 text-success"></i>2 ganhadores</p>
-        <button class="btn btn-warning-personalizado text-dark fw-semibold px-4 rounded-pill w-100">
-          <i class="fa-solid fa-magnifying-glass me-2"></i> Consultar
-        </button>
-      </div>
+  @for($i = 0; $i < $cardsFaltantes; $i++)
+  <div class="col-12 col-sm-6 col-lg-3">
+    <div class="card skeleton-card border-0 p-3 rounded-4 h-100">
+
+      <div class="skeleton skeleton-title mb-2"></div>
+      <div class="skeleton skeleton-value mb-3"></div>
+
+      <div class="skeleton skeleton-line mb-2"></div>
+      <div class="skeleton skeleton-line mb-4"></div>
+
+      <div class="skeleton skeleton-button"></div>
+
     </div>
+  </div>
+@endfor
+
+
+
+
 
    
 
@@ -287,6 +302,63 @@
 </div>
 
 <style>
+
+
+/* Card fantasma */
+.skeleton-card {
+    background: #0f172a;
+    opacity: 0.6;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Base skeleton */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        #1e293b 25%,
+        #334155 37%,
+        #1e293b 63%
+    );
+    background-size: 400% 100%;
+    animation: shimmer 2.4s ease infinite;
+    border-radius: 10px;
+}
+
+/* Tamanhos */
+.skeleton-title {
+    height: 20px;
+    width: 70%;
+}
+
+.skeleton-value {
+    height: 28px;
+    width: 50%;
+}
+
+.skeleton-line {
+    height: 14px;
+    width: 100%;
+}
+
+.skeleton-button {
+    height: 38px;
+    width: 100%;
+    border-radius: 999px;
+}
+
+/* Animação */
+@keyframes shimmer {
+    0% {
+        background-position: -400px 0;
+    }
+    100% {
+        background-position: 400px 0;
+    }
+}
+
+
+
 
   .bg-bilhete {
     background-color: #1e293b; /* Contraste perfeito com #0f172a */

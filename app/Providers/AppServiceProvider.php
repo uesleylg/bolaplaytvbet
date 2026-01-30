@@ -27,7 +27,13 @@ class AppServiceProvider extends ServiceProvider
             $bilhetesCount = 0;
 
             if (Auth::check()) {
-                $bilhetesCount = CarrinhoPalpite::where('usuario_id', Auth::id())->count();
+              $bilhetesCount = CarrinhoPalpite::where('usuario_id', Auth::id())
+    ->whereHas('rodada', function ($query) {
+        $query->where('data_fim', '>=', now())
+              ->whereNotIn('status', ['Encerrada', 'bloqueado']);
+    })
+    ->count();
+
             }
 
             $view->with('bilhetesCount', $bilhetesCount);

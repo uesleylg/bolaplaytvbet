@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\MetaController;
 use App\Http\Controllers\ResgateMetaController;
 use App\Http\Controllers\Admin\SaqueController;
 use App\Http\Controllers\SaqueUsuarioController;
+use App\Http\Controllers\RegrasBolaoController;
 use App\Http\Controllers\Admin\BilheteRelatorioController;
 
 
@@ -41,6 +42,8 @@ Route::post('/webhook/pix', [WebhookPixController::class, 'handle']);
 
 // ðŸ  Rotas pÃºblicas
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::get('/regras-do-bolao', [RegrasBolaoController::class, 'regras'])->name('home.regras');
+
 
 
 Route::post('/login', [AuthController::class, 'login'])

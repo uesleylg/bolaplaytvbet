@@ -228,6 +228,17 @@
         <i class="fa-solid fa-shield-halved me-1"></i> Add Auditoria
     </button>
 
+
+<button 
+    class="btn btn-outline-primary btn-sm rounded-pill fw-semibold shadow-sm border-secondary w-100 mt-2"
+    data-bs-toggle="modal" 
+    data-bs-target="#ModalAddBilhetesExternos"
+    data-id="{{ $rodada->id }}"
+    data-bilhete-externo="{{ $rodada->bilhete_externo }}"
+>
+    <i class="fa-solid fa-file-shield me-1 text-secondary"></i> Bilhete Externo
+</button>
+
     <a 
         href="{{ route('admin.gerar.relatorio', $rodada->id) }}" 
         class="btn btn-outline-success btn-sm rounded-pill fw-semibold shadow-sm w-100 mt-2">
@@ -324,7 +335,7 @@ document.addEventListener('click', function(e) {
 </script>
 
 
-
+@include('Paginas.Admin.Modal.ModalBilheteExterno')
 @include('Paginas.Admin.Modal.ModalVerJogos')
 @include('Paginas.Admin.Modal.ModalJogosRodada')
 @include('Paginas.Admin.Modal.ModalCriarRodada')

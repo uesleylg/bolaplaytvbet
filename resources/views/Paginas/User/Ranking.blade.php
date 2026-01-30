@@ -9,6 +9,7 @@
 
 
 
+
 <div style="padding-top: 0px !important;" class="container py-5">
 
 
@@ -48,11 +49,12 @@
  
 
     <div class="row text-center g-3 flex-nowrap overflow-auto">
+
       <div class="col-4">
         <div class="p-3 bg-secondary bg-opacity-25 rounded-4 h-100">
           <i class="fa-solid fa-ticket fs-3 text-warning mb-2"></i>
           <h6 class="text-uppercase fw-semibold mb-1">Bilhetes do Site</h6>
-          <h4 class="fw-bold text-light text-valor">13.788</h4>
+          <h4 class="fw-bold text-light text-valor">{{ number_format($bilhetesSite, 0, ',', '.') }}</h4>
         </div>
       </div>
 
@@ -60,7 +62,7 @@
         <div class="p-3 bg-secondary bg-opacity-25 rounded-4 h-100">
           <i class="fa-solid fa-globe fs-3 text-warning mb-2"></i>
           <h6 class="text-uppercase fw-semibold mb-1">Bilhetes Externos</h6>
-          <h4 class="fw-bold text-light text-valor">5</h4>
+          <h4 class="fw-bold text-light text-valor">{{ number_format($bilhetesExternos, 0, ',', '.') }}</h4>
         </div>
       </div>
 
@@ -68,9 +70,11 @@
         <div class="p-3 bg-secondary bg-opacity-25 rounded-4 h-100">
           <i class="fa-solid fa-list-ol fs-3 text-warning mb-2"></i>
           <h6 class="text-uppercase fw-semibold mb-1">Total de Bilhetes</h6>
-          <h4 class="fw-bold text-light text-valor">13.793</h4>
+          <h4 class="fw-bold text-light text-valor">   {{ number_format($totalBilhetes, 0, ',', '.') }}</h4>
         </div>
       </div>
+
+
     </div>
   </div>
 
@@ -486,73 +490,113 @@
 
 <div class="row g-3">
   <!-- Ranking Item -->
-  <div class="col-12 col-md-6 col-lg-3">
-    <div class="card bg-dark text-light shadow-sm border-0 h-100">
-      <div class="card-body d-flex flex-column justify-content-between">
-        <div class="d-flex align-items-center mb-3">
-          <i class="bi bi-trophy-fill text-warning fs-3 me-2"></i>
-          <span class="fw-semibold">22 bilhete(s)</span>
-        </div>
-        <span class="badge rounded-pill bg-success fs-6">8 acerto(s)</span>
+
+
+<div class="col-12 col-md-6 col-lg-3">
+  <div class="card bg-dark text-light shadow-sm border-0 h-100">
+    <div class="card-body d-flex flex-column justify-content-between">
+      <div class="d-flex align-items-center mb-3">
+        <i class="bi bi-trophy-fill text-warning fs-3 me-2"></i>
+        <span class="fw-semibold">
+          {{ $estatisticas[8] ?? 0 }} bilhete(s)
+        </span>
       </div>
+      <span class="badge rounded-pill bg-success fs-6">
+        8 acerto(s)
+      </span>
     </div>
   </div>
+</div>
 
-  <div class="col-12 col-md-6 col-lg-3">
-    <div class="card bg-dark text-light shadow-sm border-0 h-100">
-      <div class="card-body d-flex flex-column justify-content-between">
-        <div class="d-flex align-items-center mb-3">
-          <i class="bi bi-star-fill text-warning fs-3 me-2"></i>
-          <span class="fw-semibold">360 bilhete(s)</span>
-        </div>
-        <span class="badge rounded-pill bg-info fs-6">7 acerto(s)</span>
+
+<div class="col-12 col-md-6 col-lg-3">
+  <div class="card bg-dark text-light shadow-sm border-0 h-100">
+    <div class="card-body d-flex flex-column justify-content-between">
+      <div class="d-flex align-items-center mb-3">
+        <i class="bi bi-star-fill text-warning fs-3 me-2"></i>
+        <span class="fw-semibold">
+          {{ $estatisticas[7] ?? 0 }} bilhete(s)
+        </span>
       </div>
+      <span class="badge rounded-pill bg-info fs-6">
+        7 acerto(s)
+      </span>
     </div>
   </div>
+</div>
 
-  <div class="col-12 col-md-6 col-lg-3">
-    <div class="card bg-dark text-light shadow-sm border-0 h-100">
-      <div class="card-body d-flex flex-column justify-content-between">
-        <div class="d-flex align-items-center mb-3">
-          <i class="bi bi-lightning-fill text-warning fs-3 me-2"></i>
-          <span class="fw-semibold">1726 bilhete(s)</span>
-        </div>
-        <span class="badge rounded-pill bg-primary fs-6">6 acerto(s)</span>
+
+<div class="col-12 col-md-6 col-lg-3">
+  <div class="card bg-dark text-light shadow-sm border-0 h-100">
+    <div class="card-body d-flex flex-column justify-content-between">
+      <div class="d-flex align-items-center mb-3">
+        <i class="bi bi-lightning-fill text-warning fs-3 me-2"></i>
+        <span class="fw-semibold">
+          {{ $estatisticas[6] ?? 0 }} bilhete(s)
+        </span>
       </div>
+      <span class="badge rounded-pill bg-primary fs-6">
+        6 acerto(s)
+      </span>
     </div>
   </div>
+</div>
 
-  <div class="col-12 col-md-6 col-lg-3">
-    <div class="card bg-dark text-light shadow-sm border-0 h-100">
-      <div class="card-body d-flex flex-column justify-content-between">
-        <div class="d-flex align-items-center mb-3">
-          <i class="bi bi-x-circle-fill text-danger fs-3 me-2"></i>
-          <span class="fw-semibold">5 bilhete(s)</span>
-        </div>
-        <span class="badge rounded-pill bg-danger fs-6">0 acerto(s)</span>
+
+<div class="col-12 col-md-6 col-lg-3">
+  <div class="card bg-dark text-light shadow-sm border-0 h-100">
+    <div class="card-body d-flex flex-column justify-content-between">
+      <div class="d-flex align-items-center mb-3">
+        <i class="bi bi-x-circle-fill text-danger fs-3 me-2"></i>
+        <span class="fw-semibold">
+          {{ $estatisticas[0] ?? 0 }} bilhete(s)
+        </span>
       </div>
+      <span class="badge rounded-pill bg-danger fs-6">
+        0 acerto(s)
+      </span>
     </div>
   </div>
 </div>
 
 
 
+</div>
+
+
+
 <div class="text-title-rank"><i class="fa-solid fa-ranking-star"></i> Ranking dos Bilhetes:</div>
+
+
 <div style="position: relative; width: 100%; ">
-  <i class="fa-solid fa-magnifying-glass" style="position: absolute; top: 50%; left: 12px; transform: translateY(-50%); color: #fff;"></i>
-  <input type="text" class="form-control w-100" placeholder="Buscar bilhete ou nome..." style="
-    font-size: 20px;
-    padding-left: 40px;
-    border-radius: 12px;
-    border: 2px solid #334155;
-    background-color: #0f172a;
-    color: #fff;
-    height: 55px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  " 
-  onfocus="this.style.borderColor='#ffe200'; this.style.boxShadow='0 0 10px #ffe200';" 
-  onblur="this.style.borderColor='#334155'; this.style.boxShadow='none';">
+<form method="GET" action="{{ url()->current() }}" class="mb-4">
+  <div style="position: relative; width: 100%;">
+    <i class="fa-solid fa-magnifying-glass"
+       style="position:absolute;top:50%;left:12px;transform:translateY(-50%);color:#fff;">
+    </i>
+
+    <input
+      type="text"
+      name="busca"
+      value="{{ request('busca') }}"
+      class="form-control w-100"
+      placeholder="Buscar bilhete..."
+      style="
+        font-size: 20px;
+        padding-left: 40px;
+        border-radius: 12px;
+        border: 2px solid #334155;
+        background-color: #0f172a;
+        color: #fff;
+        height: 55px;
+        font-weight: 500;
+      "
+      onfocus="this.style.borderColor='#ffe200'; this.style.boxShadow='0 0 10px #ffe200';"
+      onblur="this.style.borderColor='#334155'; this.style.boxShadow='none';"
+    >
+  </div>
+</form>
+
 </div>
 
 
@@ -690,9 +734,7 @@
     }
   }
 </style>
-
-<div class=" my-4">
-
+<div class="my-4">
 
   <div class="ranking-container">
 
@@ -702,68 +744,111 @@
       <div>Bilhete</div>
       <div>Comprador</div>
       <div>Acertos</div>
-      <div>01</div><div>02</div><div>03</div><div>04</div><div>05</div><div>06</div><div>07</div><div>08</div>
+
+      @foreach($jogos as $index => $jogo)
+        <div>{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</div>
+      @endforeach
     </div>
 
-    <!-- Linha 1 -->
-    <div class="ranking-row" data-bs-toggle="modal" data-bs-target="#ModalAposta">
-      <div><i class="fa-solid fa-trophy"></i> 1º</div>
-      <div><i class="fa-solid fa-ticket"></i> BLT-001</div>
-      <div><i class="fa-solid fa-user"></i> João Silva</div>
-      <div><span>4 acertos</span></div>
+    {{-- ============================
+         LINHAS DO RANKING
+    ============================ --}}
+    @forelse($ranking as $posicao => $bilhete)
 
-      <!-- Ícones por coluna (desktop) -->
-      <div class="icon-col"><i class="fa-solid fa-circle-xmark"></i></div>
-      <div class="icon-col"><i class="fa-solid fa-circle-check"></i></div>
-      <div class="icon-col"><i class="fa-solid fa-circle-check"></i></div>
-      <div class="icon-col"><i class="fa-solid fa-circle-check"></i></div>
-      <div class="icon-col"><i class="fa-solid fa-circle-check"></i></div>
-      <div class="icon-col"><i class="fa-solid fa-circle-check"></i></div>
-      <div class="icon-col"><i class="fa-solid fa-circle-check"></i></div>
-      <div class="icon-col"><i class="fa-solid fa-circle-check"></i></div>
+      @php
+        // Posição contínua considerando paginação
+        $posicaoReal = (($ranking->currentPage() - 1) * $ranking->perPage()) + $posicao + 1;
+      @endphp
 
-      <!-- Versão mobile -->
-      <div class="result-icons-mobile">
-        <i class="fa-solid fa-circle-xmark"></i>
-        <i class="fa-solid fa-circle-check"></i>
-        <i class="fa-solid fa-circle-check"></i>
-        <i class="fa-solid fa-circle-check"></i>
-        <i class="fa-solid fa-circle-check"></i>
-        <i class="fa-solid fa-circle-check"></i>
-        <i class="fa-solid fa-circle-check"></i>
-        <i class="fa-solid fa-circle-check"></i>
+      <div class="ranking-row"
+      
+           data-bs-toggle="modal"
+           data-bs-target="#ModalAposta"
+           data-id="{{ $bilhete->id }}"
+           data-codigo="{{ $bilhete->codigo_bilhete }}"
+           data-usuario="{{ $bilhete->carrinho->usuario->name ?? '' }}"
+           data-acertos="{{ $bilhete->acertos }}"
+           data-total-jogos="{{ count($bilhete->apostas_formatadas) }}"
+           data-data="{{ $bilhete->created_at->format('d/m/Y H:i') }}"
+           data-valor="{{ number_format($bilhete->carrinho->valor_total ?? 0, 2, ',', '.') }}"
+           data-apostas='@json($bilhete->apostas_formatadas)'
+      >
+
+        <!-- Posição -->
+        <div>
+          @if($posicaoReal === 1)
+            <i class="fa-solid fa-trophy"></i>
+          @elseif($posicaoReal === 2)
+            <i class="fa-solid fa-medal"></i>
+          @elseif($posicaoReal === 3)
+            <i class="fa-solid fa-award"></i>
+          @endif
+          {{ $posicaoReal }}º
+        </div>
+
+        <!-- Bilhete -->
+        <div>
+          <i class="fa-solid fa-ticket"></i>
+          {{ $bilhete->codigo_bilhete }}
+        </div>
+
+        <!-- Comprador -->
+        <div>
+          <i class="fa-solid fa-user"></i>
+          {{ $bilhete->carrinho->usuario->name ?? '—' }}
+        </div>
+
+        <!-- Acertos -->
+        <div>
+          <span>{{ $bilhete->acertos }} acertos</span>
+        </div>
+
+        <!-- Ícones por jogo (Desktop) -->
+        @foreach($bilhete->apostas_formatadas as $aposta)
+          <div class="icon-col">
+            @if($aposta['status'] === 'acertou')
+              <i class="fa-solid fa-circle-check text-success"></i>
+            @elseif($aposta['status'] === 'errou')
+              <i class="fa-solid fa-circle-xmark text-danger"></i>
+            @else
+              <i class="fa-solid fa-clock text-secondary"></i>
+            @endif
+          </div>
+        @endforeach
+
+        <!-- Versão Mobile -->
+        <div class="result-icons-mobile">
+          @foreach($bilhete->apostas_formatadas as $aposta)
+            @if($aposta['status'] === 'acertou')
+              <i class="fa-solid fa-circle-check text-success"></i>
+            @elseif($aposta['status'] === 'errou')
+              <i class="fa-solid fa-circle-xmark text-danger"></i>
+            @else
+              <i class="fa-solid fa-clock text-secondary"></i>
+            @endif
+          @endforeach
+        </div>
+
       </div>
-    </div>
 
-    <!-- Linha 2 -->
-    <div class="ranking-row">
-      <div><i class="fa-solid fa-medal"></i> 2º</div>
-      <div><i class="fa-solid fa-ticket"></i> BLT-002</div>
-      <div><i class="fa-solid fa-user"></i> Maria Santos</div>
-      <div><span>3 acertos</span></div>
-      <div class="icon-col"><i class="fa-solid fa-circle-xmark"></i></div>
-      <div class="icon-col"><i class="fa-solid fa-circle-check"></i></div>
-      <div class="icon-col"><i class="fa-solid fa-circle-check"></i></div>
-      <div class="icon-col"><i class="fa-solid fa-circle-check"></i></div>
-      <div class="icon-col"><i class="fa-solid fa-circle-check"></i></div>
-      <div class="icon-col"><i class="fa-solid fa-circle-check"></i></div>
-      <div class="icon-col"><i class="fa-solid fa-circle-check"></i></div>
-      <div class="icon-col"><i class="fa-solid fa-circle-check"></i></div>
-      <div class="result-icons-mobile">
-        <i class="fa-solid fa-circle-xmark"></i>
-        <i class="fa-solid fa-circle-check"></i>
-        <i class="fa-solid fa-circle-check"></i>
-        <i class="fa-solid fa-circle-check"></i>
-        <i class="fa-solid fa-circle-check"></i>
-        <i class="fa-solid fa-circle-check"></i>
-        <i class="fa-solid fa-circle-check"></i>
-        <i class="fa-solid fa-circle-check"></i>
+    @empty
+      <div class="text-center text-muted py-4">
+        Nenhum bilhete encontrado para esta rodada.
       </div>
-    </div>
+    @endforelse
 
   </div>
-</div>
 
+  {{-- ============================
+       PAGINAÇÃO
+  ============================ --}}
+  @if($ranking->hasPages())
+    <div class="d-flex justify-content-center mt-4">
+      {{ $ranking->links('pagination::bootstrap-5') }}
+    </div>
+  @endif
+
+</div>
 
 
   </div>

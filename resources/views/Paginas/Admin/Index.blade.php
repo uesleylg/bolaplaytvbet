@@ -219,16 +219,28 @@
               </div>
             </div>
 
-            <div class="col-12 col-lg-4">
-              <div class="card p-3 stat-card">
-                <h6 class="mb-3">Resumo Rápido</h6>
-                <ul class="list-unstyled small mb-0">
-                  <li class="mb-2">Total Usuários: <strong>13.788</strong></li>
-                  <li class="mb-2">Usuários Ult 24h: <strong>5</strong></li>
-                  <li class="mb-2">Usuários Ult 7d: <strong>12</strong></li>
-                </ul>
-              </div>
-            </div>
+           <div class="col-12 col-lg-4">
+  <div class="card p-3 stat-card">
+    <h6 class="mb-3">Resumo Rápido</h6>
+    <ul class="list-unstyled small mb-0">
+      <li class="mb-2">
+        Total Usuários:
+        <strong>{{ number_format($totalUsuariosGeral, 0, ',', '.') }}</strong>
+      </li>
+
+      <li class="mb-2">
+        Usuários Últ. 24h:
+        <strong>{{ $usuarios24h }}</strong>
+      </li>
+
+      <li class="mb-2">
+        Usuários Últ. 7d:
+        <strong>{{ $usuarios7d }}</strong>
+      </li>
+    </ul>
+  </div>
+</div>
+
 
             <!-- Empty placeholders for additional cards -->
             <div class="col-12 col-md-6 col-lg-4">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CarrinhoPalpite;
 use App\Models\Rodada;
+use App\Models\Carteira;
 use Illuminate\Support\Facades\Auth;
 
 class CarrinhoPalpiteController extends Controller
@@ -145,10 +146,22 @@ public function salvarCarrinho(Request $request)
             }
         }
 
-        return response()->json([
-            'success' => true,
-            'carrinho_ids' => $bilheteIds,  // <<---- RETORNANDO PARA JS
-        ]);
+        $totalCarrinho = CarrinhoPalpite::where('usuario_id', $usuarioId)
+    ->whereHas('rodada', function ($query) {
+        $query->where('data_fim', '>=', now())
+              ->whereNotIn('status', ['Encerrada', 'bloqueado']);
+    })
+    ->count();
+
+  $saldo_carteira = Carteira::where('usuario_id', $usuarioId)->value('saldo');
+
+
+    return response()->json([
+    'success' => true,
+    'carrinho_ids' => $bilheteIds,
+    'total_bilhetes' => $totalCarrinho, // 🔥 contador atualizado
+    'saldo_carteira' => (float) $saldo_carteira, // 💰 saldo do usuário
+]);
 
     } catch (\Exception $e) {
         return response()->json([

@@ -6,21 +6,81 @@
 @include('Slide.SlidePadrao')
 
 <style>
+ .bilhete-status-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Pill de status */
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Aguardando */
+.status-pill.aguardando {
+    background: #334155;
+    color: #e5e7eb;
+}
+
+/* Ações em ícone */
+.icon-action {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #1e293b;
+    color: #cbd5f5;
+    border: 1px solid #334155;
+    transition: all 0.25s ease;
+}
+
+.icon-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 10px rgba(250, 204, 21, 0.3);
+    color: #facc15;
+    border-color: #facc15;
+}
+
+/* Diferenciação sutil */
+.icon-action.info:hover {
+    color: #38bdf8;
+    border-color: #38bdf8;
+}
+
+.icon-action.ranking:hover {
+    color: #a78bfa;
+    border-color: #a78bfa;
+}
+
 
 /* Botão (parecendo select) */
 .status-filter {
-    background: #0f172a;
-    border: 1px solid #283347;
+    background-color: #1e293b;
     color: white;
-    padding: 8px 14px;
-    border-radius: 10px;
-    transition: 0.3s ease;
+    border: 2px solid #334155;
+    border-radius: 12px;
+    padding: 18px;
+    display: inline-flex;
+    align-items: center; /* alinha o conteúdo verticalmente */
+    gap: 8px;
+    transition: all 0.3s ease;
+    line-height: 1; /* evita que o ícone “suba” */
 }
 
 .status-filter:hover {
-    background: #1e293b;
-    border-color: #3b475a;
+    border-color: #facc15;
+    box-shadow: 0 0 10px #facc15;
 }
+
 
 /* Wrapper para posicionar o dropdown */
 .dropdown-wrapper {
@@ -104,14 +164,26 @@
     flex: 1;
   }
 
-  .search-container i {
+/* Ícone dentro do input de busca */
+.search-container i {
     position: absolute;
     top: 50%;
     left: 15px;
     transform: translateY(-50%);
     color: #94a3b8;
     font-size: 1.1rem;
-  }
+}
+
+/* Ícone dentro do botão do filtro */
+.status-filter i {
+    position: static; /* garante que não sobreponha o texto */
+    transform: none;  /* remove transform do input */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
 
   .search-input {
     width: 100%;
@@ -135,19 +207,7 @@
     box-shadow: 0 0 10px #facc15;
   }
 
-  .status-filter {
-    background-color: #1e293b;
-    color: white;
-    border: 2px solid #334155;
-    border-radius: 12px;
-    padding: 12px 18px;
-    transition: all 0.3s ease;
-  }
 
-  .status-filter:hover {
-    border-color: #facc15;
-    box-shadow: 0 0 10px #facc15;
-  }
 
   .empty-state {
     background-color: #1e293b;
@@ -301,12 +361,16 @@
     </div>
     <div>
       <small>Bilhetes Ganhos</small>
-      <div class="number text-success">{{ $bilhetes->where('status', 'ganho')->count() }}</div>
+      <div class="number text-success">
+    {{ $bilhetes->filter(function($b) {
+        return $b->bilhete && $b->bilhete->status === 'ganho';
+    })->count() }}
+</div>
+
     </div>
   </div>
-
-  <!-- 🔍 Barra de pesquisa e filtro -->
-<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+<!-- 🔍 Barra de pesquisa e filtro -->
+<form method="GET" class="d-flex flex-wrap align-items-center gap-2 mb-3 search-container" action="{{ route('bilhete.index') }}">
 
   <!-- Busca -->
   <div class="search-container">
@@ -314,7 +378,7 @@
     <input 
       type="text" 
       class="search-input" 
-      placeholder="Buscar bilhete ou nome..."
+      placeholder="Buscar bilhete"
       name="busca"
       value="{{ request('busca') }}"
     >
@@ -322,27 +386,39 @@
 
   <!-- Botão Select -->
   <div class="dropdown-wrapper">
-    <button 
-      type="button" 
-      class="btn status-filter d-flex align-items-center gap-2"
-      id="btnFiltroStatus"
-    >
-      <i class="fa-solid fa-filter"></i> 
-      <span id="textoStatus">Todos os Status</span>
-    </button>
+<button 
+  type="button" 
+  class="btn status-filter d-flex align-items-center gap-2"
+  id="btnFiltroStatus"
+>
+  <i class="fa-solid fa-filter"></i>
+  <span id="textoStatus">
+    @php
+        $statusTexto = [
+            'todos' => 'Todos os Status',
+            'pendente' => 'Pendente',
+            'aguardando-pago' => 'Aguardando',
+            'ganhos' => 'Ganhos'
+        ];
+    @endphp
+    {{ $statusTexto[request('status', 'todos')] }}
+  </span>
+</button>
 
     <!-- MENU DROPDOWN -->
     <div id="menuStatus" class="status-menu">
-      <button data-value="todos">Todos os Status</button>
-      <button data-value="pendente">Pendente</button>
-      <button data-value="confirmado">Confirmado</button>
-      <button data-value="cancelado">Cancelado</button>
+      <button type="button" data-value="todos">Todos os Status</button>
+      <button type="button" data-value="pendente">Pendente</button>
+      <button type="button" data-value="aguardando-pago">Aguardando</button>
+      <button type="button" data-value="ganhos">Ganhos</button>
     </div>
 
-    <!-- INPUT QUE MANDA PRO BACK-END -->
+    <!-- INPUT ESCONDIDO -->
     <input type="hidden" name="status" id="inputStatus" value="{{ request('status', 'todos') }}">
   </div>
-</div>
+
+</form>
+
 
 
   <!-- 🎟️ Lista de bilhetes ou estado vazio -->
@@ -379,6 +455,10 @@
     <!-- Botão Editar -->
  
 
+
+
+    <!-- Botão Pagar (só se estiver pendente) -->
+@if(strtolower($bilhete->status) === 'pendente')
     <button 
     class="btn btn-outline-warning btn-sm abrirAposta"
 
@@ -390,20 +470,131 @@
 </button>
 
 
-    <!-- Botão Pagar (só se estiver pendente) -->
-    @if(strtolower($bilhete->status) === 'pendente')
-      <button class="btn btn-success btn-sm" title="Pagar agora">
-        <i class="fa-solid fa-credit-card"></i> Pagar
-      </button>
-    @endif
+  <button 
+    class="btn btn-success btn-sm btn-pagar"
+    data-carrinho-id="{{ $bilhete->id }}">
+    <i class="fa-solid fa-credit-card"></i> Pagar
+  </button>
 
-    <!-- Botão Visualizar Detalhes -->
+      <!-- Botão Visualizar Detalhes -->
 <button 
   class="btn btn-outline-light btn-sm btn-excluir" 
   title="Excluir"
-  data-id="{{ $bilhete->id }}">
+  data-id="{{ $bilhete->id }}"
+  data-bs-toggle="modal"
+  data-bs-target="#ModalExcluirBilhete">
   <i class="fa-solid fa-trash"></i>
 </button>
+
+@endif
+
+@if($bilhete->status === 'pago')
+
+    @if($bilhete->bilhete)
+
+        @switch($bilhete->bilhete->status)
+
+            @case('ganho')
+     <div class="d-flex align-items-center gap-2">
+    <!-- Badge existente -->
+    <span class="badge bg-success rounded-pill px-4 py-2 d-flex align-items-center">
+        <i class="fa-solid fa-trophy me-1"></i>
+        Bilhete Ganhador
+    </span>
+
+   
+    <a href="{{ route('ranking.index', $bilhete->rodada_id) }}" class="btn btn-ranking d-flex align-items-center gap-1">
+        <i class="fa-solid fa-chart-line"></i>
+        Ver Ranking
+    </a>
+</div>
+
+                @break
+
+            @case('perdido')
+               <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-danger rounded-pill px-4 py-2">
+                    <i class="fa-solid fa-xmark me-1"></i>
+                    Bilhete Perdido
+                </span>
+
+                  <a href="{{ route('ranking.index', $bilhete->rodada_id) }}" class="btn btn-ranking d-flex align-items-center gap-1">
+        <i class="fa-solid fa-chart-line"></i>
+        Ver Ranking
+    </a>
+                </div>
+                @break
+
+            @default
+          <div class="bilhete-status-actions">
+
+    <span class="status-pill aguardando">
+        <i class="fa-solid fa-hourglass-half"></i>
+        Aguardando resultado
+    </span>
+
+<button
+    type="button"
+    class="icon-action info btn-ver-bilhete ranking-row"
+    title="Ver bilhete"
+    data-bs-toggle="modal"
+    data-bs-target="#ModalAposta"
+
+    data-codigo="{{ $bilhete->bilhete->codigo_bilhete ?? $bilhete->id }}"
+    data-usuario="{{ auth()->user()->name }}"
+    data-data="{{ $bilhete->created_at->format('d/m/Y H:i') }}"
+    data-valor="{{ number_format($bilhete->valor_total, 2, ',', '.') }}"
+
+    {{-- 🔥 AGORA VEM DO CARRINHO --}}
+    data-apostas='@json($bilhete->apostas_formatadas ?? [])'
+>
+    <i class="fa-solid fa-eye"></i>
+</button>
+
+
+
+    <a 
+        href="{{ route('ranking.index', $bilhete->rodada_id) }}" 
+        class="icon-action ranking"
+        title="Ver ranking"
+    >
+        <i class="fa-solid fa-chart-line"></i>
+    </a>
+
+</div>
+
+
+        @endswitch
+
+    @else
+  <div class="bilhete-status-actions">
+
+    <span class="status-pill aguardando">
+        <i class="fa-solid fa-hourglass-half"></i>
+        Aguardando resultado
+    </span>
+
+    <a 
+        href="" 
+        class="icon-action info"
+        title="Ver bilhete"
+    >
+        <i class="fa-solid fa-eye"></i>
+    </a>
+
+    <a 
+        href="{{ route('ranking.index', $bilhete->rodada_id) }}" 
+        class="icon-action ranking"
+        title="Ver ranking"
+    >
+        <i class="fa-solid fa-chart-line"></i>
+    </a>
+
+</div>
+
+    @endif
+
+@endif
 
 
   </div>
@@ -419,25 +610,28 @@
 <script>
 
 
+
+
+
 document.getElementById("btnFiltroStatus").addEventListener("click", () => {
-    document.getElementById("menuStatus").style.display =
-        document.getElementById("menuStatus").style.display === "flex"
-        ? "none"
-        : "flex";
+    const menu = document.getElementById("menuStatus");
+    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
 });
 
-// Selecionar item
+// Selecionar item do dropdown e submeter o form
 document.querySelectorAll("#menuStatus button").forEach(btn => {
     btn.addEventListener("click", () => {
-
         let texto = btn.innerText;
         let valor = btn.getAttribute("data-value");
 
         document.getElementById("textoStatus").innerText = texto;
         document.getElementById("inputStatus").value = valor;
 
-        // Fecha o menu após selecionar
+        // Fecha o menu
         document.getElementById("menuStatus").style.display = "none";
+
+        // Submete o form automaticamente
+        btn.closest('form').submit();
     });
 });
 
@@ -451,42 +645,83 @@ document.addEventListener("click", function(e) {
 
 
 
-
-
-
-document.addEventListener('click', function (e) {
-  const botao = e.target.closest('.btn-excluir');
-  if (!botao) return;
-
-  e.preventDefault(); // impede comportamento padrão
-
-  const id = botao.dataset.id;
-
-  if (!confirm('Tem certeza que deseja excluir este bilhete?')) return;
-
-  fetch(`/carrinho/${id}/excluir`, {
-    method: 'DELETE',
-    headers: {
-      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-      'Accept': 'application/json'
-    }
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      alert('Bilhete excluído com sucesso!');
-      location.reload();
-    } else {
-      alert(data.message || 'Erro ao excluir o bilhete.');
-    }
-  })
-  .catch(error => {
-    console.error(error);
-    alert('Erro inesperado ao tentar excluir o bilhete.');
-  });
-});
 </script>
 
+
+
+
+
+<script>
+document.querySelectorAll('.btn-pagar').forEach(btn => {
+  btn.addEventListener('click', function () {
+
+    let carrinhoId = this.dataset.carrinhoId;
+
+    // Abrir o modal existente
+    const modal = new bootstrap.Modal(document.getElementById('ModalPix'));
+    modal.show();
+
+    // Estados visuais
+    document.getElementById('pixLoading').style.display = 'block';
+    document.getElementById('pixContent').style.display = 'none';
+
+    // Limpar dados antigos
+    document.getElementById('pixQrImg').src = '';
+    document.getElementById('pixCopiaCola').value = '';
+    document.getElementById('pixValor').innerText = '';
+
+    fetch("{{ route('gerar.pix') }}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+      },
+      body: JSON.stringify({
+        carrinho_ids: [carrinhoId]
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+      if (!data.success) {
+        alert('Erro ao gerar PIX');
+        return;
+      }
+
+      // Preencher modal
+      document.getElementById('pixQrImg').src =
+        'data:image/png;base64,' + data.qr;
+
+      document.getElementById('pixCopiaCola').value = data.copia_cola;
+
+      document.getElementById('pixValor').innerText =
+        'R$ ' + data.valor.toFixed(2).replace('.', ',');
+
+      // Mostrar conteúdo
+      document.getElementById('pixLoading').style.display = 'none';
+      document.getElementById('pixContent').style.display = 'block';
+
+    })
+    .catch(() => {
+      alert('Erro na comunicação com o servidor');
+    });
+  });
+});
+
+// Copiar PIX
+function copiarPix() {
+  const campo = document.getElementById('pixCopiaCola');
+  campo.select();
+  campo.setSelectionRange(0, 99999);
+  document.execCommand('copy');
+}
+</script>
+
+
+
+
+@include('Paginas.User.Modal.ModalBilhete')
+@include('Paginas.User.Modal.ModalExclusaoBilhete')
 @include('Paginas.User.Modal.ModalAposta')
 @include('Paginas.User.Modal.ModalIndicacao')
 @endsection

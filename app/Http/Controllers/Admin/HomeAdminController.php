@@ -10,6 +10,8 @@ use App\Models\Rodada;
 use App\Models\Bilhete;
 use App\Models\CarrinhoPalpite;
 use App\Models\User;
+use Carbon\Carbon;
+
 
 class HomeAdminController extends Controller
 {
@@ -50,6 +52,7 @@ class HomeAdminController extends Controller
                 ->count();
 
 
+
             // 🔥 Total de bilhetes da rodada
             $totalBilhetes = Bilhete::whereIn('carrinho_id', $carrinhosIds)->count();
 
@@ -84,16 +87,30 @@ class HomeAdminController extends Controller
 
         $ultimaAtualizacao = now();
 
+        $agora = Carbon::now();
 
-        return view('Paginas.Admin.index', compact(
-            'rodadas',
-            'rodadaSelecionada',
-            'totalBilhetes',
-            'totalCarrinhos',
-            'totalUsuarios',
-            'totalFaturamento',
-            'carrinhosListagem',
-            'ultimaAtualizacao'
-        ));
+$totalUsuariosGeral = User::count();
+
+$usuarios24h = User::where('created_at', '>=', $agora->copy()->subHours(24))->count();
+
+$usuarios7d = User::where('created_at', '>=', $agora->copy()->subDays(7))->count();
+
+
+       return view('Paginas.Admin.index', compact(
+    'rodadas',
+    'rodadaSelecionada',
+    'totalBilhetes',
+    'totalCarrinhos',
+    'totalUsuarios',
+    'totalFaturamento',
+    'carrinhosListagem',
+    'ultimaAtualizacao',
+
+    // 🔥 novos
+    'totalUsuariosGeral',
+    'usuarios24h',
+    'usuarios7d'
+));
+
     }
 }
